@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<plugin name="hibiscus.xmlrpc" version="1.0" class="de.willuhn.jameica.hbci.xmlrpc.Plugin">
+
+  <description>Meta-Plugin, welches Hibiscus um XML-RPC-Funktionalitaet erweitert</description>
+  <url></url>
+  <homepage>http://www.willuhn.de/projects/hibiscus</homepage>
+  <license>GPL - http://www.gnu.org/copyleft/gpl.html</license>
+
+  <classfinder>
+    <include>hibiscus\.xmlrpc\.jar</include>
+    <include>.*\.class</include>
+  </classfinder>
+
+  <services>
+    <service name="konto"  depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService" />
+  </services>
+</plugin>
+
