@@ -59,9 +59,6 @@
 			<pathelement location="../jameica/lib/de_willuhn_ds/de_willuhn_ds.jar" />
 			<pathelement location="../jameica/lib/de_willuhn_util/de_willuhn_util.jar" />
       <pathelement location="../hibiscus/bin/" />
-      <fileset dir="${lib.dir}">
-        <include name="**/*.jar" />
-      </fileset>
 		</path>
 
 	</target>
