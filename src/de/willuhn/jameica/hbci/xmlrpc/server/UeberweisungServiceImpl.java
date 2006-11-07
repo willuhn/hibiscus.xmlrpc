@@ -1,6 +1,6 @@
 /**********************************************************************
- * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/KontoServiceImpl.java,v $
- * $Revision: 1.2 $
+ * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UeberweisungServiceImpl.java,v $
+ * $Revision: 1.1 $
  * $Date: 2006/11/07 00:18:11 $
  * $Author: willuhn $
  * $Locker:  $
@@ -17,55 +17,58 @@ import java.rmi.RemoteException;
 
 import de.willuhn.datasource.rmi.DBIterator;
 import de.willuhn.datasource.rmi.DBService;
+import de.willuhn.datasource.rmi.ObjectNotFoundException;
 import de.willuhn.jameica.hbci.HBCI;
 import de.willuhn.jameica.hbci.rmi.Konto;
-import de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService;
+import de.willuhn.jameica.hbci.rmi.Ueberweisung;
+import de.willuhn.jameica.hbci.xmlrpc.rmi.UeberweisungService;
 import de.willuhn.jameica.system.Application;
 import de.willuhn.logging.Logger;
 import de.willuhn.util.ApplicationException;
 
 /**
- * Implementierung des Konto-Service.
+ * Implementierung des Ueberweisung-Service.
  */
-public class KontoServiceImpl extends AbstractServiceImpl implements
-    KontoService
+public class UeberweisungServiceImpl extends AbstractServiceImpl implements
+    UeberweisungService
 {
 
   /**
    * ct.
    * @throws RemoteException
    */
-  public KontoServiceImpl() throws RemoteException
+  public UeberweisungServiceImpl() throws RemoteException
   {
     super();
   }
 
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService#list()
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.UeberweisungService#list()
    */
   public String[] list() throws RemoteException
   {
     try
     {
       DBService service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
-      DBIterator i = service.createList(Konto.class);
+      DBIterator i = service.createList(Ueberweisung.class);
       String[] list = new String[i.size()];
       int count = 0;
       while (i.hasNext())
       {
-        Konto k = (Konto) i.next();
+        Ueberweisung u = (Ueberweisung) i.next();
+        Konto k = u.getKonto();
         StringBuffer sb = new StringBuffer();
         sb.append(k.getID());
         sb.append(":");
-        sb.append(k.getKontonummer());
+        sb.append(u.getGegenkontoNummer());
         sb.append(":");
-        sb.append(k.getBLZ());
+        sb.append(u.getGegenkontoBLZ());
         sb.append(":");
-        sb.append(k.getBezeichnung());
+        sb.append(u.getGegenkontoName());
         sb.append(":");
-        sb.append(k.getKundennummer());
+        sb.append(u.getZweck());
         sb.append(":");
-        sb.append(k.getName());
+        sb.append(HBCI.DECIMALFORMAT.format(u.getBetrag()));
         list[count++] = sb.toString();
       }
       return list;
@@ -81,21 +84,32 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
     return null;
   }
 
-
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.UeberweisungService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, double)
    */
-  public String create(String kontonummer, String blz, String name, String kundennummer) throws RemoteException
+  public String create(String kontoID, String kto, String blz, String name, String zweck, double betrag) throws RemoteException
   {
     try
     {
       DBService service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
-      Konto k = (Konto) service.createObject(Konto.class,null);
-      k.setKontonummer(kontonummer);
-      k.setBLZ(blz);
-      k.setName(name);
-      k.setKundennummer(kundennummer);
-      k.store();
+      Konto k = null;
+      try
+      {
+        k = (Konto) service.createObject(Konto.class,kontoID);
+      }
+      catch (ObjectNotFoundException oe)
+      {
+        return i18n.tr("Das Konto mit der ID {0} wurde nicht gefunden",kontoID);
+      }
+      
+      Ueberweisung u = (Ueberweisung) service.createObject(Ueberweisung.class,null);
+      u.setKonto(k);
+      u.setGegenkontoNummer(kto);
+      u.setGegenkontoBLZ(blz);
+      u.setGegenkontoName(name);
+      u.setZweck(zweck);
+      u.setBetrag(betrag);
+      u.store();
       return null;
     }
     catch (ApplicationException ae)
@@ -108,8 +122,8 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
     }
     catch (Exception e)
     {
-      Logger.error("unable to create account",e);
-      return i18n.tr("Fehler beim Anlegen des Kontos: {0}", e.getMessage());
+      Logger.error("unable to create transfer",e);
+      return i18n.tr("Fehler beim Anlegen der Überweisung: {0}", e.getMessage());
     }
   }
 
@@ -119,18 +133,15 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
    */
   public String getName() throws RemoteException
   {
-    return "[xml-rpc] konto";
+    return "[xml-rpc] ueberweisung";
   }
 
 }
 
 
 /*********************************************************************
- * $Log: KontoServiceImpl.java,v $
- * Revision 1.2  2006/11/07 00:18:11  willuhn
+ * $Log: UeberweisungServiceImpl.java,v $
+ * Revision 1.1  2006/11/07 00:18:11  willuhn
  * *** empty log message ***
- *
- * Revision 1.1  2006/10/31 01:44:09  willuhn
- * @Ninitial checkin
  *
  **********************************************************************/

@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/KontoService.java,v $
- * $Revision: 1.1 $
- * $Date: 2006/10/31 01:44:09 $
+ * $Revision: 1.2 $
+ * $Date: 2006/11/07 00:18:11 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -28,23 +28,26 @@ public interface KontoService extends Service
    * @return Liste der Konten.
    * @throws RemoteException
    */
-  public String[] getList() throws RemoteException;
+  public String[] list() throws RemoteException;
   
   /**
    * Legt ein neues Konto an.
    * @param kontonummer
    * @param blz
-   * @param name
-   * @param inhaber
+   * @param name Name des Kontoinhabers.
+   * @param kundennummer
    * @return null wenn das Anlegen erfolgreich war, sonst den Fehlertext.
    * @throws RemoteException
    */
-  public String create(String kontonummer, String blz, String name, String inhaber) throws RemoteException;
+  public String create(String kontonummer, String blz, String name, String kundennummer) throws RemoteException;
 }
 
 
 /*********************************************************************
  * $Log: KontoService.java,v $
+ * Revision 1.2  2006/11/07 00:18:11  willuhn
+ * *** empty log message ***
+ *
  * Revision 1.1  2006/10/31 01:44:09  willuhn
  * @Ninitial checkin
  *
