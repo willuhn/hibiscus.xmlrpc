@@ -48,12 +48,7 @@
 		<property name="project.zipdir" 			  value="${project.release}/${define.pluginname}" />
 
 		<property name="src.dir" 					      value="src" />
-		<property name="icon.dir" 					    value="${src.dir}/img" />
 		<property name="lang.dir" 					    value="${src.dir}/lang" />
-		<property name="help.dir" 					    value="${src.dir}/help" />
-		<property name="doc.dir" 					      value="doc" />
-		<property name="lib.dir" 					      value="lib" />
-		<property name="sql.dir" 					      value="sql" />
 		<property name="class.dir" 					    value="${project.tmp}/bin" />
 
 
@@ -90,13 +85,6 @@
 			<classpath refid="compilepath" />
 		</rmic>
 
-		<copy todir="${class.dir}/help">
-			<fileset dir="${help.dir}" />
-		</copy>
-		<copy todir="${class.dir}/img">
-			<fileset dir="${icon.dir}" />
-		</copy>
-
 	</target>
 
 
@@ -128,11 +116,6 @@
 			<fileset dir="${class.dir}" />
 		</jar>
 
-		<mkdir dir="${project.zipdir}/lib" />
-		<copy todir="${project.zipdir}/lib">
-			<fileset dir="${lib.dir}" />
-		</copy>
-
     <copy file="plugin.xml" todir="${project.zipdir}" />
 		<copy file="${build.dir}/COPYING" todir="${project.zipdir}" />
 
@@ -156,11 +139,7 @@
 				<include name=".project" />
 				<include name=".classpath" />
         <include name="plugin.xml" />
-				<include name="${doc.dir}/**" />
-				<include name="${lib.dir}/**" />
 				<include name="${src.dir}/**" />
-				<include name="${sql.dir}/**" />
-				<include name="${doc.dir}/**" />
 				<include name="${build.dir}/**" />
 				<exclude name="${build.dir}/BUILD" />
 			</fileset>
