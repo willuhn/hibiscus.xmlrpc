@@ -1,6 +1,6 @@
 /**********************************************************************
- * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/UeberweisungService.java,v $
- * $Revision: 1.2 $
+ * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/LastschriftService.java,v $
+ * $Revision: 1.1 $
  * $Date: 2006/11/16 22:11:26 $
  * $Author: willuhn $
  * $Locker:  $
@@ -15,16 +15,16 @@ package de.willuhn.jameica.hbci.xmlrpc.rmi;
 
 
 /**
- * XML-RPC-Service zum Zugriff auf Ueberweisungen.
+ * XML-RPC-Service zum Zugriff auf Lastschriften.
  */
-public interface UeberweisungService extends TransferService
+public interface LastschriftService extends TransferService
 {
 }
 
 
 /*********************************************************************
- * $Log: UeberweisungService.java,v $
- * Revision 1.2  2006/11/16 22:11:26  willuhn
+ * $Log: LastschriftService.java,v $
+ * Revision 1.1  2006/11/16 22:11:26  willuhn
  * @N Added lastschrift support
  *
  * Revision 1.1  2006/11/07 00:18:11  willuhn

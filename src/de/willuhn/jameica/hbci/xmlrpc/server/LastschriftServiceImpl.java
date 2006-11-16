@@ -1,6 +1,6 @@
 /**********************************************************************
- * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UeberweisungServiceImpl.java,v $
- * $Revision: 1.2 $
+ * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/LastschriftServiceImpl.java,v $
+ * $Revision: 1.1 $
  * $Date: 2006/11/16 22:11:26 $
  * $Author: willuhn $
  * $Locker:  $
@@ -15,21 +15,21 @@ package de.willuhn.jameica.hbci.xmlrpc.server;
 
 import java.rmi.RemoteException;
 
-import de.willuhn.jameica.hbci.rmi.Ueberweisung;
-import de.willuhn.jameica.hbci.xmlrpc.rmi.UeberweisungService;
+import de.willuhn.jameica.hbci.rmi.Lastschrift;
+import de.willuhn.jameica.hbci.xmlrpc.rmi.LastschriftService;
 
 /**
- * Implementierung des Ueberweisung-Service.
+ * Implementierung des Lastschrift-Service.
  */
-public class UeberweisungServiceImpl extends AbstractTransferServiceImpl implements
-    UeberweisungService
+public class LastschriftServiceImpl extends AbstractTransferServiceImpl implements
+    LastschriftService
 {
 
   /**
    * ct.
    * @throws RemoteException
    */
-  public UeberweisungServiceImpl() throws RemoteException
+  public LastschriftServiceImpl() throws RemoteException
   {
     super();
   }
@@ -40,7 +40,7 @@ public class UeberweisungServiceImpl extends AbstractTransferServiceImpl impleme
    */
   public String getName() throws RemoteException
   {
-    return "[xml-rpc] ueberweisung";
+    return "[xml-rpc] lastschrift";
   }
 
 
@@ -49,18 +49,15 @@ public class UeberweisungServiceImpl extends AbstractTransferServiceImpl impleme
    */
   Class getTransferType()
   {
-    return Ueberweisung.class;
+    return Lastschrift.class;
   }
 
 }
 
 
 /*********************************************************************
- * $Log: UeberweisungServiceImpl.java,v $
- * Revision 1.2  2006/11/16 22:11:26  willuhn
+ * $Log: LastschriftServiceImpl.java,v $
+ * Revision 1.1  2006/11/16 22:11:26  willuhn
  * @N Added lastschrift support
- *
- * Revision 1.1  2006/11/07 00:18:11  willuhn
- * *** empty log message ***
  *
  **********************************************************************/

@@ -15,6 +15,7 @@
   <services>
     <service name="konto"         depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService" />
     <service name="ueberweisung"  depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.UeberweisungService" />
+    <service name="lastschrift"   depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.LastschriftService" />
   </services>
 </plugin>
 
