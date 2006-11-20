@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/Attic/AbstractTransferServiceImpl.java,v $
- * $Revision: 1.1 $
- * $Date: 2006/11/16 22:11:26 $
+ * $Revision: 1.2 $
+ * $Date: 2006/11/20 22:41:10 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -107,7 +107,7 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
         return i18n.tr("Das Konto mit der ID {0} wurde nicht gefunden",kontoID);
       }
       
-      Transfer t = (Transfer) service.createObject(Transfer.class,null);
+      Transfer t = (Transfer) service.createObject(getTransferType(),null);
       t.setKonto(k);
       t.setGegenkontoNummer(kto);
       t.setGegenkontoBLZ(blz);
@@ -136,6 +136,9 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
 
 /*********************************************************************
  * $Log: AbstractTransferServiceImpl.java,v $
+ * Revision 1.2  2006/11/20 22:41:10  willuhn
+ * @B wrong transfer type
+ *
  * Revision 1.1  2006/11/16 22:11:26  willuhn
  * @N Added lastschrift support
  *
