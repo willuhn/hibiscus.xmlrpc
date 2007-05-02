@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/Attic/AbstractTransferServiceImpl.java,v $
- * $Revision: 1.2 $
- * $Date: 2006/11/20 22:41:10 $
+ * $Revision: 1.3 $
+ * $Date: 2007/05/02 09:36:01 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -19,8 +19,8 @@ import de.willuhn.datasource.rmi.DBIterator;
 import de.willuhn.datasource.rmi.DBService;
 import de.willuhn.datasource.rmi.ObjectNotFoundException;
 import de.willuhn.jameica.hbci.HBCI;
+import de.willuhn.jameica.hbci.rmi.HibiscusTransfer;
 import de.willuhn.jameica.hbci.rmi.Konto;
-import de.willuhn.jameica.hbci.rmi.Transfer;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService;
 import de.willuhn.jameica.system.Application;
 import de.willuhn.logging.Logger;
@@ -60,7 +60,7 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
       int count = 0;
       while (i.hasNext())
       {
-        Transfer t = (Transfer) i.next();
+        HibiscusTransfer t = (HibiscusTransfer) i.next();
         Konto k = t.getKonto();
         StringBuffer sb = new StringBuffer();
         sb.append(k.getID());
@@ -107,7 +107,7 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
         return i18n.tr("Das Konto mit der ID {0} wurde nicht gefunden",kontoID);
       }
       
-      Transfer t = (Transfer) service.createObject(getTransferType(),null);
+      HibiscusTransfer t = (HibiscusTransfer) service.createObject(getTransferType(),null);
       t.setKonto(k);
       t.setGegenkontoNummer(kto);
       t.setGegenkontoBLZ(blz);
@@ -136,6 +136,9 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
 
 /*********************************************************************
  * $Log: AbstractTransferServiceImpl.java,v $
+ * Revision 1.3  2007/05/02 09:36:01  willuhn
+ * @C API changes
+ *
  * Revision 1.2  2006/11/20 22:41:10  willuhn
  * @B wrong transfer type
  *
