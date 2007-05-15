@@ -7,6 +7,10 @@
   <homepage>http://www.willuhn.de/projects/hibiscus</homepage>
   <license>GPL - http://www.gnu.org/copyleft/gpl.html</license>
 
+  <requires>
+    <import plugin="hibiscus"/>
+  </requires>
+
   <classfinder>
     <include>hibiscus\.xmlrpc\.jar</include>
     <include>.*\.class</include>
