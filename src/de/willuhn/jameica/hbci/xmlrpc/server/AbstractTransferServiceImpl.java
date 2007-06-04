@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/Attic/AbstractTransferServiceImpl.java,v $
- * $Revision: 1.3 $
- * $Date: 2007/05/02 09:36:01 $
+ * $Revision: 1.4 $
+ * $Date: 2007/06/04 12:49:05 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -46,7 +46,7 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
    * @return Objekt-Typ.
    */
   abstract Class getTransferType();
-
+  
   /**
    * @see de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService#list()
    */
@@ -90,36 +90,25 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
   }
 
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, double)
+   * Erzeugt das Objekt.
+   * @param kontoID ID des Kontos.
+   * @param kto Kontonummer Gegenkonto.
+   * @param blz BLZ Gegenkonto.
+   * @param name Name Gegenkontoinhaber.
+   * @param zweck Verwendungszweck.
+   * @param betrag Betrag.
+   * @return der erzeugte Transfer.
+   * @throws RemoteException
+   * @throws ApplicationException
    */
-  public String create(String kontoID, String kto, String blz, String name, String zweck, double betrag) throws RemoteException
+  protected HibiscusTransfer createObject(String kontoID, String kto, String blz, String name, String zweck, double betrag)
+    throws RemoteException, ApplicationException
   {
+    DBService service = null;
+    
     try
     {
-      DBService service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
-      Konto k = null;
-      try
-      {
-        k = (Konto) service.createObject(Konto.class,kontoID);
-      }
-      catch (ObjectNotFoundException oe)
-      {
-        return i18n.tr("Das Konto mit der ID {0} wurde nicht gefunden",kontoID);
-      }
-      
-      HibiscusTransfer t = (HibiscusTransfer) service.createObject(getTransferType(),null);
-      t.setKonto(k);
-      t.setGegenkontoNummer(kto);
-      t.setGegenkontoBLZ(blz);
-      t.setGegenkontoName(name);
-      t.setZweck(zweck);
-      t.setBetrag(betrag);
-      t.store();
-      return null;
-    }
-    catch (ApplicationException ae)
-    {
-      return ae.getLocalizedMessage();
+      service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
     }
     catch (RemoteException re)
     {
@@ -127,15 +116,37 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
     }
     catch (Exception e)
     {
-      Logger.error("unable to create transfer",e);
-      return i18n.tr("Fehler beim Anlegen des Auftrages: {0}", e.getMessage());
+      throw new RemoteException("unable to load service",e);
     }
+
+    Konto k = null;
+    try
+    {
+      k = (Konto) service.createObject(Konto.class,kontoID);
+    }
+    catch (ObjectNotFoundException oe)
+    {
+      throw new ApplicationException(i18n.tr("Das Konto mit der ID {0} wurde nicht gefunden",kontoID));
+    }
+    
+    HibiscusTransfer t = (HibiscusTransfer) service.createObject(getTransferType(),null);
+    t.setKonto(k);
+    t.setGegenkontoNummer(kto);
+    t.setGegenkontoBLZ(blz);
+    t.setGegenkontoName(name);
+    t.setZweck(zweck);
+    t.setBetrag(betrag);
+    t.store();
+    return t;
   }
 }
 
 
 /*********************************************************************
  * $Log: AbstractTransferServiceImpl.java,v $
+ * Revision 1.4  2007/06/04 12:49:05  willuhn
+ * @N Angabe des Typs bei Lastschriften
+ *
  * Revision 1.3  2007/05/02 09:36:01  willuhn
  * @C API changes
  *

@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/LastschriftServiceImpl.java,v $
- * $Revision: 1.1 $
- * $Date: 2006/11/16 22:11:26 $
+ * $Revision: 1.2 $
+ * $Date: 2007/06/04 12:49:05 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -17,6 +17,8 @@ import java.rmi.RemoteException;
 
 import de.willuhn.jameica.hbci.rmi.Lastschrift;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.LastschriftService;
+import de.willuhn.logging.Logger;
+import de.willuhn.util.ApplicationException;
 
 /**
  * Implementierung des Lastschrift-Service.
@@ -52,11 +54,45 @@ public class LastschriftServiceImpl extends AbstractTransferServiceImpl implemen
     return Lastschrift.class;
   }
 
+  /**
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.LastschriftService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, double, java.lang.String)
+   */
+  public String create(String kontoID, String kto, String blz, String name, String zweck, double betrag, String type) throws RemoteException
+  {
+    try
+    {
+      Lastschrift l = (Lastschrift) createObject(kontoID,kto,blz,name,zweck,betrag);
+      l.setTyp(type);
+      l.store();
+      return null;
+    }
+    catch (ApplicationException ae)
+    {
+      return ae.getMessage();
+    }
+    catch (RemoteException re)
+    {
+      Logger.error("unable to create transfer",re);
+      return i18n.tr("Fehler beim Erstellen der Lastschrift: {0}",re.getMessage());
+    }
+  }
+
+  /**
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, double)
+   */
+  public String create(String kontoID, String kto, String blz, String name, String zweck, double betrag) throws RemoteException
+  {
+    return create(kontoID,kto,blz,name,zweck,betrag,"05");
+  }
+
 }
 
 
 /*********************************************************************
  * $Log: LastschriftServiceImpl.java,v $
+ * Revision 1.2  2007/06/04 12:49:05  willuhn
+ * @N Angabe des Typs bei Lastschriften
+ *
  * Revision 1.1  2006/11/16 22:11:26  willuhn
  * @N Added lastschrift support
  *
