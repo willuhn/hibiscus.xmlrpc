@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/Attic/AbstractTransferServiceImpl.java,v $
- * $Revision: 1.4 $
- * $Date: 2007/06/04 12:49:05 $
+ * $Revision: 1.5 $
+ * $Date: 2007/06/04 16:39:19 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -19,6 +19,8 @@ import de.willuhn.datasource.rmi.DBIterator;
 import de.willuhn.datasource.rmi.DBService;
 import de.willuhn.datasource.rmi.ObjectNotFoundException;
 import de.willuhn.jameica.hbci.HBCI;
+import de.willuhn.jameica.hbci.HBCIProperties;
+import de.willuhn.jameica.hbci.Settings;
 import de.willuhn.jameica.hbci.rmi.HibiscusTransfer;
 import de.willuhn.jameica.hbci.rmi.Konto;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService;
@@ -105,6 +107,14 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
     throws RemoteException, ApplicationException
   {
     DBService service = null;
+
+    // Wird sonst nur in der GUI geprueft. Da ich es nicht direkt in
+    // den Hibiscus-Fachobjekten einbauen will (dort koennte es Fehler
+    // beim Import von DTAUS/CSV-Dateien verursachen), machen wir den
+    // Check hier nochmal.
+    if (betrag > Settings.getUeberweisungLimit())
+      throw new ApplicationException(i18n.tr("Auftragslimit überschritten: {0} ", 
+          HBCI.DECIMALFORMAT.format(Settings.getUeberweisungLimit()) + " " + HBCIProperties.CURRENCY_DEFAULT_DE));
     
     try
     {
@@ -144,6 +154,9 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
 
 /*********************************************************************
  * $Log: AbstractTransferServiceImpl.java,v $
+ * Revision 1.5  2007/06/04 16:39:19  willuhn
+ * @N Pruefung des Auftragslimits
+ *
  * Revision 1.4  2007/06/04 12:49:05  willuhn
  * @N Angabe des Typs bei Lastschriften
  *
