@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/KontoServiceImpl.java,v $
- * $Revision: 1.2 $
- * $Date: 2006/11/07 00:18:11 $
+ * $Revision: 1.3 $
+ * $Date: 2007/07/06 13:21:18 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -14,6 +14,7 @@
 package de.willuhn.jameica.hbci.xmlrpc.server;
 
 import java.rmi.RemoteException;
+import java.util.Date;
 
 import de.willuhn.datasource.rmi.DBIterator;
 import de.willuhn.datasource.rmi.DBService;
@@ -66,6 +67,13 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
         sb.append(k.getKundennummer());
         sb.append(":");
         sb.append(k.getName());
+        
+        double saldo = k.getSaldo();
+        Date date    = k.getSaldoDatum();
+        sb.append(":");
+        sb.append(date != null ? (""+saldo) : "");
+        sb.append(":");
+        sb.append(date != null ? HBCI.DATEFORMAT.format(date) : "");
         list[count++] = sb.toString();
       }
       return list;
@@ -127,6 +135,9 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
 
 /*********************************************************************
  * $Log: KontoServiceImpl.java,v $
+ * Revision 1.3  2007/07/06 13:21:18  willuhn
+ * @N Saldo mit zurueckliefern
+ *
  * Revision 1.2  2006/11/07 00:18:11  willuhn
  * *** empty log message ***
  *
