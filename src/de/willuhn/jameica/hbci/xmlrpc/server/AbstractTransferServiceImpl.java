@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/Attic/AbstractTransferServiceImpl.java,v $
- * $Revision: 1.5 $
- * $Date: 2007/06/04 16:39:19 $
+ * $Revision: 1.6 $
+ * $Date: 2007/07/24 14:49:57 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -75,6 +75,8 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
         sb.append(":");
         sb.append(t.getZweck());
         sb.append(":");
+        sb.append(t.getZweck2());
+        sb.append(":");
         sb.append(HBCI.DECIMALFORMAT.format(t.getBetrag()));
         list[count++] = sb.toString();
       }
@@ -91,6 +93,12 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
     return null;
   }
 
+  protected HibiscusTransfer createObject(String kontoID, String kto, String blz, String name, String zweck, double betrag)
+    throws RemoteException, ApplicationException
+  {
+    return createObject(kontoID,kto,blz,name,zweck,null,betrag);
+  }
+
   /**
    * Erzeugt das Objekt.
    * @param kontoID ID des Kontos.
@@ -103,7 +111,7 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
    * @throws RemoteException
    * @throws ApplicationException
    */
-  protected HibiscusTransfer createObject(String kontoID, String kto, String blz, String name, String zweck, double betrag)
+  protected HibiscusTransfer createObject(String kontoID, String kto, String blz, String name, String zweck, String zweck2, double betrag)
     throws RemoteException, ApplicationException
   {
     DBService service = null;
@@ -145,6 +153,7 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
     t.setGegenkontoBLZ(blz);
     t.setGegenkontoName(name);
     t.setZweck(zweck);
+    t.setZweck2(zweck2);
     t.setBetrag(betrag);
     t.store();
     return t;
@@ -154,6 +163,9 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
 
 /*********************************************************************
  * $Log: AbstractTransferServiceImpl.java,v $
+ * Revision 1.6  2007/07/24 14:49:57  willuhn
+ * @N Neuer Paramater "zweck2"
+ *
  * Revision 1.5  2007/06/04 16:39:19  willuhn
  * @N Pruefung des Auftragslimits
  *

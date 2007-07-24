@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UeberweisungServiceImpl.java,v $
- * $Revision: 1.3 $
- * $Date: 2007/06/04 12:49:05 $
+ * $Revision: 1.4 $
+ * $Date: 2007/07/24 14:49:57 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -59,9 +59,17 @@ public class UeberweisungServiceImpl extends AbstractTransferServiceImpl impleme
    */
   public String create(String kontoID, String kto, String blz, String name, String zweck, double betrag) throws RemoteException
   {
+    return create(kontoID,kto,blz,name,zweck,null,betrag);
+  }
+
+  /**
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, double)
+   */
+  public String create(String kontoID, String kto, String blz, String name, String zweck, String zweck2, double betrag) throws RemoteException
+  {
     try
     {
-      createObject(kontoID,kto,blz,name,zweck,betrag);
+      createObject(kontoID,kto,blz,name,zweck,zweck2, betrag);
       return null;
     }
     catch (ApplicationException ae)
@@ -79,6 +87,9 @@ public class UeberweisungServiceImpl extends AbstractTransferServiceImpl impleme
 
 /*********************************************************************
  * $Log: UeberweisungServiceImpl.java,v $
+ * Revision 1.4  2007/07/24 14:49:57  willuhn
+ * @N Neuer Paramater "zweck2"
+ *
  * Revision 1.3  2007/06/04 12:49:05  willuhn
  * @N Angabe des Typs bei Lastschriften
  *
