@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/Attic/AbstractTransferServiceImpl.java,v $
- * $Revision: 1.6 $
- * $Date: 2007/07/24 14:49:57 $
+ * $Revision: 1.7 $
+ * $Date: 2007/09/10 16:09:32 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -14,6 +14,7 @@
 package de.willuhn.jameica.hbci.xmlrpc.server;
 
 import java.rmi.RemoteException;
+import java.util.Date;
 
 import de.willuhn.datasource.rmi.DBIterator;
 import de.willuhn.datasource.rmi.DBService;
@@ -23,6 +24,7 @@ import de.willuhn.jameica.hbci.HBCIProperties;
 import de.willuhn.jameica.hbci.Settings;
 import de.willuhn.jameica.hbci.rmi.HibiscusTransfer;
 import de.willuhn.jameica.hbci.rmi.Konto;
+import de.willuhn.jameica.hbci.rmi.Terminable;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService;
 import de.willuhn.jameica.system.Application;
 import de.willuhn.logging.Logger;
@@ -93,12 +95,6 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
     return null;
   }
 
-  protected HibiscusTransfer createObject(String kontoID, String kto, String blz, String name, String zweck, double betrag)
-    throws RemoteException, ApplicationException
-  {
-    return createObject(kontoID,kto,blz,name,zweck,null,betrag);
-  }
-
   /**
    * Erzeugt das Objekt.
    * @param kontoID ID des Kontos.
@@ -107,11 +103,12 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
    * @param name Name Gegenkontoinhaber.
    * @param zweck Verwendungszweck.
    * @param betrag Betrag.
+   * @param termin der Termin im Format TT.MM.JJJJ.
    * @return der erzeugte Transfer.
    * @throws RemoteException
    * @throws ApplicationException
    */
-  protected HibiscusTransfer createObject(String kontoID, String kto, String blz, String name, String zweck, String zweck2, double betrag)
+  protected HibiscusTransfer createObject(String kontoID, String kto, String blz, String name, String zweck, String zweck2, double betrag, String termin)
     throws RemoteException, ApplicationException
   {
     DBService service = null;
@@ -123,7 +120,19 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
     if (betrag > Settings.getUeberweisungLimit())
       throw new ApplicationException(i18n.tr("Auftragslimit überschritten: {0} ", 
           HBCI.DECIMALFORMAT.format(Settings.getUeberweisungLimit()) + " " + HBCIProperties.CURRENCY_DEFAULT_DE));
-    
+
+    Date date = null;
+    if (termin != null && termin.length() > 0)
+    {
+      try
+      {
+        date = HBCI.DATEFORMAT.parse(termin);
+      }
+      catch (Exception e)
+      {
+        throw new ApplicationException(i18n.tr("Angegebenes Datum ungültig: {0}",termin));
+      }
+    }
     try
     {
       service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
@@ -155,6 +164,13 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
     t.setZweck(zweck);
     t.setZweck2(zweck2);
     t.setBetrag(betrag);
+    
+    if (date != null)
+    {
+      if (!(t instanceof Terminable))
+        throw new ApplicationException(i18n.tr("Auftrag unterstützt keinen Ziel-Termin"));
+      ((Terminable)t).setTermin(date);
+    }
     t.store();
     return t;
   }
@@ -163,6 +179,9 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
 
 /*********************************************************************
  * $Log: AbstractTransferServiceImpl.java,v $
+ * Revision 1.7  2007/09/10 16:09:32  willuhn
+ * @N Termin in XML-RPC Connector fuer Auftraege
+ *
  * Revision 1.6  2007/07/24 14:49:57  willuhn
  * @N Neuer Paramater "zweck2"
  *

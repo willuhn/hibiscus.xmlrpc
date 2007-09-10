@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UeberweisungServiceImpl.java,v $
- * $Revision: 1.4 $
- * $Date: 2007/07/24 14:49:57 $
+ * $Revision: 1.5 $
+ * $Date: 2007/09/10 16:09:32 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -55,21 +55,13 @@ public class UeberweisungServiceImpl extends AbstractTransferServiceImpl impleme
   }
 
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, double)
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, double, java.lang.String)
    */
-  public String create(String kontoID, String kto, String blz, String name, String zweck, double betrag) throws RemoteException
-  {
-    return create(kontoID,kto,blz,name,zweck,null,betrag);
-  }
-
-  /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, double)
-   */
-  public String create(String kontoID, String kto, String blz, String name, String zweck, String zweck2, double betrag) throws RemoteException
+  public String create(String kontoID, String kto, String blz, String name, String zweck, String zweck2, double betrag, String termin) throws RemoteException
   {
     try
     {
-      createObject(kontoID,kto,blz,name,zweck,zweck2, betrag);
+      createObject(kontoID,kto,blz,name,zweck,zweck2, betrag,termin);
       return null;
     }
     catch (ApplicationException ae)
@@ -87,6 +79,9 @@ public class UeberweisungServiceImpl extends AbstractTransferServiceImpl impleme
 
 /*********************************************************************
  * $Log: UeberweisungServiceImpl.java,v $
+ * Revision 1.5  2007/09/10 16:09:32  willuhn
+ * @N Termin in XML-RPC Connector fuer Auftraege
+ *
  * Revision 1.4  2007/07/24 14:49:57  willuhn
  * @N Neuer Paramater "zweck2"
  *
