@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/Attic/AbstractTransferServiceImpl.java,v $
- * $Revision: 1.7 $
- * $Date: 2007/09/10 16:09:32 $
+ * $Revision: 1.8 $
+ * $Date: 2007/09/11 15:34:06 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -162,7 +162,10 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
     t.setGegenkontoBLZ(blz);
     t.setGegenkontoName(name);
     t.setZweck(zweck);
-    t.setZweck2(zweck2);
+    
+    if (zweck2 != null && zweck2.length() > 0)
+      t.setZweck2(zweck2);
+
     t.setBetrag(betrag);
     
     if (date != null)
@@ -179,6 +182,9 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
 
 /*********************************************************************
  * $Log: AbstractTransferServiceImpl.java,v $
+ * Revision 1.8  2007/09/11 15:34:06  willuhn
+ * *** empty log message ***
+ *
  * Revision 1.7  2007/09/10 16:09:32  willuhn
  * @N Termin in XML-RPC Connector fuer Auftraege
  *
