@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
+<!--
+ $Revision: 1.5 $
+ $Date: 2007/10/15 22:44:01 $
+ $Author: willuhn $
+ 
+ Copyright (c) by willuhn software & services
+ All rights reserved
+-->
+
 <project basedir=".." default="all" name="All">
 
 	<target name="init" description="inits the build">
@@ -8,6 +17,8 @@
 
 		<property name="build.dir" value="build" />
 
+		<loadproperties srcFile="${build.dir}/build.properties"/>
+		
 		<!-- read build number -->
 		<buildnumber file="${build.dir}/BUILD" />
 
@@ -34,12 +45,10 @@
 		<echo message="BUILD  : ${build.number}" />
 		<echo message="JAVA   : ${java.version}" />
 
-		<property name="define.pluginname" 			value="hibiscus.xmlrpc" />
 		<property name="define.jarfilename" 		value="${define.pluginname}.jar" />
 		<property name="define.zipfilename" 		value="${define.pluginname}.zip" />
 		<property name="define.srcfilename" 		value="${define.pluginname}.src.zip" />
 		<property name="define.javadocfilename" value="${define.pluginname}.javadoc.zip" />
-		<property name="define.package" 			  value="de.willuhn.jameica" />
 
 		<property name="project.nightly" 			  value="releases/nightly" />
 		<property name="project.release" 			  value="releases/${appversion}-${build.number}" />
@@ -49,17 +58,16 @@
 
 		<property name="src.dir" 					      value="src" />
 		<property name="lang.dir" 					    value="${src.dir}/lang" />
+		<property name="lib.dir" 					      value="lib" />
 		<property name="class.dir" 					    value="${project.tmp}/bin" />
 
+		<available file="${lib.dir}" type="dir" property="havelib" />
 
 		<path id="compilepath">
-			<pathelement location="../jameica/lib/swt/linux/swt.jar" />
-			<pathelement location="../jameica/bin/" />
-			<pathelement location="../jameica/releases/jameica-lib.jar" />
-			<pathelement location="../jameica/lib/de_willuhn_ds/de_willuhn_ds.jar" />
-			<pathelement location="../jameica/lib/de_willuhn_util/de_willuhn_util.jar" />
-      <pathelement location="../hibiscus/releases/hibiscus-lib.jar" />
-      <pathelement location="../hibiscus/bin/" />
+			<pathelement path="${define.compilepath}" />
+      <fileset dir="." >
+        <include name="${lib.dir}/**/*.jar" if="havelib"/>
+      </fileset>
 		</path>
 
 	</target>
@@ -95,6 +103,13 @@
 
 	</target>
 
+	<!-- Libs nur dann hinzufuegen, wenn sie existieren -->
+	<target name="addlib" if="havelib">
+		<mkdir dir="${project.zipdir}/lib" />
+		<copy todir="${project.zipdir}/lib">
+			<fileset dir="${lib.dir}" />
+		</copy>
+	</target>
 
 	<target depends="compile" name="jar" description="generates the jar file">
 
@@ -114,10 +129,12 @@
 			<fileset dir="${class.dir}" />
 		</jar>
 
+		<antcall target="addlib"/>
+			
     <copy file="plugin.xml" todir="${project.zipdir}" />
 		<copy file="${build.dir}/COPYING" todir="${project.zipdir}" />
 
-		<!-- Jetzt muessen wir noch das ZIP-File erzeugen und signieren -->
+		<!-- Jetzt muessen wir noch das ZIP-File erzeugen -->
 		<zip destfile="${project.release}/${define.zipfilename}">
 			<fileset dir="${project.release}">
 				<include name="${define.pluginname}" />
@@ -137,6 +154,7 @@
 				<include name=".project" />
 				<include name=".classpath" />
         <include name="plugin.xml" />
+				<include name="${lib.dir}/**" />
 				<include name="${src.dir}/**" />
 				<include name="${build.dir}/**" />
 				<exclude name="${build.dir}/BUILD" />
@@ -155,7 +173,7 @@
 
 		<mkdir dir="${project.javadoc}" />
 
-		<javadoc destdir="${project.javadoc}" packagenames="${define.package}.*">
+		<javadoc destdir="${project.javadoc}" packagenames="${define.javadoc.package}.*">
 			<classpath refid="compilepath" />
 			<sourcepath>
 				<pathelement location="${src.dir}" />
@@ -192,7 +210,7 @@
 
 	<target depends="init,compile,cvstag,jar,javadoc,src,sign,clean" description="build an official release" name="all" />
 
-	<target depends="init,compile,jar,src,clean" description="build inofficial release" name="fast" />
+	<target depends="init,compile,jar,clean" description="build inofficial release" name="fast" />
 
 	<target depends="init,cvs,compile,jar,javadoc,src" description="build nightly build" name="nightly">
 		<mkdir dir="${project.nightly}" />
