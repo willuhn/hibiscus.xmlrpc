@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
- $Revision: 1.5 $
- $Date: 2007/10/15 22:44:01 $
+ $Revision: 1.6 $
+ $Date: 2007/10/15 22:55:26 $
  $Author: willuhn $
  
  Copyright (c) by willuhn software & services
@@ -59,9 +59,11 @@
 		<property name="src.dir" 					      value="src" />
 		<property name="lang.dir" 					    value="${src.dir}/lang" />
 		<property name="lib.dir" 					      value="lib" />
+		<property name="webapps.dir" 			      value="webapps" />
 		<property name="class.dir" 					    value="${project.tmp}/bin" />
 
-		<available file="${lib.dir}" type="dir" property="havelib" />
+		<available file="${lib.dir}"     type="dir" property="havelib" />
+		<available file="${webapps.dir}" type="dir" property="havewebapps" />
 
 		<path id="compilepath">
 			<pathelement path="${define.compilepath}" />
@@ -110,6 +112,12 @@
 			<fileset dir="${lib.dir}" />
 		</copy>
 	</target>
+	<target name="addwebapps" if="havewebapps">
+		<mkdir dir="${project.zipdir}/webapps" />
+		<copy todir="${project.zipdir}/webapps">
+			<fileset dir="${webapps.dir}" />
+		</copy>
+	</target>
 
 	<target depends="compile" name="jar" description="generates the jar file">
 
@@ -130,6 +138,7 @@
 		</jar>
 
 		<antcall target="addlib"/>
+		<antcall target="addwebapps"/>
 			
     <copy file="plugin.xml" todir="${project.zipdir}" />
 		<copy file="${build.dir}/COPYING" todir="${project.zipdir}" />
