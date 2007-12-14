@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/Plugin.java,v $
- * $Revision: 1.1 $
- * $Date: 2006/10/31 01:44:10 $
+ * $Revision: 1.2 $
+ * $Date: 2007/12/14 14:03:14 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -13,10 +13,7 @@
 
 package de.willuhn.jameica.hbci.xmlrpc;
 
-import java.io.File;
-
 import de.willuhn.jameica.plugin.AbstractPlugin;
-import de.willuhn.util.ApplicationException;
 
 /**
  * hibiscus.xmlrpc Plugin.
@@ -26,46 +23,19 @@ public class Plugin extends AbstractPlugin
 
   /**
    * ct.
-   * @param file
    */
-  public Plugin(File file)
+  public Plugin()
   {
-    super(file);
+    super();
   }
-
-  /**
-   * @see de.willuhn.jameica.plugin.AbstractPlugin#init()
-   */
-  public void init() throws ApplicationException
-  {
-  }
-
-  /**
-   * @see de.willuhn.jameica.plugin.AbstractPlugin#install()
-   */
-  public void install() throws ApplicationException
-  {
-  }
-
-  /**
-   * @see de.willuhn.jameica.plugin.AbstractPlugin#shutDown()
-   */
-  public void shutDown()
-  {
-  }
-
-  /**
-   * @see de.willuhn.jameica.plugin.AbstractPlugin#update(double)
-   */
-  public void update(double oldVersion) throws ApplicationException
-  {
-  }
-
 }
 
 
 /*********************************************************************
  * $Log: Plugin.java,v $
+ * Revision 1.2  2007/12/14 14:03:14  willuhn
+ * *** empty log message ***
+ *
  * Revision 1.1  2006/10/31 01:44:10  willuhn
  * @Ninitial checkin
  *
