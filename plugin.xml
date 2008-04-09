@@ -8,6 +8,7 @@
   <license>GPL - http://www.gnu.org/copyleft/gpl.html</license>
 
   <requires>
+    <import plugin="jameica.xmlrpc"/>
     <import plugin="hibiscus"/>
   </requires>
 
