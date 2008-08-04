@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/LastschriftServiceImpl.java,v $
- * $Revision: 1.4 $
- * $Date: 2007/09/10 16:09:32 $
+ * $Revision: 1.5 $
+ * $Date: 2008/08/04 08:36:24 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -62,7 +62,7 @@ public class LastschriftServiceImpl extends AbstractTransferServiceImpl implemen
     try
     {
       Lastschrift l = (Lastschrift) createObject(kontoID,kto,blz,name,zweck,zweck2,betrag,termin);
-      l.setTyp(type);
+      l.setTextSchluessel(type);
       l.store();
       return null;
     }
@@ -90,6 +90,9 @@ public class LastschriftServiceImpl extends AbstractTransferServiceImpl implemen
 
 /*********************************************************************
  * $Log: LastschriftServiceImpl.java,v $
+ * Revision 1.5  2008/08/04 08:36:24  willuhn
+ * @B Compile-Fix
+ *
  * Revision 1.4  2007/09/10 16:09:32  willuhn
  * @N Termin in XML-RPC Connector fuer Auftraege
  *
