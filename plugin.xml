@@ -7,9 +7,9 @@
   <homepage>http://www.willuhn.de/projects/hibiscus</homepage>
   <license>GPL - http://www.gnu.org/copyleft/gpl.html</license>
 
-  <requires>
-    <import plugin="jameica.xmlrpc"/>
-    <import plugin="hibiscus"/>
+  <requires jameica="1.7+">
+    <import plugin="jameica.xmlrpc" version="1.1+"/>
+    <import plugin="hibiscus" version="1.9+"/>
   </requires>
 
   <classfinder>
