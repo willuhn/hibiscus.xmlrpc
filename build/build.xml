@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
- $Revision: 1.8 $
- $Date: 2008/12/09 14:00:18 $
+ $Revision: 1.9 $
+ $Date: 2008/12/09 14:05:38 $
  $Author: willuhn $
  
  Copyright (c) by willuhn software & services
@@ -87,12 +87,6 @@
 		<javac debug="true" debuglevel="lines,vars,source" source="1.5" target="1.5" encoding="${define.encoding}" deprecation="true" destdir="${class.dir}" srcdir="${src.dir}">
 			<classpath refid="compilepath" />
 		</javac>
-
-		<rmic verify="true" base="${class.dir}">
-			<include name="**/*.class" />
-			<classpath refid="compilepath" />
-		</rmic>
-
 	</target>
 
 
