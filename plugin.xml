@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<plugin name="hibiscus.xmlrpc" version="1.0" class="de.willuhn.jameica.hbci.xmlrpc.Plugin">
+<plugin name="hibiscus.xmlrpc" version="1.0" class="de.willuhn.jameica.hbci.xmlrpc.Plugin"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="http://www.willuhn.de/schema/jameica-plugin-1.0.xsd">
 
   <description>Meta-Plugin, welches Hibiscus um XML-RPC-Funktionalitaet erweitert</description>
   <url></url>
@@ -9,7 +11,7 @@
 
   <requires jameica="1.7+">
     <import plugin="jameica.xmlrpc" version="1.1+"/>
-    <import plugin="hibiscus" version="1.9+"/>
+    <import plugin="hibiscus"       version="1.9+"/>
   </requires>
 
   <classfinder>
@@ -18,10 +20,11 @@
   </classfinder>
 
   <services>
-    <service name="konto"         depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService" />
-    <service name="umsatz"        depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.UmsatzService" />
-    <service name="ueberweisung"  depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.UeberweisungService" />
-    <service name="lastschrift"   depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.LastschriftService" />
+    <service name="konto"             depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService" />
+    <service name="umsatz"            depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.UmsatzService" />
+    <service name="ueberweisung"      depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.UeberweisungService" />
+    <service name="lastschrift"       depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.LastschriftService" />
+    <service name="sammellastschrift" depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.SammelLastschriftService" />
   </services>
 </plugin>
 
