@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractServiceImpl.java,v $
- * $Revision: 1.1 $
- * $Date: 2006/11/07 00:18:11 $
+ * $Revision: 1.2 $
+ * $Date: 2008/12/12 01:26:41 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -15,6 +15,9 @@ package de.willuhn.jameica.hbci.xmlrpc.server;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.willuhn.datasource.Service;
 import de.willuhn.jameica.hbci.xmlrpc.Plugin;
@@ -29,7 +32,31 @@ public abstract class AbstractServiceImpl extends UnicastRemoteObject implements
 {
   private boolean started = false;
   protected I18N i18n = null;
+  private final static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-mm-dd");
 
+  /**
+   * Wandelt ein Datum vom Format YYYY-MM-DD in einen
+   * java.util.Date-Objekt um
+   * @param date im Format YYYY-MM-DD
+   * @return das Datum.
+   * @throws ParseException
+   */
+  static Date toDate(String date) throws ParseException
+  {
+    return dateFormatter.parse(date);
+  }
+  
+  /**
+   * Wandelt ein Datum in das Format 'YYYY-MM-DD' um
+   * @param date das Datum.
+   * @return der formatierte String.
+   * @throws ParseException
+   */
+  static String toString(Date date) throws ParseException
+  {
+    return dateFormatter.format(date);
+  }
+  
   /**
    * ct.
    * @throws RemoteException
@@ -81,12 +108,15 @@ public abstract class AbstractServiceImpl extends UnicastRemoteObject implements
     }
     this.started = false;
   }
-
+  
 }
 
 
 /*********************************************************************
  * $Log: AbstractServiceImpl.java,v $
+ * Revision 1.2  2008/12/12 01:26:41  willuhn
+ * @N Patch von Julian
+ *
  * Revision 1.1  2006/11/07 00:18:11  willuhn
  * *** empty log message ***
  *
