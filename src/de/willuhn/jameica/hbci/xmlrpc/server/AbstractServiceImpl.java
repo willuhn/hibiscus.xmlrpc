@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractServiceImpl.java,v $
- * $Revision: 1.2 $
- * $Date: 2008/12/12 01:26:41 $
+ * $Revision: 1.3 $
+ * $Date: 2008/12/17 14:40:56 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -32,7 +32,7 @@ public abstract class AbstractServiceImpl extends UnicastRemoteObject implements
 {
   private boolean started = false;
   protected I18N i18n = null;
-  private final static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-mm-dd");
+  private final static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
   /**
    * Wandelt ein Datum vom Format YYYY-MM-DD in einen
@@ -114,6 +114,9 @@ public abstract class AbstractServiceImpl extends UnicastRemoteObject implements
 
 /*********************************************************************
  * $Log: AbstractServiceImpl.java,v $
+ * Revision 1.3  2008/12/17 14:40:56  willuhn
+ * @N Aktualisiertes Patch von Julian
+ *
  * Revision 1.2  2008/12/12 01:26:41  willuhn
  * @N Patch von Julian
  *

@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/UmsatzService.java,v $
- * $Revision: 1.2 $
- * $Date: 2008/12/12 01:26:42 $
+ * $Revision: 1.3 $
+ * $Date: 2008/12/17 14:40:56 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -14,6 +14,7 @@
 package de.willuhn.jameica.hbci.xmlrpc.rmi;
 
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,18 +61,21 @@ public interface UmsatzService extends Service
    * gegenkonto_name
    * gegenkonto_nr
    * gegenkonto_blz
+   * id
+   * id:min
+   * id:max
    * saldo
-   * saldo:from
-   * saldo:to
+   * saldo:min
+   * saldo:max
    * valuta
-   * valuta:from
-   * valuta:to
+   * valuta:min
+   * valuta:max
    * datum
-   * datum:from
-   * datum:to
+   * datum:min
+   * datum:max
    * betrag
-   * betrag:from
-   * betrag:to
+   * betrag:min
+   * betrag:max
    * primanota
    * customer_ref
    * umsatz_typ
@@ -98,12 +102,15 @@ public interface UmsatzService extends Service
    * @return Liste der Umsaetze.
    * @throws RemoteException
    */
-  public List<Map<String,Object>> list(Map<String,Object> options) throws RemoteException;
+  public List<Map<String,Object>> list(HashMap<String,Object> options) throws RemoteException;
 }
 
 
 /*********************************************************************
  * $Log: UmsatzService.java,v $
+ * Revision 1.3  2008/12/17 14:40:56  willuhn
+ * @N Aktualisiertes Patch von Julian
+ *
  * Revision 1.2  2008/12/12 01:26:42  willuhn
  * @N Patch von Julian
  *
