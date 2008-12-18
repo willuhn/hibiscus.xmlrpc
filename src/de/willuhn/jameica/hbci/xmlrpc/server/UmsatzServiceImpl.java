@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UmsatzServiceImpl.java,v $
- * $Revision: 1.3 $
- * $Date: 2008/12/17 14:40:56 $
+ * $Revision: 1.4 $
+ * $Date: 2008/12/18 21:17:33 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -189,6 +189,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
         }
         // Exakte Uebereinstimmung
         else if (key.equals(KEY_KONTO_ID) ||
+                 key.equals(KEY_ART) || 
                  key.equals(KEY_BETRAG) || 
                  key.equals(KEY_SALDO) ||
                  key.equals(KEY_VALUTA) || 
@@ -252,6 +253,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
         map.put(KEY_GEGENKONTO_NAME,   notNull(u.getGegenkontoName()));
         map.put(KEY_GEGENKONTO_NUMMER, notNull(u.getGegenkontoNummer()));
         map.put(KEY_GEGENKONTO_BLZ,    notNull(u.getGegenkontoBLZ()));
+        map.put(KEY_ART,               notNull(u.getArt()));
         map.put(KEY_BETRAG,            notNull(u.getBetrag()));
         map.put(KEY_VALUTA,            toString(u.getValuta()));
         map.put(KEY_DATUM,             toString(u.getDatum()));
@@ -303,6 +305,9 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
 
 /*********************************************************************
  * $Log: UmsatzServiceImpl.java,v $
+ * Revision 1.4  2008/12/18 21:17:33  willuhn
+ * @N Drittes Patch von Julian (Parameter "art")
+ *
  * Revision 1.3  2008/12/17 14:40:56  willuhn
  * @N Aktualisiertes Patch von Julian
  *

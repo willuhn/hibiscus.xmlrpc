@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/UmsatzService.java,v $
- * $Revision: 1.3 $
- * $Date: 2008/12/17 14:40:56 $
+ * $Revision: 1.4 $
+ * $Date: 2008/12/18 21:17:33 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -31,6 +31,7 @@ public interface UmsatzService extends Service
   public static final String KEY_GEGENKONTO_NAME   = "gegenkonto_name";
   public static final String KEY_GEGENKONTO_NUMMER = "gegenkonto_nr";
   public static final String KEY_GEGENKONTO_BLZ    = "gegenkonto_blz";
+  public static final String KEY_ART               = "art";
   public static final String KEY_BETRAG            = "betrag";
   public static final String KEY_VALUTA            = "valuta";
   public static final String KEY_DATUM             = "datum";
@@ -58,6 +59,7 @@ public interface UmsatzService extends Service
    * ueber dem Hash koennen die folgenden Filter gesetzt werden:
    * 
    * konto_id
+   * art
    * gegenkonto_name
    * gegenkonto_nr
    * gegenkonto_blz
@@ -108,6 +110,9 @@ public interface UmsatzService extends Service
 
 /*********************************************************************
  * $Log: UmsatzService.java,v $
+ * Revision 1.4  2008/12/18 21:17:33  willuhn
+ * @N Drittes Patch von Julian (Parameter "art")
+ *
  * Revision 1.3  2008/12/17 14:40:56  willuhn
  * @N Aktualisiertes Patch von Julian
  *
