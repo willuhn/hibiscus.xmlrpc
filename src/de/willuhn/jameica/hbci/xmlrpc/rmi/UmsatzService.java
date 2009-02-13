@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/UmsatzService.java,v $
- * $Revision: 1.4 $
- * $Date: 2008/12/18 21:17:33 $
+ * $Revision: 1.5 $
+ * $Date: 2009/02/13 14:06:51 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -25,7 +25,7 @@ import de.willuhn.datasource.Service;
  */
 public interface UmsatzService extends Service
 {
-  
+
   public static final String KEY_ID                = "id";
   public static final String KEY_KONTO_ID          = "konto_id";
   public static final String KEY_GEGENKONTO_NAME   = "gegenkonto_name";
@@ -41,8 +41,8 @@ public interface UmsatzService extends Service
   public static final String KEY_CUSTOMER_REF      = "customer_ref";
   public static final String KEY_UMSATZ_TYP        = "umsatz_typ";
   public static final String KEY_KOMMENTAR         = "kommentar";
-  
-  
+
+
   /**
    * Liefert eine Liste der Umsaetze.
    * Jede Zeile entspricht einem Umsatz. Die einzelnen Werte sind durch Doppelpunkt getrennt.
@@ -53,11 +53,11 @@ public interface UmsatzService extends Service
    * @throws RemoteException
    */
   public String[] list(String text, String von, String bis) throws RemoteException;
-  
+
   /**
    * Liefert eine Liste der Umsaetze.
    * ueber dem Hash koennen die folgenden Filter gesetzt werden:
-   * 
+   *
    * konto_id
    * art
    * gegenkonto_name
@@ -81,11 +81,12 @@ public interface UmsatzService extends Service
    * primanota
    * customer_ref
    * umsatz_typ
-   * 
+   *
    * Die Funktion liefer eine Liste mit den Umsaetzen zurueck
    * jeder Umsatz liegt als Map vor und enthält die folgenden
    * Elemente:
-   * 
+   *
+   * id
    * konto_id
    * gegenkonto_name
    * gegenkonto_nr
@@ -99,7 +100,7 @@ public interface UmsatzService extends Service
    * umsatz_typ
    * zweck
    * kommentar
-   * 
+   *
    * @param text optionen fuer den Filter
    * @return Liste der Umsaetze.
    * @throws RemoteException
@@ -110,6 +111,9 @@ public interface UmsatzService extends Service
 
 /*********************************************************************
  * $Log: UmsatzService.java,v $
+ * Revision 1.5  2009/02/13 14:06:51  willuhn
+ * @D "id" war in javadoc nicht mit angegeben, wurde jedoch uebertragen
+ *
  * Revision 1.4  2008/12/18 21:17:33  willuhn
  * @N Drittes Patch von Julian (Parameter "art")
  *
