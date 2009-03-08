@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractServiceImpl.java,v $
- * $Revision: 1.3 $
- * $Date: 2008/12/17 14:40:56 $
+ * $Revision: 1.4 $
+ * $Date: 2009/03/08 22:25:47 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -30,6 +30,7 @@ import de.willuhn.util.I18N;
  */
 public abstract class AbstractServiceImpl extends UnicastRemoteObject implements Service
 {
+  private String quote = null;
   private boolean started = false;
   protected I18N i18n = null;
   private final static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -56,7 +57,36 @@ public abstract class AbstractServiceImpl extends UnicastRemoteObject implements
   {
     return dateFormatter.format(date);
   }
+
+  /**
+   * Quotet den Text.
+   * @param s zu quotender Text.
+   * @return der gequotete Text.
+   */
+  String quote(String s)
+  {
+    if (s == null || this.quote == null || this.quote.length() == 0)
+      return s;
+    
+    // Erstmal enthaltene Quoting-Zeichen escapen
+    s = s.replaceAll(this.quote,"\\" + this.quote);
+    return this.quote + s + this.quote;
+  }
   
+  /**
+   * Wandelt ein Objekt in einen String um.
+   * @param o das Objekt.
+   * @return Die String-Repraesentation oder "" - niemals aber null.
+   */
+  static String notNull(Object o)
+  {
+    if (o == null)
+      return "";
+    String s = o.toString();
+    return s == null ? "" : s;
+  }
+  
+
   /**
    * ct.
    * @throws RemoteException
@@ -93,6 +123,7 @@ public abstract class AbstractServiceImpl extends UnicastRemoteObject implements
       Logger.warn("service allready started or not startable, skipping request");
       return;
     }
+    this.quote = Application.getPluginLoader().getPlugin(Plugin.class).getResources().getSettings().getString("quoting.char",null);
     this.started = true;
   }
 
@@ -107,6 +138,7 @@ public abstract class AbstractServiceImpl extends UnicastRemoteObject implements
       return;
     }
     this.started = false;
+    this.quote = null;
   }
   
 }
@@ -114,6 +146,9 @@ public abstract class AbstractServiceImpl extends UnicastRemoteObject implements
 
 /*********************************************************************
  * $Log: AbstractServiceImpl.java,v $
+ * Revision 1.4  2009/03/08 22:25:47  willuhn
+ * @N optionales Quoting
+ *
  * Revision 1.3  2008/12/17 14:40:56  willuhn
  * @N Aktualisiertes Patch von Julian
  *

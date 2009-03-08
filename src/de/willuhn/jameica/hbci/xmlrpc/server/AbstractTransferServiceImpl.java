@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/Attic/AbstractTransferServiceImpl.java,v $
- * $Revision: 1.8 $
- * $Date: 2007/09/11 15:34:06 $
+ * $Revision: 1.9 $
+ * $Date: 2009/03/08 22:27:14 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -67,19 +67,19 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
         HibiscusTransfer t = (HibiscusTransfer) i.next();
         Konto k = t.getKonto();
         StringBuffer sb = new StringBuffer();
-        sb.append(k.getID());
+        sb.append(quote(notNull(k.getID())));
         sb.append(":");
-        sb.append(t.getGegenkontoNummer());
+        sb.append(quote(notNull(t.getGegenkontoNummer())));
         sb.append(":");
-        sb.append(t.getGegenkontoBLZ());
+        sb.append(quote(notNull(t.getGegenkontoBLZ())));
         sb.append(":");
-        sb.append(t.getGegenkontoName());
+        sb.append(quote(notNull(t.getGegenkontoName())));
         sb.append(":");
-        sb.append(t.getZweck());
+        sb.append(quote(notNull(t.getZweck())));
         sb.append(":");
-        sb.append(t.getZweck2());
+        sb.append(quote(notNull(t.getZweck2())));
         sb.append(":");
-        sb.append(HBCI.DECIMALFORMAT.format(t.getBetrag()));
+        sb.append(quote(notNull(HBCI.DECIMALFORMAT.format(t.getBetrag()))));
         list[count++] = sb.toString();
       }
       return list;
@@ -182,6 +182,9 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
 
 /*********************************************************************
  * $Log: AbstractTransferServiceImpl.java,v $
+ * Revision 1.9  2009/03/08 22:27:14  willuhn
+ * @N optionales Quoting
+ *
  * Revision 1.8  2007/09/11 15:34:06  willuhn
  * *** empty log message ***
  *

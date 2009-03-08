@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UmsatzServiceImpl.java,v $
- * $Revision: 1.4 $
- * $Date: 2008/12/18 21:17:33 $
+ * $Revision: 1.5 $
+ * $Date: 2009/03/08 22:25:47 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -94,40 +94,38 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
         if (typ != null && !typ.matches(u))
           continue;
 
-        // $!{umsatz.CustomerRef};$!{kat};$!{umsatz.Kommentar}
-
         StringBuffer sb = new StringBuffer();
-        sb.append(u.getKonto().getID());
+        sb.append(quote(u.getKonto().getID()));
         sb.append(":");
-        sb.append(notNull(u.getGegenkontoNummer()));
+        sb.append(quote(notNull(u.getGegenkontoNummer())));
         sb.append(":");
-        sb.append(notNull(u.getGegenkontoBLZ()));
+        sb.append(quote(notNull(u.getGegenkontoBLZ())));
         sb.append(":");
-        sb.append(notNull(u.getGegenkontoName()));
+        sb.append(quote(notNull(u.getGegenkontoName())));
         sb.append(":");
-        sb.append(HBCI.DECIMALFORMAT.format(u.getBetrag()));
+        sb.append(quote(HBCI.DECIMALFORMAT.format(u.getBetrag())));
         sb.append(":");
-        sb.append(u.getValuta() == null ? "" : HBCI.DATEFORMAT.format(u.getValuta()));
+        sb.append(quote(u.getValuta() == null ? "" : HBCI.DATEFORMAT.format(u.getValuta())));
         sb.append(":");
-        sb.append(u.getDatum() == null ? "" : HBCI.DATEFORMAT.format(u.getDatum()));
+        sb.append(quote(u.getDatum() == null ? "" : HBCI.DATEFORMAT.format(u.getDatum())));
         sb.append(":");
-        sb.append(notNull(u.getZweck()));
+        sb.append(quote(notNull(u.getZweck())));
         sb.append(":");
-        sb.append(notNull(u.getZweck2()));
+        sb.append(quote(notNull(u.getZweck2())));
         sb.append(":");
-        sb.append(HBCI.DECIMALFORMAT.format(u.getSaldo()));
+        sb.append(quote(HBCI.DECIMALFORMAT.format(u.getSaldo())));
         sb.append(":");
-        sb.append(notNull(u.getPrimanota()));
+        sb.append(quote(notNull(u.getPrimanota())));
         sb.append(":");
-        sb.append(notNull(u.getCustomerRef()));
+        sb.append(quote(notNull(u.getCustomerRef())));
         UmsatzTyp kat = u.getUmsatzTyp();
         String skat = "";
         if (kat != null)
           skat = kat.getName();
         sb.append(":");
-        sb.append(skat);
+        sb.append(quote(skat));
         sb.append(":");
-        sb.append(u.getKommentar());
+        sb.append(quote(u.getKommentar()));
         result.add(sb.toString());
       }
       return (String[]) result.toArray(new String[result.size()]);
@@ -281,30 +279,19 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
   }
 
   /**
-   * Wandelt ein Objekt in einen String um.
-   * @param o das Objekt.
-   * @return Die String-Repraesentation oder "" - niemals aber null.
-   */
-  private static String notNull(Object o)
-  {
-    if (o == null)
-      return "";
-    String s = o.toString();
-    return s == null ? "" : s;
-  }
-
-  /**
    * @see de.willuhn.datasource.Service#getName()
    */
   public String getName() throws RemoteException
   {
     return "[xml-rpc] umsatz";
   }
-
 }
 
 /*********************************************************************
  * $Log: UmsatzServiceImpl.java,v $
+ * Revision 1.5  2009/03/08 22:25:47  willuhn
+ * @N optionales Quoting
+ *
  * Revision 1.4  2008/12/18 21:17:33  willuhn
  * @N Drittes Patch von Julian (Parameter "art")
  *

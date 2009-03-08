@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/KontoServiceImpl.java,v $
- * $Revision: 1.4 $
- * $Date: 2007/11/27 15:17:13 $
+ * $Revision: 1.5 $
+ * $Date: 2009/03/08 22:25:47 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -57,24 +57,24 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
       {
         Konto k = (Konto) i.next();
         StringBuffer sb = new StringBuffer();
-        sb.append(k.getID());
+        sb.append(quote(notNull(k.getID())));
         sb.append(":");
-        sb.append(k.getKontonummer());
+        sb.append(quote(notNull(k.getKontonummer())));
         sb.append(":");
-        sb.append(k.getBLZ());
+        sb.append(quote(notNull(k.getBLZ())));
         sb.append(":");
-        sb.append(k.getBezeichnung());
+        sb.append(quote(notNull(k.getBezeichnung())));
         sb.append(":");
-        sb.append(k.getKundennummer());
+        sb.append(quote(notNull(k.getKundennummer())));
         sb.append(":");
-        sb.append(k.getName());
+        sb.append(quote(notNull(k.getName())));
         
         double saldo = k.getSaldo();
         Date date    = k.getSaldoDatum();
         sb.append(":");
-        sb.append(date != null ? (""+saldo) : "");
+        sb.append(quote(notNull(date != null ? (""+saldo) : "")));
         sb.append(":");
-        sb.append(date != null ? HBCI.DATEFORMAT.format(date) : "");
+        sb.append(quote(notNull(date != null ? HBCI.DATEFORMAT.format(date) : "")));
         list[count++] = sb.toString();
       }
       return list;
@@ -164,6 +164,9 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
 
 /*********************************************************************
  * $Log: KontoServiceImpl.java,v $
+ * Revision 1.5  2009/03/08 22:25:47  willuhn
+ * @N optionales Quoting
+ *
  * Revision 1.4  2007/11/27 15:17:13  willuhn
  * @N CRC-Check und Bankname-Lookup
  *
