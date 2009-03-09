@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UmsatzServiceImpl.java,v $
- * $Revision: 1.5 $
- * $Date: 2009/03/08 22:25:47 $
+ * $Revision: 1.6 $
+ * $Date: 2009/03/09 10:44:52 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -125,7 +125,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
         sb.append(":");
         sb.append(quote(skat));
         sb.append(":");
-        sb.append(quote(u.getKommentar()));
+        sb.append(quote(notNull(u.getKommentar())));
         result.add(sb.toString());
       }
       return (String[]) result.toArray(new String[result.size()]);
@@ -289,6 +289,9 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
 
 /*********************************************************************
  * $Log: UmsatzServiceImpl.java,v $
+ * Revision 1.6  2009/03/09 10:44:52  willuhn
+ * not null
+ *
  * Revision 1.5  2009/03/08 22:25:47  willuhn
  * @N optionales Quoting
  *
