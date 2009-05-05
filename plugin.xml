@@ -5,8 +5,8 @@
   xsi:noNamespaceSchemaLocation="http://www.willuhn.de/schema/jameica-plugin-1.0.xsd">
 
   <description>Meta-Plugin, welches Hibiscus um XML-RPC-Funktionalitaet erweitert</description>
-  <url>https://www.willuhn.de/projects/hibiscus/releases/nightly/hibiscus.xmlrpc-1.0-nightly.zip</url>
-  <homepage>http://www.willuhn.de/projects/hibiscus</homepage>
+  <url>https://www.willuhn.de/products/hibiscus/releases/nightly/hibiscus.xmlrpc-1.0-nightly.zip</url>
+  <homepage>http://www.willuhn.de/products/hibiscus</homepage>
   <license>GPL - http://www.gnu.org/copyleft/gpl.html</license>
 
   <requires jameica="1.7+">
