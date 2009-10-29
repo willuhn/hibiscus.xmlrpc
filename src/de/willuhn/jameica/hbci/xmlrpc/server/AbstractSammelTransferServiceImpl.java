@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractSammelTransferServiceImpl.java,v $
- * $Revision: 1.1 $
- * $Date: 2008/12/09 14:00:18 $
+ * $Revision: 1.2 $
+ * $Date: 2009/10/29 00:31:38 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -64,7 +64,7 @@ public abstract class AbstractSammelTransferServiceImpl extends AbstractServiceI
    * @return Klasse des Transfer-Typs.
    * @throws RemoteException
    */
-  abstract Class getTranferType() throws RemoteException;
+  abstract Class getTransferType() throws RemoteException;
   
   /**
    * Liefert den Typ der Buchung zurueck.
@@ -138,7 +138,7 @@ public abstract class AbstractSammelTransferServiceImpl extends AbstractServiceI
     SammelTransfer l = null;
     try
     {
-      l = (SammelTransfer) service.createObject(getTranferType(),null);
+      l = (SammelTransfer) service.createObject(getTransferType(),null);
       
       l.transactionBegin();
       
@@ -282,6 +282,9 @@ public abstract class AbstractSammelTransferServiceImpl extends AbstractServiceI
 
 /**********************************************************************
  * $Log: AbstractSammelTransferServiceImpl.java,v $
+ * Revision 1.2  2009/10/29 00:31:38  willuhn
+ * @N Neue Funktionen createParams() und create(Map) in Einzelauftraegen (nahezu identisch zu Sammel-Auftraegen)
+ *
  * Revision 1.1  2008/12/09 14:00:18  willuhn
  * @N Update auf Java 1.5
  * @N Unterstuetzung fuer Sammel-Lastschriften und Sammel-Ueberweisungen
