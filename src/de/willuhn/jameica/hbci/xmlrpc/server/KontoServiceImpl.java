@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/KontoServiceImpl.java,v $
- * $Revision: 1.5 $
- * $Date: 2009/03/08 22:25:47 $
+ * $Revision: 1.6 $
+ * $Date: 2009/11/19 22:58:05 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -24,7 +24,6 @@ import de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService;
 import de.willuhn.jameica.messaging.QueryMessage;
 import de.willuhn.jameica.system.Application;
 import de.willuhn.logging.Logger;
-import de.willuhn.util.ApplicationException;
 
 /**
  * Implementierung des Konto-Service.
@@ -92,38 +91,6 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
 
 
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-   */
-  public String create(String kontonummer, String blz, String name, String kundennummer) throws RemoteException
-  {
-    try
-    {
-      DBService service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
-      Konto k = (Konto) service.createObject(Konto.class,null);
-      k.setKontonummer(kontonummer);
-      k.setBLZ(blz);
-      k.setName(name);
-      k.setKundennummer(kundennummer);
-      k.store();
-      return null;
-    }
-    catch (ApplicationException ae)
-    {
-      return ae.getLocalizedMessage();
-    }
-    catch (RemoteException re)
-    {
-      throw re;
-    }
-    catch (Exception e)
-    {
-      Logger.error("unable to create account",e);
-      return i18n.tr("Fehler beim Anlegen des Kontos: {0}", e.getMessage());
-    }
-  }
-
-
-  /**
    * @see de.willuhn.datasource.Service#getName()
    */
   public String getName() throws RemoteException
@@ -164,6 +131,9 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
 
 /*********************************************************************
  * $Log: KontoServiceImpl.java,v $
+ * Revision 1.6  2009/11/19 22:58:05  willuhn
+ * @R Konto#create entfernt - ist Unsinn
+ *
  * Revision 1.5  2009/03/08 22:25:47  willuhn
  * @N optionales Quoting
  *

@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/KontoService.java,v $
- * $Revision: 1.3 $
- * $Date: 2007/11/27 15:17:12 $
+ * $Revision: 1.4 $
+ * $Date: 2009/11/19 22:58:05 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -31,17 +31,6 @@ public interface KontoService extends Service
   public String[] list() throws RemoteException;
   
   /**
-   * Legt ein neues Konto an.
-   * @param kontonummer
-   * @param blz
-   * @param name Name des Kontoinhabers.
-   * @param kundennummer
-   * @return null wenn das Anlegen erfolgreich war, sonst den Fehlertext.
-   * @throws RemoteException
-   */
-  public String create(String kontonummer, String blz, String name, String kundennummer) throws RemoteException;
-  
-  /**
    * Prueft eine BLZ/Kontonummer auf Plausibilitaet anhand der Pruefsumme.
    * @param blz BLZ.
    * @param kontonummer Kontonummer.
@@ -62,6 +51,9 @@ public interface KontoService extends Service
 
 /*********************************************************************
  * $Log: KontoService.java,v $
+ * Revision 1.4  2009/11/19 22:58:05  willuhn
+ * @R Konto#create entfernt - ist Unsinn
+ *
  * Revision 1.3  2007/11/27 15:17:12  willuhn
  * @N CRC-Check und Bankname-Lookup
  *
