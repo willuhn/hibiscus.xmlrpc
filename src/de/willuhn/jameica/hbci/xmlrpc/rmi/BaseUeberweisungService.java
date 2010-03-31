@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/BaseUeberweisungService.java,v $
- * $Revision: 1.1 $
- * $Date: 2010/03/31 12:24:51 $
+ * $Revision: 1.2 $
+ * $Date: 2010/03/31 12:27:45 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -35,7 +35,10 @@ public interface BaseUeberweisungService extends Service
   
   /**
    * Liefert eine Liste von Auftraegen.
-   * @param text optionaler Suchbegriff.
+   * @param text optionaler Suchbegriff. Gesucht wird in
+   *  - allen Verwendungszweck-Zeilen
+   *  - Name des Gegenkonto-Inhabers
+   *  - Nummer des Gegenkontos
    * @param von optionale Angabe des Start-Datums.
    * @param bis optionale Angabe des End-Datums.
    * @return Liste der gefundenen Auftraege.
@@ -77,6 +80,9 @@ public interface BaseUeberweisungService extends Service
 
 /*********************************************************************
  * $Log: BaseUeberweisungService.java,v $
+ * Revision 1.2  2010/03/31 12:27:45  willuhn
+ * @N Auch in Kontonummer suchen
+ *
  * Revision 1.1  2010/03/31 12:24:51  willuhn
  * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
  * @C Code-Cleanup

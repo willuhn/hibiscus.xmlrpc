@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractBaseUeberweisungServiceImpl.java,v $
- * $Revision: 1.1 $
- * $Date: 2010/03/31 12:24:51 $
+ * $Revision: 1.2 $
+ * $Date: 2010/03/31 12:27:45 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -151,10 +151,11 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
         String s = "%" + text + "%";
         params.add(s);
         params.add(s);
+        params.add(s);
         // Das ist ja mal haesslich und hat in der Basis-Klasse einfach nichts
         // zu suchen. Aber Auslandsueberweisungen haben nur eine Zeile Verwendungszweck
         // und ich hab jetzt keine Lust, hier noch eine abstrakte Methode einzufuehren
-        String filter = "(empfaenger_name like ? or zweck like ? ";
+        String filter = "(empfaenger_name like ? or empfaenger_konto like ? or zweck like ? ";
         if (!getType().equals(AuslandsUeberweisung.class))
         {
           filter += " or zweck2 like ? or zweck3 like ? ";
@@ -442,6 +443,9 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
 
 /*********************************************************************
  * $Log: AbstractBaseUeberweisungServiceImpl.java,v $
+ * Revision 1.2  2010/03/31 12:27:45  willuhn
+ * @N Auch in Kontonummer suchen
+ *
  * Revision 1.1  2010/03/31 12:24:51  willuhn
  * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
  * @C Code-Cleanup
