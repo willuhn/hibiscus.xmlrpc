@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractServiceImpl.java,v $
- * $Revision: 1.4 $
- * $Date: 2009/03/08 22:25:47 $
+ * $Revision: 1.5 $
+ * $Date: 2010/03/31 12:24:51 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -15,9 +15,6 @@ package de.willuhn.jameica.hbci.xmlrpc.server;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import de.willuhn.datasource.Service;
 import de.willuhn.jameica.hbci.xmlrpc.Plugin;
@@ -30,62 +27,9 @@ import de.willuhn.util.I18N;
  */
 public abstract class AbstractServiceImpl extends UnicastRemoteObject implements Service
 {
-  private String quote = null;
+  protected final static I18N i18n = Application.getPluginLoader().getPlugin(Plugin.class).getResources().getI18N();
+
   private boolean started = false;
-  protected I18N i18n = null;
-  private final static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-
-  /**
-   * Wandelt ein Datum vom Format YYYY-MM-DD in einen
-   * java.util.Date-Objekt um
-   * @param date im Format YYYY-MM-DD
-   * @return das Datum.
-   * @throws ParseException
-   */
-  static Date toDate(String date) throws ParseException
-  {
-    return dateFormatter.parse(date);
-  }
-  
-  /**
-   * Wandelt ein Datum in das Format 'YYYY-MM-DD' um
-   * @param date das Datum.
-   * @return der formatierte String.
-   * @throws ParseException
-   */
-  static String toString(Date date) throws ParseException
-  {
-    return dateFormatter.format(date);
-  }
-
-  /**
-   * Quotet den Text.
-   * @param s zu quotender Text.
-   * @return der gequotete Text.
-   */
-  String quote(String s)
-  {
-    if (s == null || this.quote == null || this.quote.length() == 0)
-      return s;
-    
-    // Erstmal enthaltene Quoting-Zeichen escapen
-    s = s.replaceAll(this.quote,"\\" + this.quote);
-    return this.quote + s + this.quote;
-  }
-  
-  /**
-   * Wandelt ein Objekt in einen String um.
-   * @param o das Objekt.
-   * @return Die String-Repraesentation oder "" - niemals aber null.
-   */
-  static String notNull(Object o)
-  {
-    if (o == null)
-      return "";
-    String s = o.toString();
-    return s == null ? "" : s;
-  }
-  
 
   /**
    * ct.
@@ -94,7 +38,6 @@ public abstract class AbstractServiceImpl extends UnicastRemoteObject implements
   public AbstractServiceImpl() throws RemoteException
   {
     super();
-    i18n = Application.getPluginLoader().getPlugin(Plugin.class).getResources().getI18N();
   }
 
   /**
@@ -123,7 +66,6 @@ public abstract class AbstractServiceImpl extends UnicastRemoteObject implements
       Logger.warn("service allready started or not startable, skipping request");
       return;
     }
-    this.quote = Application.getPluginLoader().getPlugin(Plugin.class).getResources().getSettings().getString("quoting.char",null);
     this.started = true;
   }
 
@@ -138,7 +80,6 @@ public abstract class AbstractServiceImpl extends UnicastRemoteObject implements
       return;
     }
     this.started = false;
-    this.quote = null;
   }
   
 }
@@ -146,6 +87,10 @@ public abstract class AbstractServiceImpl extends UnicastRemoteObject implements
 
 /*********************************************************************
  * $Log: AbstractServiceImpl.java,v $
+ * Revision 1.5  2010/03/31 12:24:51  willuhn
+ * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
+ * @C Code-Cleanup
+ *
  * Revision 1.4  2009/03/08 22:25:47  willuhn
  * @N optionales Quoting
  *

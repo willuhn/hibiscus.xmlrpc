@@ -1,7 +1,7 @@
 /**********************************************************************
- * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/Attic/AbstractTransferServiceImpl.java,v $
- * $Revision: 1.10 $
- * $Date: 2009/10/29 00:31:38 $
+ * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractBaseUeberweisungServiceImpl.java,v $
+ * $Revision: 1.1 $
+ * $Date: 2010/03/31 12:24:51 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -15,8 +15,10 @@ package de.willuhn.jameica.hbci.xmlrpc.server;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.willuhn.datasource.rmi.DBIterator;
@@ -25,19 +27,20 @@ import de.willuhn.datasource.rmi.ObjectNotFoundException;
 import de.willuhn.jameica.hbci.HBCI;
 import de.willuhn.jameica.hbci.HBCIProperties;
 import de.willuhn.jameica.hbci.Settings;
+import de.willuhn.jameica.hbci.rmi.AuslandsUeberweisung;
 import de.willuhn.jameica.hbci.rmi.BaseUeberweisung;
-import de.willuhn.jameica.hbci.rmi.HibiscusTransfer;
+import de.willuhn.jameica.hbci.rmi.HBCIDBService;
 import de.willuhn.jameica.hbci.rmi.Konto;
-import de.willuhn.jameica.hbci.rmi.Terminable;
-import de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService;
+import de.willuhn.jameica.hbci.xmlrpc.rmi.BaseUeberweisungService;
+import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
 import de.willuhn.jameica.system.Application;
 import de.willuhn.logging.Logger;
 import de.willuhn.util.ApplicationException;
 
 /**
- * Implementierung des Transfer-Service.
+ * Abstrakte Basis-Implementierung des Service fuer Ueberweisungen/Lastschriften.
  */
-public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl implements TransferService
+public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberweisung> extends AbstractServiceImpl implements BaseUeberweisungService
 {
   final static String PARAM_KONTO            = "konto";
   final static String PARAM_TERMIN           = "termin";
@@ -54,7 +57,7 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
    * ct.
    * @throws RemoteException
    */
-  public AbstractTransferServiceImpl() throws RemoteException
+  public AbstractBaseUeberweisungServiceImpl() throws RemoteException
   {
     super();
   }
@@ -63,37 +66,38 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
    * Liefert den Objekttyp des Transfers.
    * @return Objekt-Typ.
    */
-  abstract Class getTransferType();
+  abstract Class<T> getType();
   
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService#list()
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.BaseUeberweisungService#list()
    */
   public String[] list() throws RemoteException
   {
     try
     {
-      DBService service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
-      DBIterator i = service.createList(getTransferType());
+      HBCIDBService service = (HBCIDBService) Application.getServiceFactory().lookup(HBCI.class,"database");
+      DBIterator i = service.createList(getType());
+      i.setOrder("ORDER BY " + service.getSQLTimestamp("termin") + " DESC, id DESC");
       String[] list = new String[i.size()];
       int count = 0;
       while (i.hasNext())
       {
-        HibiscusTransfer t = (HibiscusTransfer) i.next();
+        T t = (T) i.next();
         Konto k = t.getKonto();
         StringBuffer sb = new StringBuffer();
-        sb.append(quote(notNull(k.getID())));
+        sb.append(StringUtil.quote(StringUtil.notNull(k.getID())));
         sb.append(":");
-        sb.append(quote(notNull(t.getGegenkontoNummer())));
+        sb.append(StringUtil.quote(StringUtil.notNull(t.getGegenkontoNummer())));
         sb.append(":");
-        sb.append(quote(notNull(t.getGegenkontoBLZ())));
+        sb.append(StringUtil.quote(StringUtil.notNull(t.getGegenkontoBLZ())));
         sb.append(":");
-        sb.append(quote(notNull(t.getGegenkontoName())));
+        sb.append(StringUtil.quote(StringUtil.notNull(t.getGegenkontoName())));
         sb.append(":");
-        sb.append(quote(notNull(t.getZweck())));
+        sb.append(StringUtil.quote(StringUtil.notNull(t.getZweck())));
         sb.append(":");
-        sb.append(quote(notNull(t.getZweck2())));
+        sb.append(StringUtil.quote(StringUtil.notNull(t.getZweck2())));
         sb.append(":");
-        sb.append(quote(notNull(HBCI.DECIMALFORMAT.format(t.getBetrag()))));
+        sb.append(StringUtil.quote(StringUtil.notNull(HBCI.DECIMALFORMAT.format(t.getBetrag()))));
         list[count++] = sb.toString();
       }
       return list;
@@ -104,9 +108,104 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
     }
     catch (Exception e)
     {
-      Logger.error("unable to load list",e);
+      throw new RemoteException(e.getMessage(),e);
     }
-    return null;
+  }
+
+  /**
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.BaseUeberweisungService#find(java.lang.String, java.lang.String, java.lang.String)
+   */
+  public List<Map> find(String text, String von, String bis) throws RemoteException
+  {
+    try
+    {
+      HBCIDBService service = (HBCIDBService) Application.getServiceFactory().lookup(HBCI.class,"database");
+      DBIterator i = service.createList(getType());
+      if (von != null && von.length() > 0)
+      {
+        try
+        {
+          Date start = HBCI.DATEFORMAT.parse(von);
+          i.addFilter("termin >= ?",new Object[]{new java.sql.Date(HBCIProperties.startOfDay(start).getTime())});
+        }
+        catch (Exception e)
+        {
+          Logger.error("start date invalid: " + von,e);
+        }
+      }
+      if (bis != null && bis.length() > 0)
+      {
+        try
+        {
+          Date end = HBCI.DATEFORMAT.parse(bis);
+          i.addFilter("termin <= ?",new Object[]{new java.sql.Date(HBCIProperties.startOfDay(end).getTime())});
+        }
+        catch (Exception e)
+        {
+          Logger.error("end date invalid: " + bis,e);
+        }
+      }
+      if (text != null && text.length() > 0)
+      {
+        List<String> params = new ArrayList<String>();
+        String s = "%" + text + "%";
+        params.add(s);
+        params.add(s);
+        // Das ist ja mal haesslich und hat in der Basis-Klasse einfach nichts
+        // zu suchen. Aber Auslandsueberweisungen haben nur eine Zeile Verwendungszweck
+        // und ich hab jetzt keine Lust, hier noch eine abstrakte Methode einzufuehren
+        String filter = "(empfaenger_name like ? or zweck like ? ";
+        if (!getType().equals(AuslandsUeberweisung.class))
+        {
+          filter += " or zweck2 like ? or zweck3 like ? ";
+          params.add(s);
+          params.add(s);
+        }
+        filter += ")";
+        i.addFilter(filter,params.toArray(new String[params.size()]));
+      }
+      i.setOrder("ORDER BY " + service.getSQLTimestamp("termin") + " DESC, id DESC");
+
+      List<Map> result = new ArrayList<Map>();
+
+      while (i.hasNext())
+      {
+        T t = (T) i.next();
+        Konto k = t.getKonto();
+        Map<String,Object> values = new HashMap<String,Object>();
+        values.put("id",t.getID());
+        values.put("ausgefuehrt",Boolean.toString(t.ausgefuehrt()));
+        values.put(PARAM_BETRAG,HBCI.DECIMALFORMAT.format(t.getBetrag()));
+        values.put(PARAM_BLZ,t.getGegenkontoBLZ());
+        values.put(PARAM_KONTO,k.getID());
+        values.put(PARAM_KONTONUMMER,t.getGegenkontoNummer());
+        values.put(PARAM_NAME,t.getGegenkontoName());
+        values.put(PARAM_TERMIN,HBCI.DATEFORMAT.format(t.getTermin()));
+        values.put(PARAM_TEXTSCHLUESSEL,t.getTextSchluessel());
+        
+        List<String> usages = new ArrayList<String>();
+        usages.add(t.getZweck());
+        String z2 = t.getZweck2();
+        if (z2 != null && z2.length() > 0)
+          usages.add(z2);
+        String[] z3 = t.getWeitereVerwendungszwecke();
+        if (z3 != null && z3.length > 0)
+          usages.addAll(Arrays.asList(z3));
+        values.put(PARAM_VERWENDUNGSZWECK,usages);
+        
+        
+        result.add(values);
+      }
+      return result;
+    }
+    catch (RemoteException re)
+    {
+      throw re;
+    }
+    catch (Exception e)
+    {
+      throw new RemoteException(e.getMessage(),e);
+    }
   }
 
   /**
@@ -122,7 +221,7 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
    * @throws RemoteException
    * @throws ApplicationException
    */
-  protected HibiscusTransfer createObject(String kontoID, String kto, String blz, String name, String zweck, String zweck2, double betrag, String termin)
+  protected T createObject(String kontoID, String kto, String blz, String name, String zweck, String zweck2, double betrag, String termin)
     throws RemoteException, ApplicationException
   {
     DBService service = null;
@@ -170,30 +269,22 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
       throw new ApplicationException(i18n.tr("Das Konto mit der ID {0} wurde nicht gefunden",kontoID));
     }
     
-    HibiscusTransfer t = (HibiscusTransfer) service.createObject(getTransferType(),null);
+    T t = (T) service.createObject(getType(),null);
     t.setKonto(k);
     t.setGegenkontoNummer(kto);
     t.setGegenkontoBLZ(blz);
     t.setGegenkontoName(name);
     t.setZweck(zweck);
-    
-    if (zweck2 != null && zweck2.length() > 0)
-      t.setZweck2(zweck2);
-
+    t.setZweck2(zweck2);
     t.setBetrag(betrag);
-    
-    if (date != null)
-    {
-      if (!(t instanceof Terminable))
-        throw new ApplicationException(i18n.tr("Auftrag unterstützt keinen Ziel-Termin"));
-      ((Terminable)t).setTermin(date);
-    }
+    t.setTermin(date);
+
     t.store();
     return t;
   }
 
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService#create(java.util.Map)
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.BaseUeberweisungService#create(java.util.Map)
    */
   public String create(Map auftrag) throws RemoteException, ApplicationException
   {
@@ -276,31 +367,17 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
 
     ////////////////////////////////////////////////////////////////////////////
     // Auftrag anlegen
-    HibiscusTransfer t = null;
+    T t = null;
     try
     {
-      t = (HibiscusTransfer) service.createObject(getTransferType(),null);
+      t = (T) service.createObject(getType(),null);
       t.setKonto(k);
-
-      if (date != null)
-      {
-        if (!(t instanceof Terminable))
-          throw new ApplicationException(i18n.tr("Auftrag unterstützt keinen Ziel-Termin"));
-        ((Terminable)t).setTermin(date);
-      }
-      
+      t.setTermin(date);
       t.setBetrag(betrag);
       t.setGegenkontoBLZ((String) auftrag.get(PARAM_BLZ));
       t.setGegenkontoNummer((String)auftrag.get(PARAM_KONTONUMMER));
       t.setGegenkontoName((String)auftrag.get(PARAM_NAME));
-      
-      String ts = (String)auftrag.get(PARAM_TEXTSCHLUESSEL);
-      if (ts != null && ts.length() > 0)
-      {
-        if (!(t instanceof BaseUeberweisung))
-          throw new ApplicationException(i18n.tr("Auftrag unterstützt keinen Textschluessel"));
-        ((BaseUeberweisung)t).setTextSchluessel(ts);
-      }
+      t.setTextSchluessel((String)auftrag.get(PARAM_TEXTSCHLUESSEL));
         
       ////////////////////////////////////////////////////////////////////////
       // Verwendungszweck
@@ -344,7 +421,7 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
   }
 
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService#createParams()
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.BaseUeberweisungService#createParams()
    */
   public Map createParams() throws RemoteException
   {
@@ -364,7 +441,11 @@ public abstract class AbstractTransferServiceImpl extends AbstractServiceImpl im
 
 
 /*********************************************************************
- * $Log: AbstractTransferServiceImpl.java,v $
+ * $Log: AbstractBaseUeberweisungServiceImpl.java,v $
+ * Revision 1.1  2010/03/31 12:24:51  willuhn
+ * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
+ * @C Code-Cleanup
+ *
  * Revision 1.10  2009/10/29 00:31:38  willuhn
  * @N Neue Funktionen createParams() und create(Map) in Einzelauftraegen (nahezu identisch zu Sammel-Auftraegen)
  *

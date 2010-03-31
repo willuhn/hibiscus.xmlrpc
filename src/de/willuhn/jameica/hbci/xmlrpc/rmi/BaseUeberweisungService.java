@@ -1,7 +1,7 @@
 /**********************************************************************
- * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/Attic/TransferService.java,v $
- * $Revision: 1.4 $
- * $Date: 2009/10/29 00:31:38 $
+ * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/BaseUeberweisungService.java,v $
+ * $Revision: 1.1 $
+ * $Date: 2010/03/31 12:24:51 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -14,6 +14,7 @@
 package de.willuhn.jameica.hbci.xmlrpc.rmi;
 
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Map;
 
 import de.willuhn.datasource.Service;
@@ -22,18 +23,28 @@ import de.willuhn.util.ApplicationException;
 /**
  * XML-RPC-Service zum Zugriff auf Transfers.
  */
-public interface TransferService extends Service
+public interface BaseUeberweisungService extends Service
 {
   /**
-   * Liefert eine Liste der Transfers.
-   * Jede Zeile entspricht einem Transfer. Die einzelnen Werte sind durch Doppelpunkt getrennt.
+   * Liefert eine Liste der Auftraege.
+   * Jede Zeile entspricht einem Auftrag. Die einzelnen Werte sind durch Doppelpunkt getrennt.
    * @return Liste der Transfers.
    * @throws RemoteException
    */
   public String[] list() throws RemoteException;
   
   /**
-   * Legt einen neuen Transfer an.
+   * Liefert eine Liste von Auftraegen.
+   * @param text optionaler Suchbegriff.
+   * @param von optionale Angabe des Start-Datums.
+   * @param bis optionale Angabe des End-Datums.
+   * @return Liste der gefundenen Auftraege.
+   * @throws RemoteException
+   */
+  public List<Map> find(String text, String von, String bis) throws RemoteException;
+  
+  /**
+   * Legt einen neuen Auftrag an.
    * @param kontoID ID des Kontos, ueber das der Transfer ausgefuehrt werden soll.
    * @param kto Kontonummer des Gegenkontos.
    * @param blz BLZ des Gegenkontos.
@@ -65,7 +76,11 @@ public interface TransferService extends Service
 }
 
 /*********************************************************************
- * $Log: TransferService.java,v $
+ * $Log: BaseUeberweisungService.java,v $
+ * Revision 1.1  2010/03/31 12:24:51  willuhn
+ * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
+ * @C Code-Cleanup
+ *
  * Revision 1.4  2009/10/29 00:31:38  willuhn
  * @N Neue Funktionen createParams() und create(Map) in Einzelauftraegen (nahezu identisch zu Sammel-Auftraegen)
  *

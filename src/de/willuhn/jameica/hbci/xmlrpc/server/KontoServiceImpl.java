@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/KontoServiceImpl.java,v $
- * $Revision: 1.6 $
- * $Date: 2009/11/19 22:58:05 $
+ * $Revision: 1.7 $
+ * $Date: 2010/03/31 12:24:51 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -21,9 +21,9 @@ import de.willuhn.datasource.rmi.DBService;
 import de.willuhn.jameica.hbci.HBCI;
 import de.willuhn.jameica.hbci.rmi.Konto;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService;
+import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
 import de.willuhn.jameica.messaging.QueryMessage;
 import de.willuhn.jameica.system.Application;
-import de.willuhn.logging.Logger;
 
 /**
  * Implementierung des Konto-Service.
@@ -56,24 +56,24 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
       {
         Konto k = (Konto) i.next();
         StringBuffer sb = new StringBuffer();
-        sb.append(quote(notNull(k.getID())));
+        sb.append(StringUtil.quote(StringUtil.notNull(k.getID())));
         sb.append(":");
-        sb.append(quote(notNull(k.getKontonummer())));
+        sb.append(StringUtil.quote(StringUtil.notNull(k.getKontonummer())));
         sb.append(":");
-        sb.append(quote(notNull(k.getBLZ())));
+        sb.append(StringUtil.quote(StringUtil.notNull(k.getBLZ())));
         sb.append(":");
-        sb.append(quote(notNull(k.getBezeichnung())));
+        sb.append(StringUtil.quote(StringUtil.notNull(k.getBezeichnung())));
         sb.append(":");
-        sb.append(quote(notNull(k.getKundennummer())));
+        sb.append(StringUtil.quote(StringUtil.notNull(k.getKundennummer())));
         sb.append(":");
-        sb.append(quote(notNull(k.getName())));
+        sb.append(StringUtil.quote(StringUtil.notNull(k.getName())));
         
         double saldo = k.getSaldo();
         Date date    = k.getSaldoDatum();
         sb.append(":");
-        sb.append(quote(notNull(date != null ? (""+saldo) : "")));
+        sb.append(StringUtil.quote(StringUtil.notNull(date != null ? (""+saldo) : "")));
         sb.append(":");
-        sb.append(quote(notNull(date != null ? HBCI.DATEFORMAT.format(date) : "")));
+        sb.append(StringUtil.quote(StringUtil.notNull(date != null ? HBCI.DATEFORMAT.format(date) : "")));
         list[count++] = sb.toString();
       }
       return list;
@@ -84,9 +84,8 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
     }
     catch (Exception e)
     {
-      Logger.error("unable to load list",e);
+      throw new RemoteException(e.getMessage(),e);
     }
-    return null;
   }
 
 
@@ -131,6 +130,10 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
 
 /*********************************************************************
  * $Log: KontoServiceImpl.java,v $
+ * Revision 1.7  2010/03/31 12:24:51  willuhn
+ * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
+ * @C Code-Cleanup
+ *
  * Revision 1.6  2009/11/19 22:58:05  willuhn
  * @R Konto#create entfernt - ist Unsinn
  *

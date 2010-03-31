@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/LastschriftServiceImpl.java,v $
- * $Revision: 1.5 $
- * $Date: 2008/08/04 08:36:24 $
+ * $Revision: 1.6 $
+ * $Date: 2010/03/31 12:24:51 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -23,8 +23,7 @@ import de.willuhn.util.ApplicationException;
 /**
  * Implementierung des Lastschrift-Service.
  */
-public class LastschriftServiceImpl extends AbstractTransferServiceImpl implements
-    LastschriftService
+public class LastschriftServiceImpl extends AbstractBaseUeberweisungServiceImpl<Lastschrift> implements LastschriftService
 {
 
   /**
@@ -47,9 +46,9 @@ public class LastschriftServiceImpl extends AbstractTransferServiceImpl implemen
 
 
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.server.AbstractTransferServiceImpl#getTransferType()
+   * @see de.willuhn.jameica.hbci.xmlrpc.server.AbstractBaseUeberweisungServiceImpl#getType()
    */
-  Class getTransferType()
+  Class getType()
   {
     return Lastschrift.class;
   }
@@ -79,7 +78,7 @@ public class LastschriftServiceImpl extends AbstractTransferServiceImpl implemen
 
 
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, double, java.lang.String)
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.BaseUeberweisungService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, double, java.lang.String)
    */
   public String create(String kontoID, String kto, String blz, String name, String zweck, String zweck2, double betrag, String termin) throws RemoteException
   {
@@ -90,6 +89,10 @@ public class LastschriftServiceImpl extends AbstractTransferServiceImpl implemen
 
 /*********************************************************************
  * $Log: LastschriftServiceImpl.java,v $
+ * Revision 1.6  2010/03/31 12:24:51  willuhn
+ * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
+ * @C Code-Cleanup
+ *
  * Revision 1.5  2008/08/04 08:36:24  willuhn
  * @B Compile-Fix
  *

@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/EchoTest.java,v $
- * $Revision: 1.1 $
- * $Date: 2009/03/09 10:37:34 $
+ * $Revision: 1.2 $
+ * $Date: 2010/03/31 12:24:51 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -14,6 +14,7 @@
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -80,51 +81,58 @@ public class EchoTest
     final XmlRpcClient client = new XmlRpcClient();
     client.setConfig(config);
 
-    // Echo-Testservice aufrufen
-    // Wir uebergeben als Parameter ein "Hello World"
-    System.out.println(url);
-    System.out.println("Test 1:");
-    Object[] l = (Object[]) client.execute("hibiscus.xmlrpc.umsatz.list",new String[]{"","",""});
-    for (int i=0;i<l.length;++i)
-    {
-      System.out.println(l[i]);
-    }
+    
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Test 1: Liste der Umsaetze abrufen
+//    System.out.println("Test 1:");
+//    Object[] l = (Object[]) client.execute("hibiscus.xmlrpc.umsatz.list",new String[]{"","",""});
+//    for (int i=0;i<l.length;++i)
+//    {
+//      System.out.println(l[i]);
+//    }
+    ////////////////////////////////////////////////////////////////////////////
 
-//    // Methode "list" auf dem Service "hibiscus.xmlrpc.konto" ausfuehren.
-//    // Freigegebene Services siehe Jameica: Datei->Einstellungen->XML-RPC
-//    // Der Parameter "(Object[]) null" muss angegeben werden, auch wenn
-//    // die Methode keine Parameter erwartet.
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Test 2: Liste der Konten abrufen
 //    System.out.println("Test 2:");
 //    Object[] konten = (Object[]) client.execute("hibiscus.xmlrpc.konto.list",(Object[]) null);
-//    
 //    for (int i=0;i<konten.length;++i)
 //    {
 //      System.out.println(konten[i]);
 //    }
-//
-//    // Methode "list" auf dem Service "hibiscus.xmlrpc.ueberweisung" ausfuehren.
-//    System.out.println("Test 3:");
-//    Object[] ueberweisungen = (Object[]) client.execute("hibiscus.xmlrpc.ueberweisung.list",(Object[]) null);
-//    
-//    for (int i=0;i<ueberweisungen.length;++i)
-//    {
-//      System.out.println(ueberweisungen[i]);
-//    }
-//  
-//    // Neue Ueberweisung anlegen
-//    System.out.println("Test 4:");
-//    Object[] params = new Object[]
-//      {
-//        "0",                // ID des Kontos, auf dem die Ueberweisung ausgefuehrt werden soll
-//        "123456789",        // Kontonummer des Empfaengers
-//        "12345678",         // BLZ des Empfaenger-Kontos
-//        "Max Mustermann",   // Name des Empfaengers
-//        "Das ist ein Test", // Verwendungszweck
-//        new Double(1.00),   // Betrag (1,- EUR)
-//      };
-//    Object returnCode = (Object) client.execute("hibiscus.xmlrpc.ueberweisung.create",params);
-//    System.out.println(returnCode);
-//
+    ////////////////////////////////////////////////////////////////////////////
+
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Test 3: Liste der Ueberweisungen abrufen
+    // Die Aufrufe fuer "hibiscus.xmlrpc.lastschrift.find" und "hibiscus.xmlrpc.sepaueberweisung.find" sind identisch
+    System.out.println("Test 3:");
+    Object[] ueberweisungen = (Object[]) client.execute("hibiscus.xmlrpc.ueberweisung.find",new String[]{"test","01.01.2009","31.12.2010"});
+    for (int i=0;i<ueberweisungen.length;++i)
+    {
+      Map values = (Map) ueberweisungen[i];
+      System.out.println("ID             : " + values.get("id"));
+      System.out.println("Konto-ID       : " + values.get("konto"));
+      System.out.println("Betrag         : " + values.get("betrag"));
+      System.out.println("Termin         : " + values.get("termin"));
+      System.out.println("Ausgefuehrt    : " + values.get("ausgefuehrt"));
+      System.out.println("Textschluessel : " + values.get("textschluessel"));
+      System.out.println("Gegenkonto BLZ : " + values.get("blz"));
+      System.out.println("Gegenkonto Nr. : " + values.get("kontonummer"));
+      System.out.println("Gegenkonto Name: " + values.get("name"));
+
+      System.out.println("Verwendungszweck:");
+      Object[] verwendungszweck = (Object[]) values.get("verwendungszweck");
+      for (int k=0;k<verwendungszweck.length;++k)
+      {
+        System.out.println("  " + verwendungszweck[k]);
+      }
+      System.out.println("---------------");
+    }
+    ////////////////////////////////////////////////////////////////////////////
+  
   }
 
 
@@ -197,6 +205,10 @@ public class EchoTest
 
 /*********************************************************************
  * $Log: EchoTest.java,v $
+ * Revision 1.2  2010/03/31 12:24:51  willuhn
+ * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
+ * @C Code-Cleanup
+ *
  * Revision 1.1  2009/03/09 10:37:34  willuhn
  * @N Payment-Server Build 2009-03-09
  *

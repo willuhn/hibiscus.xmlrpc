@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/UeberweisungService.java,v $
- * $Revision: 1.2 $
- * $Date: 2006/11/16 22:11:26 $
+ * $Revision: 1.3 $
+ * $Date: 2010/03/31 12:24:51 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -17,13 +17,17 @@ package de.willuhn.jameica.hbci.xmlrpc.rmi;
 /**
  * XML-RPC-Service zum Zugriff auf Ueberweisungen.
  */
-public interface UeberweisungService extends TransferService
+public interface UeberweisungService extends BaseUeberweisungService
 {
 }
 
 
 /*********************************************************************
  * $Log: UeberweisungService.java,v $
+ * Revision 1.3  2010/03/31 12:24:51  willuhn
+ * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
+ * @C Code-Cleanup
+ *
  * Revision 1.2  2006/11/16 22:11:26  willuhn
  * @N Added lastschrift support
  *

@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UeberweisungServiceImpl.java,v $
- * $Revision: 1.5 $
- * $Date: 2007/09/10 16:09:32 $
+ * $Revision: 1.6 $
+ * $Date: 2010/03/31 12:24:51 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -23,8 +23,7 @@ import de.willuhn.util.ApplicationException;
 /**
  * Implementierung des Ueberweisung-Service.
  */
-public class UeberweisungServiceImpl extends AbstractTransferServiceImpl implements
-    UeberweisungService
+public class UeberweisungServiceImpl extends AbstractBaseUeberweisungServiceImpl<Ueberweisung> implements UeberweisungService
 {
 
   /**
@@ -47,15 +46,15 @@ public class UeberweisungServiceImpl extends AbstractTransferServiceImpl impleme
 
 
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.server.AbstractTransferServiceImpl#getTransferType()
+   * @see de.willuhn.jameica.hbci.xmlrpc.server.AbstractBaseUeberweisungServiceImpl#getType()
    */
-  Class getTransferType()
+  Class getType()
   {
     return Ueberweisung.class;
   }
 
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.TransferService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, double, java.lang.String)
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.BaseUeberweisungService#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, double, java.lang.String)
    */
   public String create(String kontoID, String kto, String blz, String name, String zweck, String zweck2, double betrag, String termin) throws RemoteException
   {
@@ -79,6 +78,10 @@ public class UeberweisungServiceImpl extends AbstractTransferServiceImpl impleme
 
 /*********************************************************************
  * $Log: UeberweisungServiceImpl.java,v $
+ * Revision 1.6  2010/03/31 12:24:51  willuhn
+ * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
+ * @C Code-Cleanup
+ *
  * Revision 1.5  2007/09/10 16:09:32  willuhn
  * @N Termin in XML-RPC Connector fuer Auftraege
  *

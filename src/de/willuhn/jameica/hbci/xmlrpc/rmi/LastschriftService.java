@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/LastschriftService.java,v $
- * $Revision: 1.4 $
- * $Date: 2007/09/10 16:09:32 $
+ * $Revision: 1.5 $
+ * $Date: 2010/03/31 12:24:51 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -19,7 +19,7 @@ import java.rmi.RemoteException;
 /**
  * XML-RPC-Service zum Zugriff auf Lastschriften.
  */
-public interface LastschriftService extends TransferService
+public interface LastschriftService extends BaseUeberweisungService
 {
   /**
    * Erzeugt eine Lastschrift.
@@ -47,6 +47,10 @@ public interface LastschriftService extends TransferService
 
 /*********************************************************************
  * $Log: LastschriftService.java,v $
+ * Revision 1.5  2010/03/31 12:24:51  willuhn
+ * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
+ * @C Code-Cleanup
+ *
  * Revision 1.4  2007/09/10 16:09:32  willuhn
  * @N Termin in XML-RPC Connector fuer Auftraege
  *
