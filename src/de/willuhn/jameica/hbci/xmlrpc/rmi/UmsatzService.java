@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/UmsatzService.java,v $
- * $Revision: 1.5 $
- * $Date: 2009/02/13 14:06:51 $
+ * $Revision: 1.6 $
+ * $Date: 2010/03/31 12:30:40 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -101,7 +101,6 @@ public interface UmsatzService extends Service
    * zweck
    * kommentar
    *
-   * @param text optionen fuer den Filter
    * @return Liste der Umsaetze.
    * @throws RemoteException
    */
@@ -111,6 +110,9 @@ public interface UmsatzService extends Service
 
 /*********************************************************************
  * $Log: UmsatzService.java,v $
+ * Revision 1.6  2010/03/31 12:30:40  willuhn
+ * *** empty log message ***
+ *
  * Revision 1.5  2009/02/13 14:06:51  willuhn
  * @D "id" war in javadoc nicht mit angegeben, wurde jedoch uebertragen
  *

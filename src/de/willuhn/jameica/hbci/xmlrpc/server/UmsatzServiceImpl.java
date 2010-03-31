@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UmsatzServiceImpl.java,v $
- * $Revision: 1.7 $
- * $Date: 2010/03/31 12:24:51 $
+ * $Revision: 1.8 $
+ * $Date: 2010/03/31 12:31:35 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -144,7 +144,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
   }
 
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.UmsatzService#list(java.lang.Map)
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.UmsatzService#list(java.util.HashMap)
    */
   public List<Map<String, Object>> list(HashMap<String, Object> options) throws RemoteException
   {
@@ -291,6 +291,9 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
 
 /*********************************************************************
  * $Log: UmsatzServiceImpl.java,v $
+ * Revision 1.8  2010/03/31 12:31:35  willuhn
+ * *** empty log message ***
+ *
  * Revision 1.7  2010/03/31 12:24:51  willuhn
  * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
  * @C Code-Cleanup
