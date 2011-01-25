@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractSammelTransferServiceImpl.java,v $
- * $Revision: 1.3 $
- * $Date: 2011/01/25 13:43:54 $
+ * $Revision: 1.4 $
+ * $Date: 2011/01/25 14:00:40 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -27,7 +27,6 @@ import de.willuhn.jameica.hbci.Settings;
 import de.willuhn.jameica.hbci.rmi.Konto;
 import de.willuhn.jameica.hbci.rmi.SammelTransfer;
 import de.willuhn.jameica.hbci.rmi.SammelTransferBuchung;
-import de.willuhn.jameica.hbci.server.VerwendungszweckUtil;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.SammelTransferService;
 import de.willuhn.jameica.hbci.xmlrpc.util.DecimalUtil;
 import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
@@ -152,7 +151,16 @@ public abstract class AbstractSammelTransferServiceImpl extends AbstractServiceI
         buchung.setGegenkontoNummer((String)m.get(PARAM_BUCHUNGEN_KONTONUMMER));
         buchung.setGegenkontoName((String)m.get(PARAM_BUCHUNGEN_NAME));
         buchung.setTextSchluessel((String)m.get(PARAM_BUCHUNGEN_TEXTSCHLUESSEL));
-        VerwendungszweckUtil.apply(buchung,StringUtil.parseUsage(m.get(PARAM_BUCHUNGEN_VERWENDUNGSZWECK)));
+        
+        String[] lines = StringUtil.parseUsage(m.get(PARAM_BUCHUNGEN_VERWENDUNGSZWECK));
+        if (lines != null)
+        {
+          List<String> sl = new ArrayList<String>();
+          for (String s:lines) sl.add(s);
+          if (sl.size() > 0) buchung.setZweck(sl.remove(0));  // Zeile 1
+          if (sl.size() > 0) buchung.setZweck2(sl.remove(0)); // Zeile 2
+          if (sl.size() > 0) buchung.setWeitereVerwendungszwecke(sl.toArray(new String[sl.size()])); // Zeile 3 - x
+        }
 
         buchung.store();
       }
@@ -252,7 +260,10 @@ public abstract class AbstractSammelTransferServiceImpl extends AbstractServiceI
 
 /**********************************************************************
  * $Log: AbstractSammelTransferServiceImpl.java,v $
- * Revision 1.3  2011/01/25 13:43:54  willuhn
+ * Revision 1.4  2011/01/25 14:00:40  willuhn
+ * @B Kompatibilitaet zu Hibiscus 1.12
+ *
+ * Revision 1.3  2011-01-25 13:43:54  willuhn
  * @N Loeschen von Auftraegen
  * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
  * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten
