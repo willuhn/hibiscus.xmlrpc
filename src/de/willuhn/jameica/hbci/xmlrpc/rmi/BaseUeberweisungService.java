@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/BaseUeberweisungService.java,v $
- * $Revision: 1.2 $
- * $Date: 2010/03/31 12:27:45 $
+ * $Revision: 1.3 $
+ * $Date: 2011/01/25 13:43:53 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.willuhn.datasource.Service;
-import de.willuhn.util.ApplicationException;
 
 /**
  * XML-RPC-Service zum Zugriff auf Transfers.
@@ -48,18 +47,36 @@ public interface BaseUeberweisungService extends Service
   
   /**
    * Legt einen neuen Auftrag an.
-   * @param kontoID ID des Kontos, ueber das der Transfer ausgefuehrt werden soll.
+   * Die Funktion unterscheidet sich von der folgenden nur durch den fehlenden Parameter "type".
+   * Sie existiert lediglich aus Gruenden der Abwaertskompatibilitaet.
+   * @param kontoID ID des Kontos, ueber das der Auftrag ausgefuehrt werden soll.
    * @param kto Kontonummer des Gegenkontos.
    * @param blz BLZ des Gegenkontos.
    * @param name Name des Gegenkontos.
    * @param zweck Verwendungszweck.
    * @param zweck2 weiterer Verwendungszweck.
    * @param betrag Betrag.
-   * @param termin Termin im Format TT.MM.JJJJ.
-   * @return null wenn das Anlegen erfolgreich war, sonst den Fehlertext.
+   * @param termin Termin im Format TT.MM.JJJJ. oder JJJJ-MM-TT
+   * @return siehe {@link BaseUeberweisungService#create(Map)}
    * @throws RemoteException
    */
   public String create(String kontoID, String kto, String blz, String name, String zweck, String zweck2, double betrag, String termin) throws RemoteException;
+
+  /**
+   * Legt einen neuen Auftrag an.
+   * @param kontoID ID des Kontos, ueber das der Auftrag ausgefuehrt werden soll.
+   * @param kto Kontonummer des Gegenkontos.
+   * @param blz BLZ des Gegenkontos.
+   * @param name Name des Gegenkontos.
+   * @param zweck Verwendungszweck.
+   * @param zweck2 weiterer Verwendungszweck.
+   * @param betrag Betrag.
+   * @param termin Termin im Format TT.MM.JJJJ. oder JJJJ-MM-TT
+   * @param type der Text-Schluessel.
+   * @return siehe {@link BaseUeberweisungService#create(Map)}
+   * @throws RemoteException
+   */
+  public String create(String kontoID, String kto, String blz, String name, String zweck, String zweck2, double betrag, String termin, String type) throws RemoteException;
 
   /**
    * Erzeugt eine Map mit den Job-Parametern fuer einen Auftrag.
@@ -71,15 +88,38 @@ public interface BaseUeberweisungService extends Service
   /**
    * Erzeugt einen neuen Auftrag mit den ausgefuellten Parametern.
    * @param auftrag der zu erstellende Auftrag.
-   * @return NULL, wenn das Anlegen erfolgreich war, sonst ein Fehlertext.
+   * @return NULL wenn der Vorgang erfolgreich war, sonst den Fehlertext.
+   * 
+   * Falls der Parameter "xmlrpc.supports.null" in de.willuhn.jameica.hbci.xmlrpc.Plugin.properties
+   * jedoch auf "false" gestellt ist, dann: ID des Datensatzes bei
+   * Erfolg. Andernfalls wird eine Exception geworfen.
+   * 
+   * Also:
+   * xmlrpc.supports.null=true  -> OK=return NULL, FEHLER=return Fehlertext
+   * xmlrpc.supports.null=false -> OK=return ID,   FEHLER=throws Exception
    * @throws RemoteException
-   * @throws ApplicationException
    */
-  public String create(Map auftrag) throws RemoteException, ApplicationException;
+  public String create(Map auftrag) throws RemoteException;
+  
+  /**
+   * Loescht den Auftrag mit der angegebenen ID.
+   * @param id die ID des Auftrages.
+   * @return siehe {@link BaseUeberweisungService#create(Map)}
+   * @throws RemoteException
+   */
+  public String delete(String id) throws RemoteException;
 }
 
 /*********************************************************************
  * $Log: BaseUeberweisungService.java,v $
+ * Revision 1.3  2011/01/25 13:43:53  willuhn
+ * @N Loeschen von Auftraegen
+ * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
+ * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten
+ * @B Parameter-Name in Umsatzsuche wurde nicht auf ungueltige Zeichen geprueft
+ * @C Code-Cleanup
+ * @N Limitierung der zurueckgemeldeten Umsaetze auf 10.000
+ *
  * Revision 1.2  2010/03/31 12:27:45  willuhn
  * @N Auch in Kontonummer suchen
  *

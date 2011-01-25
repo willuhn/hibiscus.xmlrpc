@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/EchoTest.java,v $
- * $Revision: 1.2 $
- * $Date: 2010/03/31 12:24:51 $
+ * $Revision: 1.3 $
+ * $Date: 2011/01/25 13:43:54 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -14,6 +14,9 @@
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
@@ -85,54 +88,108 @@ public class EchoTest
     
     ////////////////////////////////////////////////////////////////////////////
     // Test 1: Liste der Umsaetze abrufen
-//    System.out.println("Test 1:");
-//    Object[] l = (Object[]) client.execute("hibiscus.xmlrpc.umsatz.list",new String[]{"","",""});
-//    for (int i=0;i<l.length;++i)
-//    {
-//      System.out.println(l[i]);
-//    }
+    {
+      System.out.println("Test 1: Umsaetze abrufen");
+      Map params = new HashMap();
+      params.put("datum:min","01.01.2010");
+      params.put("datum:max","31.12.2011");
+      params.put("zweck","test");
+      
+      Object[] l = (Object[]) client.execute("hibiscus.xmlrpc.umsatz.list",new Object[]{params});
+      for (Object o:l)
+      {
+        System.out.println(o);
+      }
+    }
     ////////////////////////////////////////////////////////////////////////////
 
 
     ////////////////////////////////////////////////////////////////////////////
     // Test 2: Liste der Konten abrufen
-//    System.out.println("Test 2:");
-//    Object[] konten = (Object[]) client.execute("hibiscus.xmlrpc.konto.list",(Object[]) null);
-//    for (int i=0;i<konten.length;++i)
-//    {
-//      System.out.println(konten[i]);
-//    }
+    {
+      System.out.println("Test 2: Konten abrufen");
+      Object[] l = (Object[]) client.execute("hibiscus.xmlrpc.konto.list",(Object[]) null);
+      for (Object o:l)
+      {
+        System.out.println(o);
+      }
+    }
     ////////////////////////////////////////////////////////////////////////////
 
     
     ////////////////////////////////////////////////////////////////////////////
     // Test 3: Liste der Ueberweisungen abrufen
     // Die Aufrufe fuer "hibiscus.xmlrpc.lastschrift.find" und "hibiscus.xmlrpc.sepaueberweisung.find" sind identisch
-    System.out.println("Test 3:");
-    Object[] ueberweisungen = (Object[]) client.execute("hibiscus.xmlrpc.ueberweisung.find",new String[]{"test","01.01.2009","31.12.2010"});
-    for (int i=0;i<ueberweisungen.length;++i)
     {
-      Map values = (Map) ueberweisungen[i];
-      System.out.println("ID             : " + values.get("id"));
-      System.out.println("Konto-ID       : " + values.get("konto"));
-      System.out.println("Betrag         : " + values.get("betrag"));
-      System.out.println("Termin         : " + values.get("termin"));
-      System.out.println("Ausgefuehrt    : " + values.get("ausgefuehrt"));
-      System.out.println("Textschluessel : " + values.get("textschluessel"));
-      System.out.println("Gegenkonto BLZ : " + values.get("blz"));
-      System.out.println("Gegenkonto Nr. : " + values.get("kontonummer"));
-      System.out.println("Gegenkonto Name: " + values.get("name"));
-
-      System.out.println("Verwendungszweck:");
-      Object[] verwendungszweck = (Object[]) values.get("verwendungszweck");
-      for (int k=0;k<verwendungszweck.length;++k)
+      System.out.println("Test 3: Überweisungen abrufen");
+      Object[] l = (Object[]) client.execute("hibiscus.xmlrpc.ueberweisung.find",new String[]{"test","01.01.2009","31.12.2011"});
+      for (Object o:l)
       {
-        System.out.println("  " + verwendungszweck[k]);
+        System.out.println(o);
       }
-      System.out.println("---------------");
     }
     ////////////////////////////////////////////////////////////////////////////
   
+    ////////////////////////////////////////////////////////////////////////////
+    // Test 4: Ueberweisung anlegen
+    {
+      // Variante 1
+      Map params = new HashMap();
+      params.put("betrag",1.50d);
+      params.put("termin","15.01.2011");
+      params.put("konto",195);
+      params.put("name","Max Mustermann");
+      params.put("blz","12345678");
+      params.put("kontonummer","1111111111");
+      params.put("verwendungszweck","Test");
+      Object result = client.execute("hibiscus.xmlrpc.ueberweisung.create",new Object[]{params});
+      System.out.println(result);
+      
+      // Auftrag wieder loeschen
+      System.out.println(client.execute("hibiscus.xmlrpc.ueberweisung.delete",new Object[]{result}));
+
+      // Variante 2
+      result = client.execute("hibiscus.xmlrpc.ueberweisung.create",new Object[]{"195",             // Konto-ID
+                                                                                 "1111111111",      // Empfaenger-Konto
+                                                                                 "12345678",        // Empfaenger-BLZ
+                                                                                 "Max Mustermann",  // Empfaenger-Name
+                                                                                 "Test",            // Verwendungszweck 1
+                                                                                 "Test 2",          // Verwendungszweck 2
+                                                                                 2.5d,              // Betrag
+                                                                                 "15.01.2011"});    // Termin
+      System.out.println(result);
+      
+      // Auftrag wieder loeschen
+      System.out.println(client.execute("hibiscus.xmlrpc.ueberweisung.delete",new Object[]{result}));
+    }
+    ////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Test 4: Sammel-Lastschrift anlegen
+    {
+      Map params = new HashMap();
+      params.put("name","Test");
+      params.put("termin","15.01.2011");
+      params.put("konto",195);
+      
+      Map buchung = new HashMap();
+      buchung.put("betrag",1.50d);
+      buchung.put("name","Max Mustermann");
+      buchung.put("blz","12345678");
+      buchung.put("kontonummer","1111111111");
+      buchung.put("verwendungszweck","Test");
+      List buchungen = new ArrayList();
+      buchungen.add(buchung);
+      
+      params.put("buchungen",buchungen);
+      
+      Object result = client.execute("hibiscus.xmlrpc.sammellastschrift.create",new Object[]{params});
+      System.out.println(result);
+
+      // Auftrag wieder loeschen
+      System.out.println(client.execute("hibiscus.xmlrpc.sammellastschrift.delete",new Object[]{result}));
+    }
+    ////////////////////////////////////////////////////////////////////////////
   }
 
 
@@ -205,6 +262,14 @@ public class EchoTest
 
 /*********************************************************************
  * $Log: EchoTest.java,v $
+ * Revision 1.3  2011/01/25 13:43:54  willuhn
+ * @N Loeschen von Auftraegen
+ * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
+ * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten
+ * @B Parameter-Name in Umsatzsuche wurde nicht auf ungueltige Zeichen geprueft
+ * @C Code-Cleanup
+ * @N Limitierung der zurueckgemeldeten Umsaetze auf 10.000
+ *
  * Revision 1.2  2010/03/31 12:24:51  willuhn
  * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
  * @C Code-Cleanup

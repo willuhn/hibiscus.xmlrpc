@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractSammelTransferServiceImpl.java,v $
- * $Revision: 1.2 $
- * $Date: 2009/10/29 00:31:38 $
+ * $Revision: 1.3 $
+ * $Date: 2011/01/25 13:43:54 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -15,8 +15,8 @@ package de.willuhn.jameica.hbci.xmlrpc.server;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.willuhn.datasource.rmi.DBService;
@@ -27,7 +27,10 @@ import de.willuhn.jameica.hbci.Settings;
 import de.willuhn.jameica.hbci.rmi.Konto;
 import de.willuhn.jameica.hbci.rmi.SammelTransfer;
 import de.willuhn.jameica.hbci.rmi.SammelTransferBuchung;
+import de.willuhn.jameica.hbci.server.VerwendungszweckUtil;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.SammelTransferService;
+import de.willuhn.jameica.hbci.xmlrpc.util.DecimalUtil;
+import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
 import de.willuhn.jameica.system.Application;
 import de.willuhn.logging.Logger;
 import de.willuhn.util.ApplicationException;
@@ -76,170 +79,96 @@ public abstract class AbstractSammelTransferServiceImpl extends AbstractServiceI
   /**
    * @see de.willuhn.jameica.hbci.xmlrpc.rmi.SammelTransferService#create(java.util.Map)
    */
-  public String create(Map auftrag) throws RemoteException, ApplicationException
+  public String create(Map auftrag) throws RemoteException
   {
-    if (auftrag == null || auftrag.size() == 0)
-      throw new RemoteException("no params given");
+    boolean supportNull = de.willuhn.jameica.hbci.xmlrpc.Settings.isNullSupported();
     
-    ////////////////////////////////////////////////////////////////////////////
-    // Termin
-    Date date = null;
-    String termin = (String) auftrag.get(PARAM_TERMIN);
-    if (termin != null && termin.length() > 0)
-    {
-      try
-      {
-        date = HBCI.DATEFORMAT.parse(termin);
-      }
-      catch (Exception e)
-      {
-        throw new ApplicationException(i18n.tr("Angegebenes Datum ungültig: {0}",termin));
-      }
-    }
-    ////////////////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////////
-    // DB-Service
-    DBService service = null;
-    try
-    {
-      service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
-    }
-    catch (RemoteException re)
-    {
-      throw re;
-    }
-    catch (Exception e)
-    {
-      throw new RemoteException("unable to load service",e);
-    }
-    ////////////////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Konto
-    Konto k = null;
-    Object kontoID = auftrag.get(PARAM_KONTO);
-    if (kontoID == null)
-      throw new ApplicationException(i18n.tr("Kein Konto angegeben"));
-    
-    String id = kontoID.toString();
-    try
-    {
-      k = (Konto) service.createObject(Konto.class,id);
-    }
-    catch (ObjectNotFoundException oe)
-    {
-      throw new ApplicationException(i18n.tr("Das Konto mit der ID {0} wurde nicht gefunden",id));
-    }
-    ////////////////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Auftrag anlegen
     SammelTransfer l = null;
+
     try
     {
-      l = (SammelTransfer) service.createObject(getTransferType(),null);
+      if (auftrag == null || auftrag.size() == 0)
+        throw new ApplicationException(i18n.tr("Keine Auftragseigenschaften angegeben"));
       
-      l.transactionBegin();
-      
-      l.setBezeichnung((String)auftrag.get(PARAM_NAME));
-      l.setKonto(k);
-      l.setTermin(date);
-      l.store();
-      
-      Object o = auftrag.get(PARAM_BUCHUNGEN);
-      if (o == null)
+      Object konto = auftrag.get(PARAM_KONTO);
+      if (konto == null)
+        throw new ApplicationException(i18n.tr("Kein Konto angegeben"));
+  
+  
+      ////////////////////////////////////////////////////////////////////////////
+      // Buchungen checken
+      Object buchungen = auftrag.get(PARAM_BUCHUNGEN);
+      if (buchungen == null)
         throw new ApplicationException(i18n.tr("Keine Buchungen angegeben"));
-
-      Map[] buchungen = null;
-      if (o instanceof Map)
+  
+      List<Map> items = new ArrayList<Map>();
+      if (buchungen instanceof Map)
       {
-        buchungen = new Map[]{(Map)o}; // nur eine Buchung
+        items.add((Map)buchungen); // nur eine Buchung
       }
-      else if (o instanceof Object[])
+      else if (buchungen instanceof Object[])
       {
-        Object[] ol = (Object[]) o;
-        ArrayList<Map> al = new ArrayList<Map>();
-        for (int n=0;n<ol.length;++n)
+        Object[] ol = (Object[]) buchungen;
+        for (Object o:ol)
         {
-          if (!(ol[n] instanceof Map))
+          if (!(o instanceof Map))
             continue;
-          al.add((Map)ol[n]);
+          items.add((Map) o);
         }
-        buchungen = (Map[]) al.toArray(new Map[al.size()]);
       }
-
-      if (buchungen == null || buchungen.length == 0)
+      if (items.size() == 0)
         throw new ApplicationException(i18n.tr("Keine Buchungen angegeben"));
+      //
+      ////////////////////////////////////////////////////////////////////////////
 
-      for (int i=0;i<buchungen.length;++i)
+      
+      // Auftrag anlegen
+      DBService service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
+
+      l = (SammelTransfer) service.createObject(getTransferType(),null);
+    
+      l.transactionBegin();
+    
+      l.setBezeichnung((String)auftrag.get(PARAM_NAME));
+      l.setKonto((Konto) service.createObject(Konto.class,konto.toString()));
+      l.setTermin(de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(auftrag.get(PARAM_TERMIN)));
+      l.store();
+    
+
+      for (Map m:items)
       {
         ////////////////////////////////////////////////////////////////////////
         // Betrag
-        double betrag = 0.0d;
-        Object b = buchungen[i].get(PARAM_BUCHUNGEN_BETRAG);
-        if (b == null)
-          throw new ApplicationException(i18n.tr("Kein Betrag angegeben"));
-        try
-        {
-          if (b instanceof Double)
-            betrag = ((Double)b).doubleValue();
-          else
-            betrag = HBCI.DECIMALFORMAT.parse(b.toString()).doubleValue();
-        }
-        catch (Exception e)
-        {
-          throw new ApplicationException(i18n.tr("Ungültiger Betrag: {0}",b.toString()));
-        }
+        double betrag = DecimalUtil.parse(m.get(PARAM_BUCHUNGEN_BETRAG));
+
         if (betrag > Settings.getUeberweisungLimit())
-          throw new ApplicationException(i18n.tr("Auftragslimit überschritten: {0} ", 
-              HBCI.DECIMALFORMAT.format(Settings.getUeberweisungLimit()) + " " + HBCIProperties.CURRENCY_DEFAULT_DE));
+          throw new ApplicationException(i18n.tr("Auftragslimit überschritten: {0} ", HBCI.DECIMALFORMAT.format(Settings.getUeberweisungLimit()) + " " + HBCIProperties.CURRENCY_DEFAULT_DE));
         ////////////////////////////////////////////////////////////////////////
-        
+      
         SammelTransferBuchung buchung = (SammelTransferBuchung) service.createObject(getBuchungType(),null);
         buchung.setSammelTransfer(l);
         buchung.setBetrag(betrag);
-        buchung.setGegenkontoBLZ((String)buchungen[i].get(PARAM_BUCHUNGEN_BLZ));
-        buchung.setGegenkontoNummer((String)buchungen[i].get(PARAM_BUCHUNGEN_KONTONUMMER));
-        buchung.setGegenkontoName((String)buchungen[i].get(PARAM_BUCHUNGEN_NAME));
-        buchung.setTextSchluessel((String)buchungen[i].get(PARAM_BUCHUNGEN_TEXTSCHLUESSEL));
-        
-        ////////////////////////////////////////////////////////////////////////
-        // Verwendungszweck
-        Object zweck = buchungen[i].get(PARAM_BUCHUNGEN_VERWENDUNGSZWECK);
-        if (zweck == null)
-          throw new ApplicationException("Kein Verwendungszweck angegeben");
-        if (zweck instanceof Object[])
-        {
-          Object[] list = (Object[]) zweck;
-          if (list.length == 0)
-            throw new ApplicationException("Kein Verwendungszweck angegeben");
-          buchung.setZweck(list[0].toString());
-          if (list.length > 1)
-            buchung.setZweck2(list[1].toString());
-          if (list.length > 2)
-          {
-            ArrayList<String> lines = new ArrayList<String>();
-            for (int n=2;n<list.length;++n)
-              lines.add(list[n].toString());
-            buchung.setWeitereVerwendungszwecke((String[])lines.toArray(new String[lines.size()]));
-          }
-        }
-        else
-        {
-          // Nur eine Zeile Verwendungszweck
-          buchung.setZweck(zweck.toString());
-        }
-        ////////////////////////////////////////////////////////////////////////
+        buchung.setGegenkontoBLZ((String)m.get(PARAM_BUCHUNGEN_BLZ));
+        buchung.setGegenkontoNummer((String)m.get(PARAM_BUCHUNGEN_KONTONUMMER));
+        buchung.setGegenkontoName((String)m.get(PARAM_BUCHUNGEN_NAME));
+        buchung.setTextSchluessel((String)m.get(PARAM_BUCHUNGEN_TEXTSCHLUESSEL));
+        VerwendungszweckUtil.apply(buchung,StringUtil.parseUsage(m.get(PARAM_BUCHUNGEN_VERWENDUNGSZWECK)));
+
         buchung.store();
       }
-      l.transactionCommit();
-      Logger.info("created bundle transfer \"" + l.getBezeichnung() + "\" [ID: " + l.getID() + "]");
       
-      return null;
+      l.transactionCommit();
+      Logger.info("created bundle transfer [ID: " + l.getID() + " (" + l.getClass().getName() + ")]");
+      
+      return supportNull ? null : l.getID();
     }
     catch (Exception e)
     {
+      // Wir loggen nur echte Fehler
+      if (!(e instanceof ApplicationException) && !(e instanceof ObjectNotFoundException))
+        Logger.error("unable to create bundle transfer",e);
+
+      // Auf jeden Fall erstmal die Transaktion zurueckrollen.
       if (l != null)
       {
         try {
@@ -249,11 +178,23 @@ public abstract class AbstractSammelTransferServiceImpl extends AbstractServiceI
           Logger.error("rollback failed",e2);
         }
       }
-      if (e instanceof ApplicationException)
-        return e.getMessage();
 
-      Logger.error("unable to create transfer",e);
-      return i18n.tr("Fehler beim Erstellen des Auftrages: {0}",e.getMessage());
+      // Fehlerbehandlung
+      if (supportNull)
+      {
+        if (e instanceof ApplicationException)
+          return e.getMessage();
+        if (e instanceof ObjectNotFoundException)
+          return i18n.tr("Das Konto mit der ID {0} wurde nicht gefunden",auftrag.get(PARAM_KONTO).toString());
+        return i18n.tr("Fehler beim Erstellen des Auftrages: {0}",e.getMessage());
+      }
+      
+      // OK, wir duerfen Exceptions werfen
+      if (e instanceof ApplicationException)
+        throw new RemoteException(e.getMessage(),e);
+      if (e instanceof ObjectNotFoundException)
+        throw new RemoteException(i18n.tr("Das Konto mit der ID {0} wurde nicht gefunden",auftrag.get(PARAM_KONTO).toString()));
+      throw new RemoteException(i18n.tr("Fehler beim Erstellen des Auftrages: {0}",e.getMessage()),e);
     }
     ////////////////////////////////////////////////////////////////////////////
   }
@@ -278,10 +219,47 @@ public abstract class AbstractSammelTransferServiceImpl extends AbstractServiceI
     m.put(PARAM_BUCHUNGEN,new Map[]{buchung});
     return m;
   }
+
+  /**
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.BaseUeberweisungService#delete(java.lang.String)
+   */
+  public String delete(String id) throws RemoteException
+  {
+    boolean supportNull = de.willuhn.jameica.hbci.xmlrpc.Settings.isNullSupported();
+
+    try
+    {
+      if (id == null || id.length() == 0)
+        throw new ApplicationException(i18n.tr("Keine ID des zu löschenden Datensatzes angegeben"));
+
+      DBService service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
+      SammelTransfer t = (SammelTransfer) service.createObject(getTransferType(),id);
+      t.delete();
+      Logger.info("deleted bundle transfer [ID: " + id + " (" + t.getClass().getName() + ")]");
+      return supportNull ? null : id;
+    }
+    catch (Exception e)
+    {
+      if (supportNull)
+        return e.getMessage();
+
+      if (e instanceof RemoteException)
+        throw (RemoteException) e;
+      throw new RemoteException(e.getMessage(),e);
+    }
+  }
 }
 
 /**********************************************************************
  * $Log: AbstractSammelTransferServiceImpl.java,v $
+ * Revision 1.3  2011/01/25 13:43:54  willuhn
+ * @N Loeschen von Auftraegen
+ * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
+ * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten
+ * @B Parameter-Name in Umsatzsuche wurde nicht auf ungueltige Zeichen geprueft
+ * @C Code-Cleanup
+ * @N Limitierung der zurueckgemeldeten Umsaetze auf 10.000
+ *
  * Revision 1.2  2009/10/29 00:31:38  willuhn
  * @N Neue Funktionen createParams() und create(Map) in Einzelauftraegen (nahezu identisch zu Sammel-Auftraegen)
  *

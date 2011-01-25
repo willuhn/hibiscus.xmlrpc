@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/UmsatzService.java,v $
- * $Revision: 1.6 $
- * $Date: 2010/03/31 12:30:40 $
+ * $Revision: 1.7 $
+ * $Date: 2011/01/25 13:43:54 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -80,7 +80,8 @@ public interface UmsatzService extends Service
    * betrag:max
    * primanota
    * customer_ref
-   * umsatz_typ
+   * umsatz_typ (ID der Umsatz-Kategorie)
+   * zweck
    *
    * Die Funktion liefer eine Liste mit den Umsaetzen zurueck
    * jeder Umsatz liegt als Map vor und enthält die folgenden
@@ -110,6 +111,14 @@ public interface UmsatzService extends Service
 
 /*********************************************************************
  * $Log: UmsatzService.java,v $
+ * Revision 1.7  2011/01/25 13:43:54  willuhn
+ * @N Loeschen von Auftraegen
+ * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
+ * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten
+ * @B Parameter-Name in Umsatzsuche wurde nicht auf ungueltige Zeichen geprueft
+ * @C Code-Cleanup
+ * @N Limitierung der zurueckgemeldeten Umsaetze auf 10.000
+ *
  * Revision 1.6  2010/03/31 12:30:40  willuhn
  * *** empty log message ***
  *
