@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UmsatzServiceImpl.java,v $
- * $Revision: 1.10 $
- * $Date: 2011/01/25 13:49:26 $
+ * $Revision: 1.11 $
+ * $Date: 2011/01/25 13:53:25 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -23,6 +23,7 @@ import java.util.Map;
 import de.willuhn.datasource.rmi.DBIterator;
 import de.willuhn.datasource.rmi.ObjectNotFoundException;
 import de.willuhn.jameica.hbci.HBCI;
+import de.willuhn.jameica.hbci.HBCIProperties;
 import de.willuhn.jameica.hbci.Settings;
 import de.willuhn.jameica.hbci.rmi.Umsatz;
 import de.willuhn.jameica.hbci.rmi.UmsatzTyp;
@@ -61,7 +62,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
         try
         {
           Date start = HBCI.DATEFORMAT.parse(von);
-          list.addFilter("valuta >= ?", new Object[] { new java.sql.Date(de.willuhn.jameica.util.DateUtil.startOfDay(start).getTime()) });
+          list.addFilter("valuta >= ?", new Object[] { new java.sql.Date(HBCIProperties.startOfDay(start).getTime()) });
         }
         catch (Exception e)
         {
@@ -74,7 +75,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
         try
         {
           Date end = HBCI.DATEFORMAT.parse(bis);
-          list.addFilter("valuta <= ?", new Object[] { new java.sql.Date(de.willuhn.jameica.util.DateUtil.endOfDay(end).getTime()) });
+          list.addFilter("valuta <= ?", new Object[] { new java.sql.Date(HBCIProperties.endOfDay(end).getTime()) });
         }
         catch (Exception e)
         {
@@ -300,7 +301,10 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
 
 /*********************************************************************
  * $Log: UmsatzServiceImpl.java,v $
- * Revision 1.10  2011/01/25 13:49:26  willuhn
+ * Revision 1.11  2011/01/25 13:53:25  willuhn
+ * @C Jameica 1.10 Kompatibilitaet
+ *
+ * Revision 1.10  2011-01-25 13:49:26  willuhn
  * @N Limit konfigurierbar und auch in Auftragslisten beruecksichtigen
  *
  * Revision 1.9  2011-01-25 13:43:54  willuhn

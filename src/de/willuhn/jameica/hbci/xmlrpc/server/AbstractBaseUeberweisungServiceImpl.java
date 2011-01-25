@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractBaseUeberweisungServiceImpl.java,v $
- * $Revision: 1.4 $
- * $Date: 2011/01/25 13:49:26 $
+ * $Revision: 1.5 $
+ * $Date: 2011/01/25 13:53:25 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -36,7 +36,6 @@ import de.willuhn.jameica.hbci.xmlrpc.rmi.BaseUeberweisungService;
 import de.willuhn.jameica.hbci.xmlrpc.util.DecimalUtil;
 import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
 import de.willuhn.jameica.system.Application;
-import de.willuhn.jameica.util.DateUtil;
 import de.willuhn.logging.Logger;
 import de.willuhn.util.ApplicationException;
 
@@ -126,10 +125,10 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
       DBIterator i = service.createList(getType());
 
       Date start = de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(von);
-      i.addFilter("termin >= ?",new Object[]{new java.sql.Date(DateUtil.startOfDay(start).getTime())});
+      i.addFilter("termin >= ?",new Object[]{new java.sql.Date(HBCIProperties.startOfDay(start).getTime())});
 
       Date end = de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(bis);
-      i.addFilter("termin <= ?",new Object[]{new java.sql.Date(DateUtil.endOfDay(end).getTime())});
+      i.addFilter("termin <= ?",new Object[]{new java.sql.Date(HBCIProperties.endOfDay(end).getTime())});
 
       if (text != null && text.length() > 0)
       {
@@ -366,7 +365,10 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
 
 /*********************************************************************
  * $Log: AbstractBaseUeberweisungServiceImpl.java,v $
- * Revision 1.4  2011/01/25 13:49:26  willuhn
+ * Revision 1.5  2011/01/25 13:53:25  willuhn
+ * @C Jameica 1.10 Kompatibilitaet
+ *
+ * Revision 1.4  2011-01-25 13:49:26  willuhn
  * @N Limit konfigurierbar und auch in Auftragslisten beruecksichtigen
  *
  * Revision 1.3  2011-01-25 13:43:54  willuhn
