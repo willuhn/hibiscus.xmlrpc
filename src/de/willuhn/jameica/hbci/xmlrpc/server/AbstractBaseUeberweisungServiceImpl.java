@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractBaseUeberweisungServiceImpl.java,v $
- * $Revision: 1.3 $
- * $Date: 2011/01/25 13:43:54 $
+ * $Revision: 1.4 $
+ * $Date: 2011/01/25 13:49:26 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -155,8 +155,16 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
 
       List<Map> result = new ArrayList<Map>();
 
+      int count = 0;
+      int limit = de.willuhn.jameica.hbci.xmlrpc.Settings.getResultLimit();
       while (i.hasNext())
       {
+        if (count++ > limit)
+        {
+          Logger.warn("result size limited to " + limit + " items");
+          break;
+        }
+
         T t = (T) i.next();
         Konto k = t.getKonto();
         Map<String,Object> values = new HashMap<String,Object>();
@@ -358,7 +366,10 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
 
 /*********************************************************************
  * $Log: AbstractBaseUeberweisungServiceImpl.java,v $
- * Revision 1.3  2011/01/25 13:43:54  willuhn
+ * Revision 1.4  2011/01/25 13:49:26  willuhn
+ * @N Limit konfigurierbar und auch in Auftragslisten beruecksichtigen
+ *
+ * Revision 1.3  2011-01-25 13:43:54  willuhn
  * @N Loeschen von Auftraegen
  * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
  * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten

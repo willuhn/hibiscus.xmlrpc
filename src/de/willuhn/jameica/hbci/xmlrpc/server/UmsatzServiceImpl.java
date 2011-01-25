@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UmsatzServiceImpl.java,v $
- * $Revision: 1.9 $
- * $Date: 2011/01/25 13:43:54 $
+ * $Revision: 1.10 $
+ * $Date: 2011/01/25 13:49:26 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -89,9 +89,18 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
         typ.setPattern(text);
       }
 
-      ArrayList result = new ArrayList();
+      int count = 0;
+      int limit = de.willuhn.jameica.hbci.xmlrpc.Settings.getResultLimit();
+      List<String> result = new ArrayList<String>();
       while (list.hasNext())
       {
+        if (count++ > limit)
+        {
+          // Sonst koennte man eine OutOfMemoryException provozieren
+          Logger.warn("result size limited to " + limit + " tems");
+          break;
+        }
+
         Umsatz u = (Umsatz) list.next();
         if (typ != null && !typ.matches(u))
           continue;
@@ -239,14 +248,14 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
     }
 
     List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
-    int count = 0;
 
+    int count = 0;
+    int limit = de.willuhn.jameica.hbci.xmlrpc.Settings.getResultLimit();
     while (list.hasNext())
     {
-      if (count++ > 10000)
+      if (count++ > limit)
       {
-        // Sonst koennte man eine OutOfMemoryException provozieren
-        Logger.warn("result size limited to 10.000 items");
+        Logger.warn("result size limited to " + limit + " items");
         break;
       }
       
@@ -291,7 +300,10 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
 
 /*********************************************************************
  * $Log: UmsatzServiceImpl.java,v $
- * Revision 1.9  2011/01/25 13:43:54  willuhn
+ * Revision 1.10  2011/01/25 13:49:26  willuhn
+ * @N Limit konfigurierbar und auch in Auftragslisten beruecksichtigen
+ *
+ * Revision 1.9  2011-01-25 13:43:54  willuhn
  * @N Loeschen von Auftraegen
  * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
  * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten

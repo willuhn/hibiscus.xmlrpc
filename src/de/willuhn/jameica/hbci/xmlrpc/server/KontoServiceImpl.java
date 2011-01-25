@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/KontoServiceImpl.java,v $
- * $Revision: 1.7 $
- * $Date: 2010/03/31 12:24:51 $
+ * $Revision: 1.8 $
+ * $Date: 2011/01/25 13:49:26 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -24,6 +24,7 @@ import de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService;
 import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
 import de.willuhn.jameica.messaging.QueryMessage;
 import de.willuhn.jameica.system.Application;
+import de.willuhn.logging.Logger;
 
 /**
  * Implementierung des Konto-Service.
@@ -51,7 +52,10 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
       DBService service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
       DBIterator i = service.createList(Konto.class);
       String[] list = new String[i.size()];
+
       int count = 0;
+      int limit = de.willuhn.jameica.hbci.xmlrpc.Settings.getResultLimit();
+      
       while (i.hasNext())
       {
         Konto k = (Konto) i.next();
@@ -75,6 +79,12 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
         sb.append(":");
         sb.append(StringUtil.quote(StringUtil.notNull(date != null ? HBCI.DATEFORMAT.format(date) : "")));
         list[count++] = sb.toString();
+
+        if (count > limit)
+        {
+          Logger.warn("result size limited to " + limit + " items");
+          break;
+        }
       }
       return list;
     }
@@ -130,6 +140,9 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
 
 /*********************************************************************
  * $Log: KontoServiceImpl.java,v $
+ * Revision 1.8  2011/01/25 13:49:26  willuhn
+ * @N Limit konfigurierbar und auch in Auftragslisten beruecksichtigen
+ *
  * Revision 1.7  2010/03/31 12:24:51  willuhn
  * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
  * @C Code-Cleanup

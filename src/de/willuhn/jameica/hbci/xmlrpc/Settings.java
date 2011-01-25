@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/Settings.java,v $
- * $Revision: 1.1 $
- * $Date: 2011/01/25 13:43:54 $
+ * $Revision: 1.2 $
+ * $Date: 2011/01/25 13:49:26 $
  * $Author: willuhn $
  *
  * Copyright (c) by willuhn - software & services
@@ -32,6 +32,16 @@ public class Settings
   {
     return SETTINGS.getBoolean("xmlrpc.supports.null",true);
   }
+  
+  /**
+   * Liefert die maximale Anzahl zurueckzuliefernder Datensaetze.
+   * Verhindert OutOfMemoryException bei zuvielen Ergebnissen.
+   * @return maximale Anzahl zurueckzuliefernder Datensaetze. Per Default 10.000.
+   */
+  public final static int getResultLimit()
+  {
+    return SETTINGS.getInt("xmlrpc.result.limit",10000);
+  }
 
 }
 
@@ -39,7 +49,10 @@ public class Settings
 
 /**********************************************************************
  * $Log: Settings.java,v $
- * Revision 1.1  2011/01/25 13:43:54  willuhn
+ * Revision 1.2  2011/01/25 13:49:26  willuhn
+ * @N Limit konfigurierbar und auch in Auftragslisten beruecksichtigen
+ *
+ * Revision 1.1  2011-01-25 13:43:54  willuhn
  * @N Loeschen von Auftraegen
  * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
  * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten
