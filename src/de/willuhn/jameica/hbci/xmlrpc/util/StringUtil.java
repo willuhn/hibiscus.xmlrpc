@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/util/StringUtil.java,v $
- * $Revision: 1.2 $
- * $Date: 2011/01/25 13:43:54 $
+ * $Revision: 1.3 $
+ * $Date: 2011/01/25 14:05:12 $
  * $Author: willuhn $
  *
  * Copyright (c) by willuhn - software & services
@@ -11,9 +11,12 @@
 
 package de.willuhn.jameica.hbci.xmlrpc.util;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.willuhn.jameica.hbci.rmi.HibiscusTransfer;
+import de.willuhn.jameica.hbci.server.VerwendungszweckUtil;
 import de.willuhn.jameica.hbci.xmlrpc.Plugin;
 import de.willuhn.jameica.system.Application;
 
@@ -91,13 +94,44 @@ public class StringUtil
     }
     return new String[]{object.toString()};
   }
+  
+  /**
+   * Merget die Verwendungszweck-Zeilen des Auftrages zu einer Zeile zusammen.
+   * Statt Zeilenumbruch wird Leerzeichen verwendet.
+   * @param t der Auftrag.
+   * @return der String mit einer Zeile, die alle Verwendungszwecke enthaelt.
+   * @throws RemoteException
+   */
+  public static String mergeUsage(HibiscusTransfer t) throws RemoteException
+  {
+    StringBuffer sb = new StringBuffer();
+    String s1 = t.getZweck();
+    String s2 = t.getZweck2();
+    String s3 = VerwendungszweckUtil.merge(t.getWeitereVerwendungszwecke());
+
+    if (s1 != null)
+    {
+      sb.append(s1);
+      sb.append(' ');
+    }
+    if (s2 != null)
+    {
+      sb.append(s2);
+      sb.append(' ');
+    }
+    if (s3 != null) sb.append(s3);
+    return sb.toString().replace('\n',' ');
+  }
 }
 
 
 
 /**********************************************************************
  * $Log: StringUtil.java,v $
- * Revision 1.2  2011/01/25 13:43:54  willuhn
+ * Revision 1.3  2011/01/25 14:05:12  willuhn
+ * @B Kompatibilitaet zu Hibiscus 1.12
+ *
+ * Revision 1.2  2011-01-25 13:43:54  willuhn
  * @N Loeschen von Auftraegen
  * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
  * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten

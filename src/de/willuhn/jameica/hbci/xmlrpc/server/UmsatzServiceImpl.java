@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UmsatzServiceImpl.java,v $
- * $Revision: 1.11 $
- * $Date: 2011/01/25 13:53:25 $
+ * $Revision: 1.12 $
+ * $Date: 2011/01/25 14:05:12 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -28,7 +28,6 @@ import de.willuhn.jameica.hbci.Settings;
 import de.willuhn.jameica.hbci.rmi.Umsatz;
 import de.willuhn.jameica.hbci.rmi.UmsatzTyp;
 import de.willuhn.jameica.hbci.server.UmsatzUtil;
-import de.willuhn.jameica.hbci.server.VerwendungszweckUtil;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.UmsatzService;
 import de.willuhn.jameica.hbci.xmlrpc.util.DateUtil;
 import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
@@ -274,7 +273,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
       map.put(KEY_BETRAG,            HBCI.DECIMALFORMAT.format(u.getBetrag()));
       map.put(KEY_VALUTA,            DateUtil.format(u.getValuta()));
       map.put(KEY_DATUM,             DateUtil.format(u.getDatum()));
-      map.put(KEY_ZWECK,             VerwendungszweckUtil.toString(u));
+      map.put(KEY_ZWECK,             StringUtil.mergeUsage(u));
       map.put(KEY_SALDO,             StringUtil.notNull(u.getSaldo()));
       map.put(KEY_PRIMANOTA,         StringUtil.notNull(u.getPrimanota()));
       map.put(KEY_CUSTOMER_REF,      StringUtil.notNull(u.getCustomerRef()));
@@ -301,7 +300,10 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
 
 /*********************************************************************
  * $Log: UmsatzServiceImpl.java,v $
- * Revision 1.11  2011/01/25 13:53:25  willuhn
+ * Revision 1.12  2011/01/25 14:05:12  willuhn
+ * @B Kompatibilitaet zu Hibiscus 1.12
+ *
+ * Revision 1.11  2011-01-25 13:53:25  willuhn
  * @C Jameica 1.10 Kompatibilitaet
  *
  * Revision 1.10  2011-01-25 13:49:26  willuhn
