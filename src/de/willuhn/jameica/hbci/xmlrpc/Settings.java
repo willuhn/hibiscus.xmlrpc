@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/Settings.java,v $
- * $Revision: 1.2 $
- * $Date: 2011/01/25 13:49:26 $
+ * $Revision: 1.3 $
+ * $Date: 2011/01/26 18:35:56 $
  * $Author: willuhn $
  *
  * Copyright (c) by willuhn - software & services
@@ -34,6 +34,16 @@ public class Settings
   }
   
   /**
+   * Legt fest, ob die XML-RPC-Implementierung NULL unterstuetzen soll.
+   * Siehe {@link Settings#isNullSupported()}
+   * @param b true, wenn NULL unterstuetzt werden soll.
+   */
+  public final static void setNullSupported(boolean b)
+  {
+    SETTINGS.setAttribute("xmlrpc.supports.null",b);
+  }
+  
+  /**
    * Liefert die maximale Anzahl zurueckzuliefernder Datensaetze.
    * Verhindert OutOfMemoryException bei zuvielen Ergebnissen.
    * @return maximale Anzahl zurueckzuliefernder Datensaetze. Per Default 10.000.
@@ -49,7 +59,10 @@ public class Settings
 
 /**********************************************************************
  * $Log: Settings.java,v $
- * Revision 1.2  2011/01/25 13:49:26  willuhn
+ * Revision 1.3  2011/01/26 18:35:56  willuhn
+ * @N Setter fuer Null-Support
+ *
+ * Revision 1.2  2011-01-25 13:49:26  willuhn
  * @N Limit konfigurierbar und auch in Auftragslisten beruecksichtigen
  *
  * Revision 1.1  2011-01-25 13:43:54  willuhn
