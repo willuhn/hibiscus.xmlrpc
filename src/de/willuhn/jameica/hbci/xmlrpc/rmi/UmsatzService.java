@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/UmsatzService.java,v $
- * $Revision: 1.7 $
- * $Date: 2011/01/25 13:43:54 $
+ * $Revision: 1.8 $
+ * $Date: 2011/02/06 21:52:11 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -28,9 +28,9 @@ public interface UmsatzService extends Service
 
   public static final String KEY_ID                = "id";
   public static final String KEY_KONTO_ID          = "konto_id";
-  public static final String KEY_GEGENKONTO_NAME   = "gegenkonto_name";
-  public static final String KEY_GEGENKONTO_NUMMER = "gegenkonto_nr";
-  public static final String KEY_GEGENKONTO_BLZ    = "gegenkonto_blz";
+  public static final String KEY_GEGENKONTO_NAME   = "empfaenger_name";
+  public static final String KEY_GEGENKONTO_NUMMER = "empfaenger_konto";
+  public static final String KEY_GEGENKONTO_BLZ    = "empfaenger_blz";
   public static final String KEY_ART               = "art";
   public static final String KEY_BETRAG            = "betrag";
   public static final String KEY_VALUTA            = "valuta";
@@ -111,7 +111,10 @@ public interface UmsatzService extends Service
 
 /*********************************************************************
  * $Log: UmsatzService.java,v $
- * Revision 1.7  2011/01/25 13:43:54  willuhn
+ * Revision 1.8  2011/02/06 21:52:11  willuhn
+ * @B Falscher Spaltenname
+ *
+ * Revision 1.7  2011-01-25 13:43:54  willuhn
  * @N Loeschen von Auftraegen
  * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
  * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten
