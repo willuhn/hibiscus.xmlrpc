@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/EchoTest.java,v $
- * $Revision: 1.4 $
- * $Date: 2011/01/27 00:10:33 $
+ * $Revision: 1.5 $
+ * $Date: 2011/02/07 12:22:13 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -87,14 +87,20 @@ public class EchoTest
       client.setConfig(config);
 
       
+      String kontoID = null;
+      
       ////////////////////////////////////////////////////////////////////////////
       // Test 1: Liste der Konten abrufen
       {
         System.out.println("Test 1: Konten abrufen");
-        Object[] l = (Object[]) client.execute("hibiscus.xmlrpc.konto.list",(Object[]) null);
+        Object[] l = (Object[]) client.execute("hibiscus.xmlrpc.konto.find",(Object[]) null);
         for (Object o:l)
         {
           System.out.println(o);
+          
+          // Fuer die weiteren Tests nehmen wir das erste gefundene Konto
+          if (kontoID == null)
+            kontoID = (String) ((Map)o).get("id");
         }
       }
       ////////////////////////////////////////////////////////////////////////////
@@ -134,11 +140,12 @@ public class EchoTest
       ////////////////////////////////////////////////////////////////////////////
       // Test 4: Ueberweisung anlegen
       {
+        System.out.println("Test 4: Überweisung anlegen");
         // Variante 1
         Map params = new HashMap();
         params.put("betrag",1.50d);
         params.put("termin","15.01.2011");
-        params.put("konto",195);
+        params.put("konto",kontoID);
         params.put("name","Max Mustermann");
         params.put("blz","12345678");
         params.put("kontonummer","1111111111");
@@ -150,7 +157,7 @@ public class EchoTest
         System.out.println(client.execute("hibiscus.xmlrpc.ueberweisung.delete",new Object[]{result}));
 
         // Variante 2
-        result = client.execute("hibiscus.xmlrpc.ueberweisung.create",new Object[]{"195",             // Konto-ID
+        result = client.execute("hibiscus.xmlrpc.ueberweisung.create",new Object[]{kontoID,           // Konto-ID
                                                                                    "1111111111",      // Empfaenger-Konto
                                                                                    "12345678",        // Empfaenger-BLZ
                                                                                    "Max Mustermann",  // Empfaenger-Name
@@ -166,12 +173,13 @@ public class EchoTest
       ////////////////////////////////////////////////////////////////////////////
 
       ////////////////////////////////////////////////////////////////////////////
-      // Test 4: Sammel-Lastschrift anlegen
+      // Test 5: Sammel-Lastschrift anlegen
       {
+        System.out.println("Test 5: Sammel-Lastschrift anlegen");
         Map params = new HashMap();
         params.put("name","Test");
         params.put("termin","15.01.2011");
-        params.put("konto",195);
+        params.put("konto",kontoID);
         
         Map buchung = new HashMap();
         buchung.put("betrag",1.50d);
@@ -191,6 +199,43 @@ public class EchoTest
         System.out.println(client.execute("hibiscus.xmlrpc.sammellastschrift.delete",new Object[]{result}));
       }
       ////////////////////////////////////////////////////////////////////////////
+
+      ////////////////////////////////////////////////////////////////////////////
+      // Test 6: Adresse anlegen
+      
+      Object id = null;
+      {
+        System.out.println("Test 6: Adresse anlegen");
+        
+        Map address = new HashMap();
+        address.put("name","Max Mustermann");
+        address.put("kontonummer","1234567890");
+        address.put("blz","12345678");
+        id = client.execute("hibiscus.xmlrpc.address.create",new Object[]{address});
+        System.out.println(id);
+      }
+      ////////////////////////////////////////////////////////////////////////////
+
+      ////////////////////////////////////////////////////////////////////////////
+      // Test 7: Adressen suchen
+      {
+        System.out.println("Test 7: Adressen suchen");
+        Object[] l = (Object[]) client.execute("hibiscus.xmlrpc.address.find",new String[]{"max"});
+        for (Object o:l)
+        {
+          System.out.println(o);
+        }
+      }
+      ////////////////////////////////////////////////////////////////////////////
+
+      ////////////////////////////////////////////////////////////////////////////
+      // Test 8: Adresse loeschen
+      {
+        System.out.println("Test 8: Adresse loeschen");
+        System.out.println(client.execute("hibiscus.xmlrpc.address.delete",new Object[]{id}));
+      }
+      ////////////////////////////////////////////////////////////////////////////
+
     }
     catch (Exception e)
     {
@@ -268,7 +313,10 @@ public class EchoTest
 
 /*********************************************************************
  * $Log: EchoTest.java,v $
- * Revision 1.4  2011/01/27 00:10:33  willuhn
+ * Revision 1.5  2011/02/07 12:22:13  willuhn
+ * @N XML-RPC Address-Service
+ *
+ * Revision 1.4  2011-01-27 00:10:33  willuhn
  * *** empty log message ***
  *
  * Revision 1.3  2011-01-25 13:43:54  willuhn

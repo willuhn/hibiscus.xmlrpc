@@ -20,6 +20,7 @@
   </classfinder>
 
   <services>
+    <service name="address"            depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.AddressService" />
     <service name="konto"              depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService" />
     <service name="umsatz"             depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.UmsatzService" />
     <service name="ueberweisung"       depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.UeberweisungService" />

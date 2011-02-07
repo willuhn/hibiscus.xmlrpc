@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/KontoService.java,v $
- * $Revision: 1.4 $
- * $Date: 2009/11/19 22:58:05 $
+ * $Revision: 1.5 $
+ * $Date: 2011/02/07 12:22:13 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -14,6 +14,8 @@
 package de.willuhn.jameica.hbci.xmlrpc.rmi;
 
 import java.rmi.RemoteException;
+import java.util.List;
+import java.util.Map;
 
 import de.willuhn.datasource.Service;
 
@@ -22,6 +24,20 @@ import de.willuhn.datasource.Service;
  */
 public interface KontoService extends Service
 {
+  public final static String PARAM_KONTONUMMER     = "kontonummer";
+  public final static String PARAM_UNTERKONTO      = "unterkonto";
+  public final static String PARAM_BLZ             = "blz";
+  public final static String PARAM_NAME            = "name";
+  public final static String PARAM_BEZEICHNUNG     = "bezeichnung";
+  public final static String PARAM_KUNDENNUMMER    = "kundennummer";
+  public final static String PARAM_KOMMENTAR       = "kommentar";
+  public final static String PARAM_BIC             = "bic";
+  public final static String PARAM_IBAN            = "iban";
+  public final static String PARAM_WAEHRUNG        = "waehrung";
+  public final static String PARAM_SALDO           = "saldo";
+  public final static String PARAM_SALDO_AVAILABLE = "saldo_available";
+  public final static String PARAM_SALDO_DATUM     = "saldo_datum";
+  
   /**
    * Liefert eine Liste der Konten.
    * Jede Zeile entspricht einem Konto. Die einzelnen Werte sind durch Doppelpunkt getrennt.
@@ -29,6 +45,13 @@ public interface KontoService extends Service
    * @throws RemoteException
    */
   public String[] list() throws RemoteException;
+  
+  /**
+   * Liefert eine Liste der Konten.
+   * @return Liste der Konten als Map.
+   * @throws RemoteException
+   */
+  public List<Map<String,String>> find() throws RemoteException;
   
   /**
    * Prueft eine BLZ/Kontonummer auf Plausibilitaet anhand der Pruefsumme.
@@ -51,6 +74,9 @@ public interface KontoService extends Service
 
 /*********************************************************************
  * $Log: KontoService.java,v $
+ * Revision 1.5  2011/02/07 12:22:13  willuhn
+ * @N XML-RPC Address-Service
+ *
  * Revision 1.4  2009/11/19 22:58:05  willuhn
  * @R Konto#create entfernt - ist Unsinn
  *

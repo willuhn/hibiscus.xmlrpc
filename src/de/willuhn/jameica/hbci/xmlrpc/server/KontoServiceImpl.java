@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/KontoServiceImpl.java,v $
- * $Revision: 1.8 $
- * $Date: 2011/01/25 13:49:26 $
+ * $Revision: 1.9 $
+ * $Date: 2011/02/07 12:22:13 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -14,7 +14,11 @@
 package de.willuhn.jameica.hbci.xmlrpc.server;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.willuhn.datasource.rmi.DBIterator;
 import de.willuhn.datasource.rmi.DBService;
@@ -98,6 +102,53 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
     }
   }
 
+  /**
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService#find()
+   */
+  public List<Map<String, String>> find() throws RemoteException
+  {
+    try
+    {
+      DBService service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
+      DBIterator i = service.createList(Konto.class);
+
+      List<Map<String,String>> result = new ArrayList<Map<String,String>>();
+      
+      while (i.hasNext())
+      {
+        Konto k = (Konto) i.next();
+        Date datum = k.getSaldoDatum();
+        double sa  = k.getSaldoAvailable();
+        
+        Map<String,String> m = new HashMap<String,String>();
+        m.put("id",                  k.getID());
+        m.put(PARAM_BEZEICHNUNG,     k.getBezeichnung());
+        m.put(PARAM_BIC,             k.getBic());
+        m.put(PARAM_BLZ,             k.getBLZ());
+        m.put(PARAM_IBAN,            k.getIban());
+        m.put(PARAM_KOMMENTAR,       k.getKommentar());
+        m.put(PARAM_KONTONUMMER,     k.getKontonummer());
+        m.put(PARAM_KUNDENNUMMER,    k.getKundennummer());
+        m.put(PARAM_NAME,            k.getName());
+        m.put(PARAM_SALDO,           HBCI.DECIMALFORMAT.format(k.getSaldo()));
+        m.put(PARAM_SALDO_AVAILABLE, Double.isNaN(sa) ? null : HBCI.DECIMALFORMAT.format(sa));
+        m.put(PARAM_SALDO_DATUM,     datum != null ? HBCI.DATEFORMAT.format(datum) : null);
+        m.put(PARAM_UNTERKONTO,      k.getUnterkonto());
+        m.put(PARAM_WAEHRUNG,        k.getWaehrung());
+        result.add(m);
+      }
+      
+      return result;
+    }
+    catch (RemoteException re)
+    {
+      throw re;
+    }
+    catch (Exception e)
+    {
+      throw new RemoteException(e.getMessage(),e);
+    }
+  }
 
   /**
    * @see de.willuhn.datasource.Service#getName()
@@ -140,7 +191,10 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
 
 /*********************************************************************
  * $Log: KontoServiceImpl.java,v $
- * Revision 1.8  2011/01/25 13:49:26  willuhn
+ * Revision 1.9  2011/02/07 12:22:13  willuhn
+ * @N XML-RPC Address-Service
+ *
+ * Revision 1.8  2011-01-25 13:49:26  willuhn
  * @N Limit konfigurierbar und auch in Auftragslisten beruecksichtigen
  *
  * Revision 1.7  2010/03/31 12:24:51  willuhn
