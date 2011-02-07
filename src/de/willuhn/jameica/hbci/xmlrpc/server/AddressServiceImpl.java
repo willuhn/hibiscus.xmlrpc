@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AddressServiceImpl.java,v $
- * $Revision: 1.1 $
- * $Date: 2011/02/07 12:22:13 $
+ * $Revision: 1.2 $
+ * $Date: 2011/02/07 17:12:52 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -25,6 +25,7 @@ import de.willuhn.jameica.hbci.rmi.Address;
 import de.willuhn.jameica.hbci.rmi.AddressbookService;
 import de.willuhn.jameica.hbci.rmi.HibiscusAddress;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.AddressService;
+import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
 import de.willuhn.jameica.system.Application;
 import de.willuhn.logging.Logger;
 import de.willuhn.util.ApplicationException;
@@ -57,15 +58,38 @@ public class AddressServiceImpl extends AbstractServiceImpl implements AddressSe
    */
   public String create(Map<String,String> address) throws RemoteException
   {
+    return store(address,false);
+  }
+
+  /**
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.AddressService#update(java.util.Map)
+   */
+  public String update(Map<String, String> address) throws RemoteException
+  {
+    return store(address,true);
+  }
+  
+  /**
+   * Speichert die Adresse.
+   * @param address die zu speichernde Adresse.
+   * @return Fehlertext oder ID des Datensatzes.
+   * @throws RemoteException
+   */
+  private String store(Map<String,String> address, boolean update) throws RemoteException
+  {
     boolean supportNull = de.willuhn.jameica.hbci.xmlrpc.Settings.isNullSupported();
 
     try
     {
       if (address == null || address.size() == 0)
         throw new ApplicationException(i18n.tr("Keine Adresseigenschaften angegeben"));
+      
+      String id = update ? address.get("id") : null;
+      if (update && (id == null || id.length() == 0))
+        throw new ApplicationException(i18n.tr("Schlüssel \"id\" mit der zu aktualisierenden Adresse fehlt"));
 
       DBService service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
-      HibiscusAddress a = (HibiscusAddress) service.createObject(HibiscusAddress.class,null);
+      HibiscusAddress a = (HibiscusAddress) service.createObject(HibiscusAddress.class,id);
       a.setBic(address.get(PARAM_BIC));
       a.setBlz(address.get(PARAM_BLZ));
       a.setIban(address.get(PARAM_IBAN));
@@ -74,6 +98,7 @@ public class AddressServiceImpl extends AbstractServiceImpl implements AddressSe
       a.setKontonummer(address.get(PARAM_KONTONUMMER));
       a.setName(address.get(PARAM_NAME));
       a.store();
+      Logger.info((update ? "updated" : "created") + " address [ID: " + a.getID() + "]");
       return supportNull ? null : a.getID();
     }
     catch (ApplicationException ae)
@@ -84,8 +109,8 @@ public class AddressServiceImpl extends AbstractServiceImpl implements AddressSe
     }
     catch (Exception e)
     {
-      Logger.error("unable to create address",e);
-      throw new RemoteException(i18n.tr("Fehler beim Erstellen der Adresse: {0}",e.getMessage()),e);
+      Logger.error("unable to store address",e);
+      throw new RemoteException(i18n.tr("Fehler beim Speichern der Adresse: {0}",e.getMessage()),e);
     }
   }
 
@@ -95,13 +120,13 @@ public class AddressServiceImpl extends AbstractServiceImpl implements AddressSe
   public Map<String,String> createParams() throws RemoteException
   {
     Map<String,String> m = new HashMap<String,String>();
-    m.put(PARAM_BIC,         (String) null);
-    m.put(PARAM_BLZ,         (String) null);
-    m.put(PARAM_IBAN,        (String) null);
-    m.put(PARAM_KATEGORIE,   (String) null);
-    m.put(PARAM_KOMMENTAR,   (String) null);
-    m.put(PARAM_KONTONUMMER, (String) null);
-    m.put(PARAM_NAME,        (String) null);
+    m.put(PARAM_BIC,         "");
+    m.put(PARAM_BLZ,         "");
+    m.put(PARAM_IBAN,        "");
+    m.put(PARAM_KATEGORIE,   "");
+    m.put(PARAM_KOMMENTAR,   "");
+    m.put(PARAM_KONTONUMMER, "");
+    m.put(PARAM_NAME,        "");
     return m;
   }
 
@@ -151,13 +176,13 @@ public class AddressServiceImpl extends AbstractServiceImpl implements AddressSe
         if (a instanceof HibiscusAddress)
           m.put("id",            ((HibiscusAddress)a).getID());
         
-        m.put(PARAM_BIC,         a.getBic());
-        m.put(PARAM_BLZ,         a.getBlz());
-        m.put(PARAM_IBAN,        a.getIban());
-        m.put(PARAM_KATEGORIE,   a.getKategorie());
-        m.put(PARAM_KOMMENTAR,   a.getKommentar());
-        m.put(PARAM_KONTONUMMER, a.getKontonummer());
-        m.put(PARAM_NAME,        a.getName());
+        m.put(PARAM_BIC,         StringUtil.notNull(a.getBic()));
+        m.put(PARAM_BLZ,         StringUtil.notNull(a.getBlz()));
+        m.put(PARAM_IBAN,        StringUtil.notNull(a.getIban()));
+        m.put(PARAM_KATEGORIE,   StringUtil.notNull(a.getKategorie()));
+        m.put(PARAM_KOMMENTAR,   StringUtil.notNull(a.getKommentar()));
+        m.put(PARAM_KONTONUMMER, StringUtil.notNull(a.getKontonummer()));
+        m.put(PARAM_NAME,        StringUtil.notNull(a.getName()));
         
         result.add(m);
       }
@@ -180,7 +205,10 @@ public class AddressServiceImpl extends AbstractServiceImpl implements AddressSe
 
 /*********************************************************************
  * $Log: AddressServiceImpl.java,v $
- * Revision 1.1  2011/02/07 12:22:13  willuhn
+ * Revision 1.2  2011/02/07 17:12:52  willuhn
+ * @N Code-Cleanup
+ *
+ * Revision 1.1  2011-02-07 12:22:13  willuhn
  * @N XML-RPC Address-Service
  *
  **********************************************************************/

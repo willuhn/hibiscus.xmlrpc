@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/EchoTest.java,v $
- * $Revision: 1.5 $
- * $Date: 2011/02/07 12:22:13 $
+ * $Revision: 1.6 $
+ * $Date: 2011/02/07 17:12:52 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -229,9 +229,25 @@ public class EchoTest
       ////////////////////////////////////////////////////////////////////////////
 
       ////////////////////////////////////////////////////////////////////////////
-      // Test 8: Adresse loeschen
+      // Test 8: Adresse aendern
+      
       {
-        System.out.println("Test 8: Adresse loeschen");
+        System.out.println("Test 8: Adresse aendern");
+        
+        Map address = new HashMap();
+        address.put("id",id);
+        address.put("name","Max Mustermann");
+        address.put("kontonummer","1111111111");
+        address.put("blz","12345678");
+        id = client.execute("hibiscus.xmlrpc.address.update",new Object[]{address});
+        System.out.println(id);
+      }
+      ////////////////////////////////////////////////////////////////////////////
+
+      ////////////////////////////////////////////////////////////////////////////
+      // Test 9: Adresse loeschen
+      {
+        System.out.println("Test 9: Adresse loeschen");
         System.out.println(client.execute("hibiscus.xmlrpc.address.delete",new Object[]{id}));
       }
       ////////////////////////////////////////////////////////////////////////////
@@ -313,7 +329,10 @@ public class EchoTest
 
 /*********************************************************************
  * $Log: EchoTest.java,v $
- * Revision 1.5  2011/02/07 12:22:13  willuhn
+ * Revision 1.6  2011/02/07 17:12:52  willuhn
+ * @N Code-Cleanup
+ *
+ * Revision 1.5  2011-02-07 12:22:13  willuhn
  * @N XML-RPC Address-Service
  *
  * Revision 1.4  2011-01-27 00:10:33  willuhn

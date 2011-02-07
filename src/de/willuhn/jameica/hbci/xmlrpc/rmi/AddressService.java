@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/AddressService.java,v $
- * $Revision: 1.1 $
- * $Date: 2011/02/07 12:22:13 $
+ * $Revision: 1.2 $
+ * $Date: 2011/02/07 17:12:52 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -64,6 +64,15 @@ public interface AddressService extends Service
   public String create(Map<String,String> address) throws RemoteException;
   
   /**
+   * Aktualisiert eine vorhandene Adresse.
+   * @param address die zu aktualisierende Adresse.
+   * Die Map muss einen Key "id" mit der ID der zu aendernden Adresse enthalten.
+   * @return siehe {@link AddressService#create(Map)}
+   * @throws RemoteException
+   */
+  public String update(Map<String,String> address) throws RemoteException;
+
+  /**
    * Loescht die Adresse mit der angegebenen ID.
    * @param id die ID des Auftrages.
    * @return siehe {@link AddressService#create(Map)}
@@ -76,7 +85,10 @@ public interface AddressService extends Service
 
 /*********************************************************************
  * $Log: AddressService.java,v $
- * Revision 1.1  2011/02/07 12:22:13  willuhn
+ * Revision 1.2  2011/02/07 17:12:52  willuhn
+ * @N Code-Cleanup
+ *
+ * Revision 1.1  2011-02-07 12:22:13  willuhn
  * @N XML-RPC Address-Service
  *
  **********************************************************************/
