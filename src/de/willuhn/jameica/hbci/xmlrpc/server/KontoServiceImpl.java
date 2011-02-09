@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/KontoServiceImpl.java,v $
- * $Revision: 1.9 $
- * $Date: 2011/02/07 12:22:13 $
+ * $Revision: 1.10 $
+ * $Date: 2011/02/09 16:28:25 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -122,19 +122,19 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
         
         Map<String,String> m = new HashMap<String,String>();
         m.put("id",                  k.getID());
-        m.put(PARAM_BEZEICHNUNG,     k.getBezeichnung());
-        m.put(PARAM_BIC,             k.getBic());
-        m.put(PARAM_BLZ,             k.getBLZ());
-        m.put(PARAM_IBAN,            k.getIban());
-        m.put(PARAM_KOMMENTAR,       k.getKommentar());
-        m.put(PARAM_KONTONUMMER,     k.getKontonummer());
-        m.put(PARAM_KUNDENNUMMER,    k.getKundennummer());
-        m.put(PARAM_NAME,            k.getName());
+        m.put(PARAM_BEZEICHNUNG,     StringUtil.notNull(k.getBezeichnung()));
+        m.put(PARAM_BIC,             StringUtil.notNull(k.getBic()));
+        m.put(PARAM_BLZ,             StringUtil.notNull(k.getBLZ()));
+        m.put(PARAM_IBAN,            StringUtil.notNull(k.getIban()));
+        m.put(PARAM_KOMMENTAR,       StringUtil.notNull(k.getKommentar()));
+        m.put(PARAM_KONTONUMMER,     StringUtil.notNull(k.getKontonummer()));
+        m.put(PARAM_KUNDENNUMMER,    StringUtil.notNull(k.getKundennummer()));
+        m.put(PARAM_NAME,            StringUtil.notNull(k.getName()));
         m.put(PARAM_SALDO,           HBCI.DECIMALFORMAT.format(k.getSaldo()));
-        m.put(PARAM_SALDO_AVAILABLE, Double.isNaN(sa) ? null : HBCI.DECIMALFORMAT.format(sa));
-        m.put(PARAM_SALDO_DATUM,     datum != null ? HBCI.DATEFORMAT.format(datum) : null);
-        m.put(PARAM_UNTERKONTO,      k.getUnterkonto());
-        m.put(PARAM_WAEHRUNG,        k.getWaehrung());
+        m.put(PARAM_SALDO_AVAILABLE, Double.isNaN(sa) ? "" : HBCI.DECIMALFORMAT.format(sa));
+        m.put(PARAM_SALDO_DATUM,     datum != null ? HBCI.DATEFORMAT.format(datum) : "");
+        m.put(PARAM_UNTERKONTO,      StringUtil.notNull(k.getUnterkonto()));
+        m.put(PARAM_WAEHRUNG,        StringUtil.notNull(k.getWaehrung()));
         result.add(m);
       }
       
@@ -191,7 +191,10 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
 
 /*********************************************************************
  * $Log: KontoServiceImpl.java,v $
- * Revision 1.9  2011/02/07 12:22:13  willuhn
+ * Revision 1.10  2011/02/09 16:28:25  willuhn
+ * @B NotNUll
+ *
+ * Revision 1.9  2011-02-07 12:22:13  willuhn
  * @N XML-RPC Address-Service
  *
  * Revision 1.8  2011-01-25 13:49:26  willuhn
