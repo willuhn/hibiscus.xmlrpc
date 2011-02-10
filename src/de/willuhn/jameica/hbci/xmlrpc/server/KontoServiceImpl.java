@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/KontoServiceImpl.java,v $
- * $Revision: 1.11 $
- * $Date: 2011/02/10 15:41:04 $
+ * $Revision: 1.12 $
+ * $Date: 2011/02/10 15:44:48 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -28,6 +28,7 @@ import de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService;
 import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
 import de.willuhn.jameica.messaging.QueryMessage;
 import de.willuhn.jameica.system.Application;
+import de.willuhn.logging.Logger;
 
 /**
  * Implementierung des Konto-Service.
@@ -54,12 +55,20 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
     {
       DBService service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
       DBIterator i = service.createList(Konto.class);
-      String[] list = new String[i.size()];
+
+      List<String> list = new ArrayList<String>();
 
       int count = 0;
+      int limit = de.willuhn.jameica.hbci.xmlrpc.Settings.getResultLimit();
       
       while (i.hasNext())
       {
+        if (count++ > limit)
+        {
+          Logger.warn("result size limited to " + limit + " items");
+          break;
+        }
+
         Konto k = (Konto) i.next();
         StringBuffer sb = new StringBuffer();
         sb.append(StringUtil.quote(StringUtil.notNull(k.getID())));
@@ -80,9 +89,9 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
         sb.append(StringUtil.quote(StringUtil.notNull(date != null ? (""+saldo) : "")));
         sb.append(":");
         sb.append(StringUtil.quote(StringUtil.notNull(date != null ? HBCI.DATEFORMAT.format(date) : "")));
-        list[count++] = sb.toString();
+        list.add(sb.toString());
       }
-      return list;
+      return list.toArray(new String[list.size()]);
     }
     catch (RemoteException re)
     {
@@ -106,8 +115,17 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
 
       List<Map<String,String>> result = new ArrayList<Map<String,String>>();
       
+      int count = 0;
+      int limit = de.willuhn.jameica.hbci.xmlrpc.Settings.getResultLimit();
+
       while (i.hasNext())
       {
+        if (count++ > limit)
+        {
+          Logger.warn("result size limited to " + limit + " items");
+          break;
+        }
+
         Konto k = (Konto) i.next();
         Date datum = k.getSaldoDatum();
         double sa  = k.getSaldoAvailable();
@@ -183,7 +201,10 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
 
 /*********************************************************************
  * $Log: KontoServiceImpl.java,v $
- * Revision 1.11  2011/02/10 15:41:04  willuhn
+ * Revision 1.12  2011/02/10 15:44:48  willuhn
+ * @C nicht direkt auf Array arbeiten
+ *
+ * Revision 1.11  2011-02-10 15:41:04  willuhn
  * @C Result-Limit wurde nicht ueberall beruecksichtigt
  *
  * Revision 1.10  2011-02-09 16:28:25  willuhn
