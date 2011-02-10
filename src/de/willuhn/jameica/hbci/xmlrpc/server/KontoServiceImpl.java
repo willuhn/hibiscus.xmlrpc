@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/KontoServiceImpl.java,v $
- * $Revision: 1.10 $
- * $Date: 2011/02/09 16:28:25 $
+ * $Revision: 1.11 $
+ * $Date: 2011/02/10 15:41:04 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -28,7 +28,6 @@ import de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService;
 import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
 import de.willuhn.jameica.messaging.QueryMessage;
 import de.willuhn.jameica.system.Application;
-import de.willuhn.logging.Logger;
 
 /**
  * Implementierung des Konto-Service.
@@ -58,7 +57,6 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
       String[] list = new String[i.size()];
 
       int count = 0;
-      int limit = de.willuhn.jameica.hbci.xmlrpc.Settings.getResultLimit();
       
       while (i.hasNext())
       {
@@ -83,12 +81,6 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
         sb.append(":");
         sb.append(StringUtil.quote(StringUtil.notNull(date != null ? HBCI.DATEFORMAT.format(date) : "")));
         list[count++] = sb.toString();
-
-        if (count > limit)
-        {
-          Logger.warn("result size limited to " + limit + " items");
-          break;
-        }
       }
       return list;
     }
@@ -191,7 +183,10 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
 
 /*********************************************************************
  * $Log: KontoServiceImpl.java,v $
- * Revision 1.10  2011/02/09 16:28:25  willuhn
+ * Revision 1.11  2011/02/10 15:41:04  willuhn
+ * @C Result-Limit wurde nicht ueberall beruecksichtigt
+ *
+ * Revision 1.10  2011-02-09 16:28:25  willuhn
  * @B NotNUll
  *
  * Revision 1.9  2011-02-07 12:22:13  willuhn

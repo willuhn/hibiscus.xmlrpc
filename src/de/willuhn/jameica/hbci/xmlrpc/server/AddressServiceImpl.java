@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AddressServiceImpl.java,v $
- * $Revision: 1.2 $
- * $Date: 2011/02/07 17:12:52 $
+ * $Revision: 1.3 $
+ * $Date: 2011/02/10 15:41:05 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -170,8 +170,17 @@ public class AddressServiceImpl extends AbstractServiceImpl implements AddressSe
       List<Address> list = service.findAddresses(query);
       List<Map<String,String>> result = new ArrayList<Map<String,String>>();
       
+      int count = 0;
+      int limit = de.willuhn.jameica.hbci.xmlrpc.Settings.getResultLimit();
+
       for (Address a:list)
       {
+        if (count++ > limit)
+        {
+          Logger.warn("result size limited to " + limit + " items");
+          break;
+        }
+
         Map<String,String> m = new HashMap<String,String>();
         if (a instanceof HibiscusAddress)
           m.put("id",            ((HibiscusAddress)a).getID());
@@ -205,7 +214,10 @@ public class AddressServiceImpl extends AbstractServiceImpl implements AddressSe
 
 /*********************************************************************
  * $Log: AddressServiceImpl.java,v $
- * Revision 1.2  2011/02/07 17:12:52  willuhn
+ * Revision 1.3  2011/02/10 15:41:05  willuhn
+ * @C Result-Limit wurde nicht ueberall beruecksichtigt
+ *
+ * Revision 1.2  2011-02-07 17:12:52  willuhn
  * @N Code-Cleanup
  *
  * Revision 1.1  2011-02-07 12:22:13  willuhn

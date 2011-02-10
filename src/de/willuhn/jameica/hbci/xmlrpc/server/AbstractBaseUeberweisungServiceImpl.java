@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractBaseUeberweisungServiceImpl.java,v $
- * $Revision: 1.6 $
- * $Date: 2011/02/10 11:55:19 $
+ * $Revision: 1.7 $
+ * $Date: 2011/02/10 15:41:04 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -81,9 +81,18 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
       DBIterator i = service.createList(getType());
       i.setOrder("ORDER BY " + service.getSQLTimestamp("termin") + " DESC, id DESC");
       String[] list = new String[i.size()];
+
       int count = 0;
+      int limit = de.willuhn.jameica.hbci.xmlrpc.Settings.getResultLimit();
+      
       while (i.hasNext())
       {
+        if (count++ > limit)
+        {
+          Logger.warn("result size limited to " + limit + " items");
+          break;
+        }
+
         T t = (T) i.next();
         Konto k = t.getKonto();
         StringBuffer sb = new StringBuffer();
@@ -100,7 +109,7 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
         sb.append(StringUtil.quote(StringUtil.notNull(t.getZweck2())));
         sb.append(":");
         sb.append(StringUtil.quote(StringUtil.notNull(HBCI.DECIMALFORMAT.format(t.getBetrag()))));
-        list[count++] = sb.toString();
+        list[count] = sb.toString();
       }
       return list;
     }
@@ -367,7 +376,10 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
 
 /*********************************************************************
  * $Log: AbstractBaseUeberweisungServiceImpl.java,v $
- * Revision 1.6  2011/02/10 11:55:19  willuhn
+ * Revision 1.7  2011/02/10 15:41:04  willuhn
+ * @C Result-Limit wurde nicht ueberall beruecksichtigt
+ *
+ * Revision 1.6  2011-02-10 11:55:19  willuhn
  * @B minor debugging
  *
  * Revision 1.5  2011-01-25 13:53:25  willuhn
