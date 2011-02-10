@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UmsatzServiceImpl.java,v $
- * $Revision: 1.12 $
- * $Date: 2011/01/25 14:05:12 $
+ * $Revision: 1.13 $
+ * $Date: 2011/02/10 11:55:19 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -56,32 +56,16 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
     {
       DBIterator list = UmsatzUtil.getUmsaetzeBackwards();
 
-      if (von != null && von.length() > 0)
-      {
-        try
-        {
-          Date start = HBCI.DATEFORMAT.parse(von);
-          list.addFilter("valuta >= ?", new Object[] { new java.sql.Date(HBCIProperties.startOfDay(start).getTime()) });
-        }
-        catch (Exception e)
-        {
-          throw new RemoteException("invalid start date: " + von);
-        }
-      }
+      Date start = de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(von);
+      if (start != null)
+        list.addFilter("valuta >= ?",new Object[]{new java.sql.Date(HBCIProperties.startOfDay(start).getTime())});
 
-      if (bis != null && bis.length() > 0)
-      {
-        try
-        {
-          Date end = HBCI.DATEFORMAT.parse(bis);
-          list.addFilter("valuta <= ?", new Object[] { new java.sql.Date(HBCIProperties.endOfDay(end).getTime()) });
-        }
-        catch (Exception e)
-        {
-          throw new RemoteException("invalid end date: " + bis);
-        }
-      }
-
+      Date end = de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(bis);
+      if (end != null)
+        list.addFilter("valuta <= ?",new Object[]{new java.sql.Date(HBCIProperties.endOfDay(end).getTime())});
+      
+      // Wir suchen nicht selbst nach dem Suchbegriff sondern lassen das einfach
+      // eine virtuelle Umsatz-Kategorie machen
       UmsatzTyp typ = null;
       if (text != null && text.length() > 0)
       {
@@ -97,7 +81,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
         if (count++ > limit)
         {
           // Sonst koennte man eine OutOfMemoryException provozieren
-          Logger.warn("result size limited to " + limit + " tems");
+          Logger.warn("result size limited to " + limit + " items");
           break;
         }
 
@@ -229,14 +213,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
         // Umsatz-Typ
         if (key.equals(KEY_UMSATZ_TYP))
         {
-          try
-          {
-            typ = (UmsatzTyp) Settings.getDBService().createObject(UmsatzTyp.class, value.toString());
-          }
-          catch (ObjectNotFoundException e)
-          {
-            Logger.warn("category [ID: " + value + "] not found, skipping");
-          }
+          typ = findKategorie(value.toString());
           continue;
         }
         Logger.warn("unknown parameter " + key + ", skipping");
@@ -260,7 +237,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
       }
       
       Umsatz u = (Umsatz) list.next();
-      if (typ != null && !typ.matches(u))
+      if (typ != null && !typ.matches(u)) // wenn eine Kategorie angegeben ist, muss sie passen
         continue;
 
       Map<String, Object> map = new HashMap<String, Object>();
@@ -288,6 +265,40 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
     }
     return result;
   }
+  
+  /**
+   * Sucht die Kategorie mit dem angegebenen Namen oder der ID.
+   * @param s Name oder ID der Kategorie.
+   * @return die gefundene Kategorie oder NULL.
+   * @throws RemoteException
+   */
+  private UmsatzTyp findKategorie(String s) throws RemoteException
+  {
+    if (s == null)
+      return null;
+    
+    s = s.trim().toLowerCase();
+    if (s.length() == 0)
+      return null;
+    
+    // Checken, ob wir sie anhand der ID finden
+    try
+    {
+      return (UmsatzTyp) Settings.getDBService().createObject(UmsatzTyp.class,s);
+    }
+    catch (ObjectNotFoundException oe)
+    {
+      // Ne, gibts nicht
+    }
+    
+    // Dann suchen wir anhand des Namens
+    DBIterator list = Settings.getDBService().createList(UmsatzTyp.class);
+    list.addFilter("lower(name) like ?",new Object[]{s});
+    if (list.hasNext())
+      return (UmsatzTyp) list.next();
+    
+    return null;
+  }
 
   /**
    * @see de.willuhn.datasource.Service#getName()
@@ -300,7 +311,10 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
 
 /*********************************************************************
  * $Log: UmsatzServiceImpl.java,v $
- * Revision 1.12  2011/01/25 14:05:12  willuhn
+ * Revision 1.13  2011/02/10 11:55:19  willuhn
+ * @B minor debugging
+ *
+ * Revision 1.12  2011-01-25 14:05:12  willuhn
  * @B Kompatibilitaet zu Hibiscus 1.12
  *
  * Revision 1.11  2011-01-25 13:53:25  willuhn

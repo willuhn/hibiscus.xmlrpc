@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractBaseUeberweisungServiceImpl.java,v $
- * $Revision: 1.5 $
- * $Date: 2011/01/25 13:53:25 $
+ * $Revision: 1.6 $
+ * $Date: 2011/02/10 11:55:19 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -125,10 +125,12 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
       DBIterator i = service.createList(getType());
 
       Date start = de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(von);
-      i.addFilter("termin >= ?",new Object[]{new java.sql.Date(HBCIProperties.startOfDay(start).getTime())});
+      if (start != null)
+        i.addFilter("termin >= ?",new Object[]{new java.sql.Date(HBCIProperties.startOfDay(start).getTime())});
 
       Date end = de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(bis);
-      i.addFilter("termin <= ?",new Object[]{new java.sql.Date(HBCIProperties.endOfDay(end).getTime())});
+      if (end != null)
+        i.addFilter("termin <= ?",new Object[]{new java.sql.Date(HBCIProperties.endOfDay(end).getTime())});
 
       if (text != null && text.length() > 0)
       {
@@ -170,12 +172,12 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
         values.put("id",                t.getID());
         values.put("ausgefuehrt",       Boolean.toString(t.ausgefuehrt()));
         values.put(PARAM_BETRAG,        HBCI.DECIMALFORMAT.format(t.getBetrag()));
-        values.put(PARAM_BLZ,           t.getGegenkontoBLZ());
+        values.put(PARAM_BLZ,           StringUtil.notNull(t.getGegenkontoBLZ()));
         values.put(PARAM_KONTO,         k.getID());
-        values.put(PARAM_KONTONUMMER,   t.getGegenkontoNummer());
-        values.put(PARAM_NAME,          t.getGegenkontoName());
+        values.put(PARAM_KONTONUMMER,   StringUtil.notNull(t.getGegenkontoNummer()));
+        values.put(PARAM_NAME,          StringUtil.notNull(t.getGegenkontoName()));
         values.put(PARAM_TERMIN,        HBCI.DATEFORMAT.format(t.getTermin()));
-        values.put(PARAM_TEXTSCHLUESSEL,t.getTextSchluessel());
+        values.put(PARAM_TEXTSCHLUESSEL,StringUtil.notNull(t.getTextSchluessel()));
         
         List<String> usages = new ArrayList<String>();
         usages.add(t.getZweck());
@@ -365,7 +367,10 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
 
 /*********************************************************************
  * $Log: AbstractBaseUeberweisungServiceImpl.java,v $
- * Revision 1.5  2011/01/25 13:53:25  willuhn
+ * Revision 1.6  2011/02/10 11:55:19  willuhn
+ * @B minor debugging
+ *
+ * Revision 1.5  2011-01-25 13:53:25  willuhn
  * @C Jameica 1.10 Kompatibilitaet
  *
  * Revision 1.4  2011-01-25 13:49:26  willuhn

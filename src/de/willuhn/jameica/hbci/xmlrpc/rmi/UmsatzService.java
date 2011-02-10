@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/UmsatzService.java,v $
- * $Revision: 1.8 $
- * $Date: 2011/02/06 21:52:11 $
+ * $Revision: 1.9 $
+ * $Date: 2011/02/10 11:55:19 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -60,9 +60,9 @@ public interface UmsatzService extends Service
    *
    * konto_id
    * art
-   * gegenkonto_name
-   * gegenkonto_nr
-   * gegenkonto_blz
+   * empfaenger_name
+   * empfaenger_konto
+   * empfaenger_blz
    * id
    * id:min
    * id:max
@@ -80,7 +80,7 @@ public interface UmsatzService extends Service
    * betrag:max
    * primanota
    * customer_ref
-   * umsatz_typ (ID der Umsatz-Kategorie)
+   * umsatz_typ (Name oder ID der Umsatz-Kategorie)
    * zweck
    *
    * Die Funktion liefer eine Liste mit den Umsaetzen zurueck
@@ -89,9 +89,9 @@ public interface UmsatzService extends Service
    *
    * id
    * konto_id
-   * gegenkonto_name
-   * gegenkonto_nr
-   * gegenkonto_blz
+   * empfaenger_name
+   * empfaenger_konto
+   * empfaenger_blz
    * saldo
    * valuta
    * datum
@@ -111,7 +111,10 @@ public interface UmsatzService extends Service
 
 /*********************************************************************
  * $Log: UmsatzService.java,v $
- * Revision 1.8  2011/02/06 21:52:11  willuhn
+ * Revision 1.9  2011/02/10 11:55:19  willuhn
+ * @B minor debugging
+ *
+ * Revision 1.8  2011-02-06 21:52:11  willuhn
  * @B Falscher Spaltenname
  *
  * Revision 1.7  2011-01-25 13:43:54  willuhn

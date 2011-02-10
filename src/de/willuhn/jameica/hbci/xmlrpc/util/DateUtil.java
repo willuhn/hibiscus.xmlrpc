@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/util/DateUtil.java,v $
- * $Revision: 1.2 $
- * $Date: 2011/01/25 13:43:54 $
+ * $Revision: 1.3 $
+ * $Date: 2011/02/10 11:55:19 $
  * $Author: willuhn $
  *
  * Copyright (c) by willuhn - software & services
@@ -47,6 +47,8 @@ public class DateUtil
       return (Date) object;
 
     String s = object.toString();
+    if (s.length() == 0)
+      return null;
 
     try
     {
@@ -82,7 +84,10 @@ public class DateUtil
 
 /**********************************************************************
  * $Log: DateUtil.java,v $
- * Revision 1.2  2011/01/25 13:43:54  willuhn
+ * Revision 1.3  2011/02/10 11:55:19  willuhn
+ * @B minor debugging
+ *
+ * Revision 1.2  2011-01-25 13:43:54  willuhn
  * @N Loeschen von Auftraegen
  * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
  * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten
