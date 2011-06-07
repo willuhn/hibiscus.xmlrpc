@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UmsatzServiceImpl.java,v $
- * $Revision: 1.13 $
- * $Date: 2011/02/10 11:55:19 $
+ * $Revision: 1.14 $
+ * $Date: 2011/06/07 10:07:53 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -28,6 +28,7 @@ import de.willuhn.jameica.hbci.Settings;
 import de.willuhn.jameica.hbci.rmi.Umsatz;
 import de.willuhn.jameica.hbci.rmi.UmsatzTyp;
 import de.willuhn.jameica.hbci.server.UmsatzUtil;
+import de.willuhn.jameica.hbci.server.VerwendungszweckUtil;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.UmsatzService;
 import de.willuhn.jameica.hbci.xmlrpc.util.DateUtil;
 import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
@@ -250,7 +251,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
       map.put(KEY_BETRAG,            HBCI.DECIMALFORMAT.format(u.getBetrag()));
       map.put(KEY_VALUTA,            DateUtil.format(u.getValuta()));
       map.put(KEY_DATUM,             DateUtil.format(u.getDatum()));
-      map.put(KEY_ZWECK,             StringUtil.mergeUsage(u));
+      map.put(KEY_ZWECK,             VerwendungszweckUtil.toString(u," "));
       map.put(KEY_SALDO,             StringUtil.notNull(u.getSaldo()));
       map.put(KEY_PRIMANOTA,         StringUtil.notNull(u.getPrimanota()));
       map.put(KEY_CUSTOMER_REF,      StringUtil.notNull(u.getCustomerRef()));
@@ -311,7 +312,10 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
 
 /*********************************************************************
  * $Log: UmsatzServiceImpl.java,v $
- * Revision 1.13  2011/02/10 11:55:19  willuhn
+ * Revision 1.14  2011/06/07 10:07:53  willuhn
+ * @C Verwendungszweck-Handling vereinheitlicht/vereinfacht - geht jetzt fast ueberall ueber VerwendungszweckUtil
+ *
+ * Revision 1.13  2011-02-10 11:55:19  willuhn
  * @B minor debugging
  *
  * Revision 1.12  2011-01-25 14:05:12  willuhn
