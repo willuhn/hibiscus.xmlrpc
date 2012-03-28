@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractBaseUeberweisungServiceImpl.java,v $
- * $Revision: 1.8 $
- * $Date: 2011/02/10 15:44:48 $
+ * $Revision: 1.9 $
+ * $Date: 2012/03/28 22:18:41 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -36,11 +36,13 @@ import de.willuhn.jameica.hbci.xmlrpc.rmi.BaseUeberweisungService;
 import de.willuhn.jameica.hbci.xmlrpc.util.DecimalUtil;
 import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
 import de.willuhn.jameica.system.Application;
+import de.willuhn.jameica.util.DateUtil;
 import de.willuhn.logging.Logger;
 import de.willuhn.util.ApplicationException;
 
 /**
  * Abstrakte Basis-Implementierung des Service fuer Ueberweisungen/Lastschriften.
+ * @param <T> der konkrete Auftragstyp.
  */
 public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberweisung> extends AbstractServiceImpl implements BaseUeberweisungService
 {
@@ -136,11 +138,11 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
 
       Date start = de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(von);
       if (start != null)
-        i.addFilter("termin >= ?",new Object[]{new java.sql.Date(HBCIProperties.startOfDay(start).getTime())});
+        i.addFilter("termin >= ?",new Object[]{new java.sql.Date(DateUtil.startOfDay(start).getTime())});
 
       Date end = de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(bis);
       if (end != null)
-        i.addFilter("termin <= ?",new Object[]{new java.sql.Date(HBCIProperties.endOfDay(end).getTime())});
+        i.addFilter("termin <= ?",new Object[]{new java.sql.Date(DateUtil.endOfDay(end).getTime())});
 
       if (text != null && text.length() > 0)
       {
@@ -377,7 +379,10 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
 
 /*********************************************************************
  * $Log: AbstractBaseUeberweisungServiceImpl.java,v $
- * Revision 1.8  2011/02/10 15:44:48  willuhn
+ * Revision 1.9  2012/03/28 22:18:41  willuhn
+ * @C Umstellung auf DateUtil, javadoc Fixes
+ *
+ * Revision 1.8  2011-02-10 15:44:48  willuhn
  * @C nicht direkt auf Array arbeiten
  *
  * Revision 1.7  2011-02-10 15:41:04  willuhn

@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/AbstractSammelTransferServiceImpl.java,v $
- * $Revision: 1.4 $
- * $Date: 2011/01/25 14:00:40 $
+ * $Revision: 1.5 $
+ * $Date: 2012/03/28 22:18:41 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -229,7 +229,7 @@ public abstract class AbstractSammelTransferServiceImpl extends AbstractServiceI
   }
 
   /**
-   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.BaseUeberweisungService#delete(java.lang.String)
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.SammelTransferService#delete(java.lang.String)
    */
   public String delete(String id) throws RemoteException
   {
@@ -260,7 +260,10 @@ public abstract class AbstractSammelTransferServiceImpl extends AbstractServiceI
 
 /**********************************************************************
  * $Log: AbstractSammelTransferServiceImpl.java,v $
- * Revision 1.4  2011/01/25 14:00:40  willuhn
+ * Revision 1.5  2012/03/28 22:18:41  willuhn
+ * @C Umstellung auf DateUtil, javadoc Fixes
+ *
+ * Revision 1.4  2011-01-25 14:00:40  willuhn
  * @B Kompatibilitaet zu Hibiscus 1.12
  *
  * Revision 1.3  2011-01-25 13:43:54  willuhn

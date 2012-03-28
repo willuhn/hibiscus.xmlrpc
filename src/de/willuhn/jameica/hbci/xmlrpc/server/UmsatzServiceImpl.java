@@ -1,7 +1,7 @@
 /**********************************************************************
  * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UmsatzServiceImpl.java,v $
- * $Revision: 1.14 $
- * $Date: 2011/06/07 10:07:53 $
+ * $Revision: 1.15 $
+ * $Date: 2012/03/28 22:18:41 $
  * $Author: willuhn $
  * $Locker:  $
  * $State: Exp $
@@ -23,7 +23,6 @@ import java.util.Map;
 import de.willuhn.datasource.rmi.DBIterator;
 import de.willuhn.datasource.rmi.ObjectNotFoundException;
 import de.willuhn.jameica.hbci.HBCI;
-import de.willuhn.jameica.hbci.HBCIProperties;
 import de.willuhn.jameica.hbci.Settings;
 import de.willuhn.jameica.hbci.rmi.Umsatz;
 import de.willuhn.jameica.hbci.rmi.UmsatzTyp;
@@ -59,11 +58,11 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
 
       Date start = de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(von);
       if (start != null)
-        list.addFilter("valuta >= ?",new Object[]{new java.sql.Date(HBCIProperties.startOfDay(start).getTime())});
+        list.addFilter("valuta >= ?",new Object[]{new java.sql.Date(de.willuhn.jameica.util.DateUtil.startOfDay(start).getTime())});
 
       Date end = de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(bis);
       if (end != null)
-        list.addFilter("valuta <= ?",new Object[]{new java.sql.Date(HBCIProperties.endOfDay(end).getTime())});
+        list.addFilter("valuta <= ?",new Object[]{new java.sql.Date(de.willuhn.jameica.util.DateUtil.endOfDay(end).getTime())});
       
       // Wir suchen nicht selbst nach dem Suchbegriff sondern lassen das einfach
       // eine virtuelle Umsatz-Kategorie machen
@@ -312,7 +311,10 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
 
 /*********************************************************************
  * $Log: UmsatzServiceImpl.java,v $
- * Revision 1.14  2011/06/07 10:07:53  willuhn
+ * Revision 1.15  2012/03/28 22:18:41  willuhn
+ * @C Umstellung auf DateUtil, javadoc Fixes
+ *
+ * Revision 1.14  2011-06-07 10:07:53  willuhn
  * @C Verwendungszweck-Handling vereinheitlicht/vereinfacht - geht jetzt fast ueberall ueber VerwendungszweckUtil
  *
  * Revision 1.13  2011-02-10 11:55:19  willuhn
