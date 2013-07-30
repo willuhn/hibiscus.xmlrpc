@@ -162,7 +162,7 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
           filter += " or lower(zweck2) like ? or lower(zweck3) like ? ";
         }
         filter += ")";
-        i.addFilter(filter,params.toArray(new String[params.size()]));
+        i.addFilter(filter,params);
       }
       i.setOrder("ORDER BY " + service.getSQLTimestamp("termin") + " DESC, id DESC");
 

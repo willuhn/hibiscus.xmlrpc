@@ -101,46 +101,10 @@ public interface UmsatzService extends Service
    * umsatz_typ
    * zweck
    * kommentar
-   *
+   * 
+   * @param options Map mit den Filter-Parametern.
    * @return Liste der Umsaetze.
    * @throws RemoteException
    */
   public List<Map<String,Object>> list(HashMap<String,Object> options) throws RemoteException;
 }
-
-
-/*********************************************************************
- * $Log: UmsatzService.java,v $
- * Revision 1.9  2011/02/10 11:55:19  willuhn
- * @B minor debugging
- *
- * Revision 1.8  2011-02-06 21:52:11  willuhn
- * @B Falscher Spaltenname
- *
- * Revision 1.7  2011-01-25 13:43:54  willuhn
- * @N Loeschen von Auftraegen
- * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
- * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten
- * @B Parameter-Name in Umsatzsuche wurde nicht auf ungueltige Zeichen geprueft
- * @C Code-Cleanup
- * @N Limitierung der zurueckgemeldeten Umsaetze auf 10.000
- *
- * Revision 1.6  2010/03/31 12:30:40  willuhn
- * *** empty log message ***
- *
- * Revision 1.5  2009/02/13 14:06:51  willuhn
- * @D "id" war in javadoc nicht mit angegeben, wurde jedoch uebertragen
- *
- * Revision 1.4  2008/12/18 21:17:33  willuhn
- * @N Drittes Patch von Julian (Parameter "art")
- *
- * Revision 1.3  2008/12/17 14:40:56  willuhn
- * @N Aktualisiertes Patch von Julian
- *
- * Revision 1.2  2008/12/12 01:26:42  willuhn
- * @N Patch von Julian
- *
- * Revision 1.1  2007/09/30 14:11:20  willuhn
- * @N hibiscus.xmlrpc.umsatz.list
- *
- **********************************************************************/
