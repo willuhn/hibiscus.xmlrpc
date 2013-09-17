@@ -199,6 +199,8 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
         if (z3 != null && z3.length > 0)   usages.addAll(Arrays.asList(z3));
         values.put(PARAM_VERWENDUNGSZWECK,usages);
         
+        this.afterLoad(values,t);
+        
         result.add(values);
       }
       return result;
@@ -287,6 +289,8 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
       t.setTextSchluessel((String)auftrag.get(PARAM_TEXTSCHLUESSEL));
       t.setTermin(de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(auftrag.get(PARAM_TERMIN)));
       VerwendungszweckUtil.apply(t,StringUtil.parseUsage(auftrag.get(PARAM_VERWENDUNGSZWECK)));
+      
+      this.beforeStore(auftrag,t);
 
       t.store();
       Logger.info("created transfer [ID: " + t.getID() + " (" + t.getClass().getName() + ")]");
@@ -307,6 +311,27 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
       throw new ApplicationException(i18n.tr("Fehler beim Erstellen des Auftrages: {0}",e.getMessage()),e);
     }
   }
+  
+  /**
+   * Kann von abgeleiteten Klassen ueberschrieben werden, um vor dem Speichern noch weitere Properties zu setzen.
+   * @param params die Map mit den Properties.
+   * @param auftrag der Auftrag.
+   * @throws Exception
+   */
+  protected void beforeStore(Map params, T auftrag) throws Exception
+  {
+  }
+  
+  /**
+   * Kann von abgeleiteten Klassen ueberschrieben werden, um nach dem Laden (aber vor dem Ausliefern) noch weitere Properties zu setzen.
+   * @param params die Map mit den Properties.
+   * @param auftrag der Auftrag.
+   * @throws Exception
+   */
+  protected void afterLoad(Map params, T auftrag) throws Exception
+  {
+  }
+
 
   /**
    * @see de.willuhn.jameica.hbci.xmlrpc.rmi.BaseUeberweisungService#create(java.util.Map)
@@ -375,74 +400,3 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
   }
 
 }
-
-
-/*********************************************************************
- * $Log: AbstractBaseUeberweisungServiceImpl.java,v $
- * Revision 1.9  2012/03/28 22:18:41  willuhn
- * @C Umstellung auf DateUtil, javadoc Fixes
- *
- * Revision 1.8  2011-02-10 15:44:48  willuhn
- * @C nicht direkt auf Array arbeiten
- *
- * Revision 1.7  2011-02-10 15:41:04  willuhn
- * @C Result-Limit wurde nicht ueberall beruecksichtigt
- *
- * Revision 1.6  2011-02-10 11:55:19  willuhn
- * @B minor debugging
- *
- * Revision 1.5  2011-01-25 13:53:25  willuhn
- * @C Jameica 1.10 Kompatibilitaet
- *
- * Revision 1.4  2011-01-25 13:49:26  willuhn
- * @N Limit konfigurierbar und auch in Auftragslisten beruecksichtigen
- *
- * Revision 1.3  2011-01-25 13:43:54  willuhn
- * @N Loeschen von Auftraegen
- * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
- * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten
- * @B Parameter-Name in Umsatzsuche wurde nicht auf ungueltige Zeichen geprueft
- * @C Code-Cleanup
- * @N Limitierung der zurueckgemeldeten Umsaetze auf 10.000
- *
- * Revision 1.2  2010/03/31 12:27:45  willuhn
- * @N Auch in Kontonummer suchen
- *
- * Revision 1.1  2010/03/31 12:24:51  willuhn
- * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
- * @C Code-Cleanup
- *
- * Revision 1.10  2009/10/29 00:31:38  willuhn
- * @N Neue Funktionen createParams() und create(Map) in Einzelauftraegen (nahezu identisch zu Sammel-Auftraegen)
- *
- * Revision 1.9  2009/03/08 22:27:14  willuhn
- * @N optionales Quoting
- *
- * Revision 1.8  2007/09/11 15:34:06  willuhn
- * *** empty log message ***
- *
- * Revision 1.7  2007/09/10 16:09:32  willuhn
- * @N Termin in XML-RPC Connector fuer Auftraege
- *
- * Revision 1.6  2007/07/24 14:49:57  willuhn
- * @N Neuer Paramater "zweck2"
- *
- * Revision 1.5  2007/06/04 16:39:19  willuhn
- * @N Pruefung des Auftragslimits
- *
- * Revision 1.4  2007/06/04 12:49:05  willuhn
- * @N Angabe des Typs bei Lastschriften
- *
- * Revision 1.3  2007/05/02 09:36:01  willuhn
- * @C API changes
- *
- * Revision 1.2  2006/11/20 22:41:10  willuhn
- * @B wrong transfer type
- *
- * Revision 1.1  2006/11/16 22:11:26  willuhn
- * @N Added lastschrift support
- *
- * Revision 1.1  2006/11/07 00:18:11  willuhn
- * *** empty log message ***
- *
- **********************************************************************/
