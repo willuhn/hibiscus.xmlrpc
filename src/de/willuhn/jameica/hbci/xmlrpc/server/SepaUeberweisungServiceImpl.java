@@ -18,6 +18,7 @@ import java.util.Map;
 
 import de.willuhn.jameica.hbci.rmi.AuslandsUeberweisung;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.SepaUeberweisungService;
+import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
 
 /**
  * Implementierung des SEPA-Ueberweisung-Service.
@@ -61,15 +62,15 @@ public class SepaUeberweisungServiceImpl extends AbstractBaseUeberweisungService
   protected void beforeStore(Map params, AuslandsUeberweisung auftrag) throws Exception
   {
     auftrag.setEndtoEndId((String)params.get(PARAM_ENDTOEND_ID));
-  };
+  }
   
   /**
    * @see de.willuhn.jameica.hbci.xmlrpc.server.AbstractBaseUeberweisungServiceImpl#afterLoad(java.util.Map, de.willuhn.jameica.hbci.rmi.BaseUeberweisung)
    */
   protected void afterLoad(Map params, AuslandsUeberweisung auftrag) throws Exception
   {
-    params.put(PARAM_ENDTOEND_ID,auftrag.getEndtoEndId());
-  };
+    params.put(PARAM_ENDTOEND_ID,StringUtil.notNull(auftrag.getEndtoEndId()));
+  }
 
   /**
    * @see de.willuhn.jameica.hbci.xmlrpc.server.AbstractBaseUeberweisungServiceImpl#getType()
