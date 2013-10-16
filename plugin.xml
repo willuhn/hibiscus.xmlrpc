@@ -28,6 +28,7 @@
     <service name="sammellastschrift"  depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.SammelLastschriftService" />
     <service name="sammelueberweisung" depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.SammelUeberweisungService" />
     <service name="sepaueberweisung"   depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.SepaUeberweisungService" />
+    <service name="sepalastschrift"    depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.SepaLastschriftService" />
   </services>
 </plugin>
 
