@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<plugin name="hibiscus.xmlrpc" version="2.5.0" class="de.willuhn.jameica.hbci.xmlrpc.Plugin"
+<plugin name="hibiscus.xmlrpc" version="2.7.0" class="de.willuhn.jameica.hbci.xmlrpc.Plugin"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="http://www.willuhn.de/schema/jameica-plugin-1.0.xsd">
 
   <description>Meta-Plugin, welches Hibiscus um XML-RPC-Funktionalitaet erweitert</description>
-  <url>https://www.willuhn.de/products/hibiscus/releases/nightly/hibiscus.xmlrpc-2.5.0-nightly.zip</url>
+  <url>https://www.willuhn.de/products/hibiscus/releases/nightly/hibiscus.xmlrpc-2.7.0-nightly.zip</url>
   <homepage>http://www.willuhn.de/products/hibiscus</homepage>
   <license>GPL - http://www.gnu.org/copyleft/gpl.html</license>
 
-  <requires jameica="2.3.0+">
-    <import plugin="jameica.xmlrpc" version="2.3.0+"/>
-    <import plugin="hibiscus"       version="2.3.0+"/>
+  <requires jameica="2.6.0+">
+    <import plugin="jameica.xmlrpc" version="2.6.0+"/>
+    <import plugin="hibiscus"       version="2.6.0+"/>
   </requires>
 
   <classfinder>
