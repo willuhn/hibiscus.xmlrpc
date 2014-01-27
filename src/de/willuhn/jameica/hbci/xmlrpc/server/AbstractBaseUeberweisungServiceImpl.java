@@ -162,7 +162,8 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
           filter += " or lower(zweck2) like ? or lower(zweck3) like ? ";
         }
         filter += ")";
-        i.addFilter(filter,params);
+        Object[] op = params.toArray(); // BUGZILLA 1468
+        i.addFilter(filter,op);
       }
       i.setOrder("ORDER BY " + service.getSQLTimestamp("termin") + " DESC, id DESC");
 
