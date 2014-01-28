@@ -31,6 +31,7 @@ import de.willuhn.jameica.hbci.rmi.AuslandsUeberweisung;
 import de.willuhn.jameica.hbci.rmi.BaseUeberweisung;
 import de.willuhn.jameica.hbci.rmi.HBCIDBService;
 import de.willuhn.jameica.hbci.rmi.Konto;
+import de.willuhn.jameica.hbci.rmi.SepaLastschrift;
 import de.willuhn.jameica.hbci.server.VerwendungszweckUtil;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.BaseUeberweisungService;
 import de.willuhn.jameica.hbci.xmlrpc.util.DecimalUtil;
@@ -155,7 +156,7 @@ public abstract class AbstractBaseUeberweisungServiceImpl<T extends BaseUeberwei
         // zu suchen. Aber Auslandsueberweisungen haben nur eine Zeile Verwendungszweck
         // und ich hab jetzt keine Lust, hier noch eine abstrakte Methode einzufuehren
         String filter = "(lower(empfaenger_name) like ? or lower(empfaenger_konto) like ? or lower(zweck) like ? ";
-        if (!getType().equals(AuslandsUeberweisung.class))
+        if (!getType().equals(AuslandsUeberweisung.class) && !getType().equals(SepaLastschrift.class)) // BUGZILLA 1469
         {
           params.add(s);
           params.add(s);
