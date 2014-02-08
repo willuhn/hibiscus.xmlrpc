@@ -86,7 +86,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
         }
 
         Umsatz u = (Umsatz) list.next();
-        if (typ != null && !typ.matches(u))
+        if (typ != null && !typ.matches(u,true))
           continue;
 
         StringBuffer sb = new StringBuffer();
@@ -179,14 +179,14 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
           // Vergleiche mit Zahl
           if (newKey.equals(KEY_ID) || newKey.equals(KEY_BETRAG) || newKey.equals(KEY_SALDO))
           {
-            list.addFilter(newKey + " " + operator + " ?", new Object[] {value});
+            list.addFilter(newKey + " " + operator + " ?", value);
             continue;
           }
           
           // Vergleiche mit Datum
           if (newKey.equals(KEY_VALUTA) || newKey.equals(KEY_DATUM))
           {
-            list.addFilter(newKey + " " + operator + " ?", new Object[] {new java.sql.Date(DateUtil.parse(value).getTime())});
+            list.addFilter(newKey + " " + operator + " ?", new java.sql.Date(DateUtil.parse(value).getTime()));
             continue;
           }
           
@@ -198,15 +198,23 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
         // Exakte Uebereinstimmung
         if (key.equals(KEY_KONTO_ID) || key.equals(KEY_ART) || key.equals(KEY_BETRAG) || key.equals(KEY_SALDO) || key.equals(KEY_VALUTA) || key.equals(KEY_DATUM) || key.equals(KEY_PRIMANOTA) || key.equals(KEY_CUSTOMER_REF))
         {
-          list.addFilter(key + " = ?", new Object[] {value});
+          list.addFilter(key + " = ?", value);
           continue;
         }
         
         // Verwendungszweck, Kommentar und Gegenkonto sucht unscharf
-        if (key.equals(KEY_GEGENKONTO_BLZ) || key.equals(KEY_GEGENKONTO_NAME) || key.equals(KEY_GEGENKONTO_NUMMER) || key.equals(KEY_ZWECK) || key.equals(KEY_KOMMENTAR))
+        if (key.equals(KEY_GEGENKONTO_BLZ) || key.equals(KEY_GEGENKONTO_NAME) || key.equals(KEY_GEGENKONTO_NUMMER) || key.equals(KEY_KOMMENTAR))
         {
           String s = "%" + value.toString().toLowerCase() + "%";
-          list.addFilter("lower(" + key + ")" + " like ?", new Object[] {s});
+          list.addFilter("lower(" + key + ")" + " like ?", s);
+          continue;
+        }
+        
+        // BUGZILLA 1478 - auch in zweck2 und zweck3 suchen
+        if (key.equals(KEY_ZWECK))
+        {
+          String s = "%" + value.toString().toLowerCase() + "%";
+          list.addFilter("(lower(zweck) like ? or lower(zweck2) like ? or lower(zweck3) like ?)", s, s, s);
           continue;
         }
 
