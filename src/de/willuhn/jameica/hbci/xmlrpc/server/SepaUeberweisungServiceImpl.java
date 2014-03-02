@@ -25,7 +25,7 @@ import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
  */
 public class SepaUeberweisungServiceImpl extends AbstractBaseUeberweisungServiceImpl<AuslandsUeberweisung> implements SepaUeberweisungService
 {
-  final static String PARAM_ENDTOEND_ID   = "endtoendid";
+  
 
   /**
    * ct.
@@ -52,7 +52,7 @@ public class SepaUeberweisungServiceImpl extends AbstractBaseUeberweisungService
   public Map createParams() throws RemoteException
   {
     Map<String,Object> m = super.createParams();
-    m.put(PARAM_ENDTOEND_ID, (String) null);
+    m.put(XmlRpcParameter.PARAM_ENDTOEND_ID, (String) null);
     return m;
   }
   
@@ -61,7 +61,7 @@ public class SepaUeberweisungServiceImpl extends AbstractBaseUeberweisungService
    */
   protected void beforeStore(Map params, AuslandsUeberweisung auftrag) throws Exception
   {
-    auftrag.setEndtoEndId((String)params.get(PARAM_ENDTOEND_ID));
+    auftrag.setEndtoEndId((String)params.get(XmlRpcParameter.PARAM_ENDTOEND_ID));
   }
   
   /**
@@ -69,7 +69,7 @@ public class SepaUeberweisungServiceImpl extends AbstractBaseUeberweisungService
    */
   protected void afterLoad(Map params, AuslandsUeberweisung auftrag) throws Exception
   {
-    params.put(PARAM_ENDTOEND_ID,StringUtil.notNull(auftrag.getEndtoEndId()));
+    params.put(XmlRpcParameter.PARAM_ENDTOEND_ID,StringUtil.notNull(auftrag.getEndtoEndId()));
   }
 
   /**

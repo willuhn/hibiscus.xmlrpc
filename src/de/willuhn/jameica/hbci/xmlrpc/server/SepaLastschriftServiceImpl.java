@@ -23,13 +23,7 @@ import de.willuhn.util.ApplicationException;
  */
 public class SepaLastschriftServiceImpl extends AbstractBaseUeberweisungServiceImpl<SepaLastschrift> implements SepaLastschriftService
 {
-  final static String PARAM_ENDTOEND_ID   = "endtoendid";
-  final static String PARAM_MANDATE_ID    = "mandateid";
-  final static String PARAM_CREDITOR_ID   = "creditorid";
-  final static String PARAM_SIGNATUREDATE = "sigdate";
-  final static String PARAM_SEQUENCETYPE  = "sequencetype";
-  final static String PARAM_SEPATYPE      = "sepatype";
-  final static String PARAM_TARGETDATE    = "targetdate";
+ 
 
   /**
    * ct.
@@ -56,14 +50,14 @@ public class SepaLastschriftServiceImpl extends AbstractBaseUeberweisungServiceI
   public Map createParams() throws RemoteException
   {
     Map<String,Object> m = super.createParams();
-    m.put(PARAM_ENDTOEND_ID,   (String) null);
-    m.put(PARAM_MANDATE_ID,    (String) null);
-    m.put(PARAM_CREDITOR_ID,   (String) null);
-    m.put(PARAM_SIGNATUREDATE, (String) null);
-    m.put(PARAM_SEQUENCETYPE,  (String) null);
-    m.put(PARAM_SEPATYPE,      (String) null);
-    m.put(PARAM_TARGETDATE,    (String) null);
-    return m;
+    m.put(XmlRpcParameter.PARAM_ENDTOEND_ID,   (String) null);
+    m.put(XmlRpcParameter.PARAM_MANDATE_ID,    (String) null);
+    m.put(XmlRpcParameter.PARAM_CREDITOR_ID,   (String) null);
+    m.put(XmlRpcParameter.PARAM_SIGNATUREDATE, (String) null);
+    m.put(XmlRpcParameter.PARAM_SEQUENCETYPE,  (String) null);
+    m.put(XmlRpcParameter.PARAM_SEPATYPE,      (String) null);
+    m.put(XmlRpcParameter.PARAM_TARGETDATE,    (String) null);
+     return m;
   }
   
   /**
@@ -71,13 +65,13 @@ public class SepaLastschriftServiceImpl extends AbstractBaseUeberweisungServiceI
    */
   protected void beforeStore(Map params, SepaLastschrift auftrag) throws Exception
   {
-    auftrag.setEndtoEndId((String)params.get(PARAM_ENDTOEND_ID));
-    auftrag.setMandateId((String)params.get(PARAM_MANDATE_ID));
-    auftrag.setCreditorId((String)params.get(PARAM_CREDITOR_ID));
-    auftrag.setSignatureDate(de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(params.get(PARAM_SIGNATUREDATE)));
+    auftrag.setEndtoEndId((String)params.get(XmlRpcParameter.PARAM_ENDTOEND_ID));
+    auftrag.setMandateId((String)params.get(XmlRpcParameter.PARAM_MANDATE_ID));
+    auftrag.setCreditorId((String)params.get(XmlRpcParameter.PARAM_CREDITOR_ID));
+    auftrag.setSignatureDate(de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(params.get(XmlRpcParameter.PARAM_SIGNATUREDATE)));
     
     SepaLastSequenceType seq = null;
-    String s = (String)params.get(PARAM_SEQUENCETYPE);
+    String s = (String)params.get(XmlRpcParameter.PARAM_SEQUENCETYPE);
     if (s != null && s.length() > 0)
     {
       try
@@ -92,7 +86,7 @@ public class SepaLastschriftServiceImpl extends AbstractBaseUeberweisungServiceI
     auftrag.setSequenceType(seq);
     
     SepaLastType type = null;
-    s = (String)params.get(PARAM_SEPATYPE);
+    s = (String)params.get(XmlRpcParameter.PARAM_SEPATYPE);
     if (s != null && s.length() > 0)
     {
       try
@@ -106,7 +100,7 @@ public class SepaLastschriftServiceImpl extends AbstractBaseUeberweisungServiceI
     }
     
     auftrag.setType(type);
-    auftrag.setTargetDate(de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(params.get(PARAM_TARGETDATE)));
+    auftrag.setTargetDate(de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(params.get(XmlRpcParameter.PARAM_TARGETDATE)));
   }
   
   /**
@@ -114,13 +108,13 @@ public class SepaLastschriftServiceImpl extends AbstractBaseUeberweisungServiceI
    */
   protected void afterLoad(Map params, SepaLastschrift auftrag) throws Exception
   {
-    params.put(PARAM_ENDTOEND_ID,   StringUtil.notNull(auftrag.getEndtoEndId()));
-    params.put(PARAM_MANDATE_ID,    auftrag.getMandateId());
-    params.put(PARAM_CREDITOR_ID,   auftrag.getCreditorId());
-    params.put(PARAM_SIGNATUREDATE, HBCI.DATEFORMAT.format(auftrag.getSignatureDate()));
-    params.put(PARAM_SEQUENCETYPE,  auftrag.getSequenceType().name());
-    params.put(PARAM_SEPATYPE,      auftrag.getType() != null ? auftrag.getType().name() : StringUtil.notNull(null));
-    params.put(PARAM_TARGETDATE,    auftrag.getTargetDate() != null ? HBCI.DATEFORMAT.format(auftrag.getTargetDate()) : StringUtil.notNull(null));
+    params.put(XmlRpcParameter.PARAM_ENDTOEND_ID,   StringUtil.notNull(auftrag.getEndtoEndId()));
+    params.put(XmlRpcParameter.PARAM_MANDATE_ID,    auftrag.getMandateId());
+    params.put(XmlRpcParameter.PARAM_CREDITOR_ID,   auftrag.getCreditorId());
+    params.put(XmlRpcParameter.PARAM_SIGNATUREDATE, HBCI.DATEFORMAT.format(auftrag.getSignatureDate()));
+    params.put(XmlRpcParameter.PARAM_SEQUENCETYPE,  auftrag.getSequenceType().name());
+    params.put(XmlRpcParameter.PARAM_SEPATYPE,      auftrag.getType() != null ? auftrag.getType().name() : StringUtil.notNull(null));
+    params.put(XmlRpcParameter.PARAM_TARGETDATE,    auftrag.getTargetDate() != null ? HBCI.DATEFORMAT.format(auftrag.getTargetDate()) : StringUtil.notNull(null));
   }
 
   /**
