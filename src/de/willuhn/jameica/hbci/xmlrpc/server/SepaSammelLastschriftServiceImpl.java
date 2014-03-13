@@ -75,7 +75,6 @@ public class SepaSammelLastschriftServiceImpl extends AbstractSepaSammelTransfer
   protected void beforeStoreBuchung(Map params, SepaSammelLastBuchung buchung) throws Exception
   {
     buchung.setCreditorId((String)params.get(XmlRpcParameter.PARAM_CREDITOR_ID));
-    buchung.setEndtoEndId((String)params.get(XmlRpcParameter.PARAM_ENDTOEND_ID));
     buchung.setSignatureDate(de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(params.get(XmlRpcParameter.PARAM_SIGNATUREDATE)));
     buchung.setMandateId((String)params.get(XmlRpcParameter.PARAM_MANDATE_ID));
   }

@@ -141,6 +141,7 @@ public abstract class AbstractSepaSammelTransferServiceImpl<T extends SepaSammel
         buchung.setGegenkontoBLZ((String)m.get(XmlRpcParameter.PARAM_BUCHUNGEN_BLZ));
         buchung.setGegenkontoNummer((String)m.get(XmlRpcParameter.PARAM_BUCHUNGEN_KONTONUMMER));
         buchung.setGegenkontoName((String)m.get(XmlRpcParameter.PARAM_BUCHUNGEN_NAME));
+        buchung.setEndtoEndId((String)m.get(XmlRpcParameter.PARAM_ENDTOEND_ID));
         
         String[] lines = StringUtil.parseUsage(m.get(XmlRpcParameter.PARAM_BUCHUNGEN_VERWENDUNGSZWECK));
         if (lines != null && lines.length > 0)
