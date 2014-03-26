@@ -106,4 +106,26 @@ public class SepaSammelLastschriftServiceImpl extends AbstractSepaSammelTransfer
 	  }
 	  params.put(XmlRpcParameter.PARAM_BUCHUNGEN, buchungen);
   }
+  
+  /**
+   * @see de.willuhn.jameica.hbci.xmlrpc.server.AbstractSepaSammelTransferServiceImpl#createParams()
+   */
+  @Override
+  public Map createParams() throws RemoteException
+  {
+    Map m = super.createParams();
+    
+    // SEPA-Lastschrift-spezifische Parameter 
+    m.put(XmlRpcParameter.PARAM_SEQUENCETYPE, (String) null);
+    m.put(XmlRpcParameter.PARAM_TARGETDATE,   (String) null);
+    m.put(XmlRpcParameter.PARAM_SEPATYPE,     (String) null);
+    
+    Map[] buchungen = (Map[]) m.get(XmlRpcParameter.PARAM_BUCHUNGEN);
+    buchungen[0].put(XmlRpcParameter.PARAM_ENDTOEND_ID,   (String) null);
+    buchungen[0].put(XmlRpcParameter.PARAM_CREDITOR_ID,   (String) null);
+    buchungen[0].put(XmlRpcParameter.PARAM_MANDATE_ID,    (String) null);
+    buchungen[0].put(XmlRpcParameter.PARAM_SIGNATUREDATE, (String) null);
+
+    return m;
+  }
 }

@@ -44,6 +44,11 @@ public class XmlRpcParameter
 	 */
 	public final static String PARAM_TARGETDATE = "targetdate";
 	
+  /**
+   * Batchbooking-Parameter.
+   */
+  public final static String PARAM_BATCHBOOK = "batchbook";
+
 	/**
 	 * Bezeichnung des Sammelauftrages.
 	 */

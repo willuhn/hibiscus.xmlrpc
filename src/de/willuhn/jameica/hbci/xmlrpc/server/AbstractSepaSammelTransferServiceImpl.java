@@ -19,7 +19,9 @@ import de.willuhn.datasource.rmi.DBService;
 import de.willuhn.datasource.rmi.ObjectNotFoundException;
 import de.willuhn.jameica.hbci.HBCI;
 import de.willuhn.jameica.hbci.HBCIProperties;
+import de.willuhn.jameica.hbci.MetaKey;
 import de.willuhn.jameica.hbci.Settings;
+import de.willuhn.jameica.hbci.rmi.BatchBookType;
 import de.willuhn.jameica.hbci.rmi.HBCIDBService;
 import de.willuhn.jameica.hbci.rmi.Konto;
 import de.willuhn.jameica.hbci.rmi.SammelTransfer;
@@ -123,6 +125,18 @@ public abstract class AbstractSepaSammelTransferServiceImpl<T extends SepaSammel
       this.beforeStore(auftrag, l);
       
       l.store();
+      
+      /////////////////////
+      // Batchbook-Flag
+      String s = (String) auftrag.get(XmlRpcParameter.PARAM_BATCHBOOK);
+      if (s != null && s.length() > 0)
+      {
+        BatchBookType batch = BatchBookType.byValue(Boolean.valueOf(s));
+        if (batch != null)
+          MetaKey.SEPA_BATCHBOOK.set(l,batch.getValue());
+      }
+      //
+      /////////////////////
     
 
       for (Map m:items)
@@ -205,9 +219,7 @@ public abstract class AbstractSepaSammelTransferServiceImpl<T extends SepaSammel
     m.put(XmlRpcParameter.PARAM_NAME,         (String) null);
     m.put(XmlRpcParameter.PARAM_KONTO,        (Integer) null);
     m.put(XmlRpcParameter.PARAM_TERMIN,       (String) null);
-    m.put(XmlRpcParameter.PARAM_SEQUENCETYPE, (String) null);
-    m.put(XmlRpcParameter.PARAM_TARGETDATE,   (String) null);
-    m.put(XmlRpcParameter.PARAM_SEPATYPE,     (String) null);
+    m.put(XmlRpcParameter.PARAM_BATCHBOOK,    (String) null);
     
     Map<String,Object> buchung = new HashMap<String,Object>();
     buchung.put(XmlRpcParameter.PARAM_BUCHUNGEN_KONTONUMMER,      (String) null);
@@ -215,11 +227,6 @@ public abstract class AbstractSepaSammelTransferServiceImpl<T extends SepaSammel
     buchung.put(XmlRpcParameter.PARAM_BUCHUNGEN_BLZ,              (String) null);
     buchung.put(XmlRpcParameter.PARAM_BUCHUNGEN_BETRAG,           (Double) null);
     buchung.put(XmlRpcParameter.PARAM_BUCHUNGEN_VERWENDUNGSZWECK, (String) null);
-    buchung.put(XmlRpcParameter.PARAM_ENDTOEND_ID,                (String) null);
-    buchung.put(XmlRpcParameter.PARAM_CREDITOR_ID,                (String) null);
-    buchung.put(XmlRpcParameter.PARAM_MANDATE_ID,                 (String) null);
-    buchung.put(XmlRpcParameter.PARAM_SIGNATUREDATE,              (String) null);
-    
     
     m.put(XmlRpcParameter.PARAM_BUCHUNGEN,new Map[]{buchung});
     return m;
@@ -299,6 +306,9 @@ public abstract class AbstractSepaSammelTransferServiceImpl<T extends SepaSammel
 	        values.put(XmlRpcParameter.PARAM_KONTO,       k.getID());
 	        values.put(XmlRpcParameter.PARAM_TERMIN,      HBCI.DATEFORMAT.format(t.getTermin()));
 	        values.put(XmlRpcParameter.PARAM_NAME,        t.getBezeichnung());
+	        
+	        BatchBookType batch = BatchBookType.byValue(MetaKey.SEPA_BATCHBOOK.get(t));
+          values.put(XmlRpcParameter.PARAM_BATCHBOOK, batch != null ? batch.getBooleanValue().toString() : null);
 	         
 	        this.afterLoad(values,t);
 	        
