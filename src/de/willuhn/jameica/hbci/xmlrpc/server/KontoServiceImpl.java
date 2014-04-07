@@ -1,12 +1,6 @@
 /**********************************************************************
- * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/KontoServiceImpl.java,v $
- * $Revision: 1.12 $
- * $Date: 2011/02/10 15:44:48 $
- * $Author: willuhn $
- * $Locker:  $
- * $State: Exp $
  *
- * Copyright (c) by willuhn.webdesign
+ * Copyright (c) by Olaf Willuhn
  * All rights reserved
  *
  **********************************************************************/
@@ -195,47 +189,17 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
     Object value = msg.getData();
     return value == null ? "" : value.toString();
   }
-
+  
+  /**
+   * @see de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService#calculateIBAN(java.lang.String, java.lang.String)
+   */
+  public String[] calculateIBAN(String blz, String kontonummer) throws RemoteException
+  {
+    if (blz == null || kontonummer == null || blz.length() == 0 || kontonummer.length() == 0)
+      return null;
+    QueryMessage msg = new QueryMessage(blz + ":" + kontonummer);
+    Application.getMessagingFactory().getMessagingQueue("hibiscus.query.ibancalc").sendSyncMessage(msg);
+    Object value = msg.getData();
+    return (String[])value ;
+  }
 }
-
-
-/*********************************************************************
- * $Log: KontoServiceImpl.java,v $
- * Revision 1.12  2011/02/10 15:44:48  willuhn
- * @C nicht direkt auf Array arbeiten
- *
- * Revision 1.11  2011-02-10 15:41:04  willuhn
- * @C Result-Limit wurde nicht ueberall beruecksichtigt
- *
- * Revision 1.10  2011-02-09 16:28:25  willuhn
- * @B NotNUll
- *
- * Revision 1.9  2011-02-07 12:22:13  willuhn
- * @N XML-RPC Address-Service
- *
- * Revision 1.8  2011-01-25 13:49:26  willuhn
- * @N Limit konfigurierbar und auch in Auftragslisten beruecksichtigen
- *
- * Revision 1.7  2010/03/31 12:24:51  willuhn
- * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
- * @C Code-Cleanup
- *
- * Revision 1.6  2009/11/19 22:58:05  willuhn
- * @R Konto#create entfernt - ist Unsinn
- *
- * Revision 1.5  2009/03/08 22:25:47  willuhn
- * @N optionales Quoting
- *
- * Revision 1.4  2007/11/27 15:17:13  willuhn
- * @N CRC-Check und Bankname-Lookup
- *
- * Revision 1.3  2007/07/06 13:21:18  willuhn
- * @N Saldo mit zurueckliefern
- *
- * Revision 1.2  2006/11/07 00:18:11  willuhn
- * *** empty log message ***
- *
- * Revision 1.1  2006/10/31 01:44:09  willuhn
- * @Ninitial checkin
- *
- **********************************************************************/

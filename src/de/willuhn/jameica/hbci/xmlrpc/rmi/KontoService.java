@@ -1,12 +1,6 @@
 /**********************************************************************
- * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/rmi/KontoService.java,v $
- * $Revision: 1.5 $
- * $Date: 2011/02/07 12:22:13 $
- * $Author: willuhn $
- * $Locker:  $
- * $State: Exp $
  *
- * Copyright (c) by willuhn.webdesign
+ * Copyright (c) by Olaf Willuhn
  * All rights reserved
  *
  **********************************************************************/
@@ -69,24 +63,16 @@ public interface KontoService extends Service
    * @throws RemoteException
    */
   public String getBankname(String blz) throws RemoteException;
+  
+  
+  /**
+   * Berechnet die IBAN und BIC zur angegebenen BLZ/Kontonummer.
+   * @param blz BLZ.
+   * @param kontonummer Kontonummer.
+   * @return IBAN (auf Index 0) und BIC (auf Index 1).
+   * @throws RemoteException
+   */
+  public String[] calculateIBAN(String blz, String kontonummer) throws RemoteException;
+  
+  
 }
-
-
-/*********************************************************************
- * $Log: KontoService.java,v $
- * Revision 1.5  2011/02/07 12:22:13  willuhn
- * @N XML-RPC Address-Service
- *
- * Revision 1.4  2009/11/19 22:58:05  willuhn
- * @R Konto#create entfernt - ist Unsinn
- *
- * Revision 1.3  2007/11/27 15:17:12  willuhn
- * @N CRC-Check und Bankname-Lookup
- *
- * Revision 1.2  2006/11/07 00:18:11  willuhn
- * *** empty log message ***
- *
- * Revision 1.1  2006/10/31 01:44:09  willuhn
- * @Ninitial checkin
- *
- **********************************************************************/
