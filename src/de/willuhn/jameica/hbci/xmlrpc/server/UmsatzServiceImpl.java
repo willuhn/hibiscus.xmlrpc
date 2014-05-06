@@ -263,6 +263,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
       map.put(KEY_PRIMANOTA,         StringUtil.notNull(u.getPrimanota()));
       map.put(KEY_CUSTOMER_REF,      StringUtil.notNull(u.getCustomerRef()));
       map.put(KEY_KOMMENTAR,         StringUtil.notNull(u.getKommentar()));
+      map.put(KEY_GVCODE,            StringUtil.notNull(u.getGvCode()));
 
       UmsatzTyp kat = u.getUmsatzTyp();
       
