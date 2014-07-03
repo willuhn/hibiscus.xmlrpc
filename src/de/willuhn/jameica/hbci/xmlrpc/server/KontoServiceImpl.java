@@ -195,11 +195,26 @@ public class KontoServiceImpl extends AbstractServiceImpl implements
    */
   public String[] calculateIBAN(String blz, String kontonummer) throws RemoteException
   {
-    if (blz == null || kontonummer == null || blz.length() == 0 || kontonummer.length() == 0)
-      return null;
-    QueryMessage msg = new QueryMessage(blz + ":" + kontonummer);
-    Application.getMessagingFactory().getMessagingQueue("hibiscus.query.ibancalc").sendSyncMessage(msg);
-    Object value = msg.getData();
-    return (String[])value ;
+	  try
+	  {
+      if (blz == null || kontonummer == null || blz.length() == 0 || kontonummer.length() == 0)
+        return null;
+      QueryMessage msg = new QueryMessage(blz + ":" + kontonummer);
+      Application.getMessagingFactory().getMessagingQueue("hibiscus.query.ibancalc").sendSyncMessage(msg);
+      Object value = msg.getData();
+      if(value instanceof Exception)
+      {
+      	throw (Exception) value;
+      }
+      return (String[])value ;
+    }
+    catch (RemoteException re)
+    {
+      throw re;
+    }
+    catch (Exception e)
+    {
+      throw new RemoteException(e.getMessage(),e);
+    }
   }
 }
