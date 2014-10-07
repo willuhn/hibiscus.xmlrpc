@@ -53,6 +53,7 @@ public class SepaUeberweisungServiceImpl extends AbstractBaseUeberweisungService
   {
     Map<String,Object> m = super.createParams();
     m.put(XmlRpcParameter.PARAM_ENDTOEND_ID, (String) null);
+    m.put(XmlRpcParameter.PARAM_PMTINF_ID, (String) null);
     return m;
   }
   
@@ -62,6 +63,7 @@ public class SepaUeberweisungServiceImpl extends AbstractBaseUeberweisungService
   protected void beforeStore(Map params, AuslandsUeberweisung auftrag) throws Exception
   {
     auftrag.setEndtoEndId((String)params.get(XmlRpcParameter.PARAM_ENDTOEND_ID));
+    auftrag.setPmtInfId((String)params.get(XmlRpcParameter.PARAM_PMTINF_ID));
   }
   
   /**
@@ -70,6 +72,7 @@ public class SepaUeberweisungServiceImpl extends AbstractBaseUeberweisungService
   protected void afterLoad(Map params, AuslandsUeberweisung auftrag) throws Exception
   {
     params.put(XmlRpcParameter.PARAM_ENDTOEND_ID,StringUtil.notNull(auftrag.getEndtoEndId()));
+    params.put(XmlRpcParameter.PARAM_PMTINF_ID,StringUtil.notNull(auftrag.getPmtInfId()));
   }
 
   /**

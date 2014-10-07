@@ -14,6 +14,11 @@ public class XmlRpcParameter
 	 */
 	public final static String PARAM_ENDTOEND_ID = "endtoendid";
 	
+  /**
+   * Payment-Information-ID
+   */
+  public final static String PARAM_PMTINF_ID = "pmtinfid";
+
 	/**
 	 * Mandatsreferenz.
 	 */

@@ -51,6 +51,7 @@ public class SepaLastschriftServiceImpl extends AbstractBaseUeberweisungServiceI
   {
     Map<String,Object> m = super.createParams();
     m.put(XmlRpcParameter.PARAM_ENDTOEND_ID,   (String) null);
+    m.put(XmlRpcParameter.PARAM_PMTINF_ID,     (String) null);
     m.put(XmlRpcParameter.PARAM_MANDATE_ID,    (String) null);
     m.put(XmlRpcParameter.PARAM_CREDITOR_ID,   (String) null);
     m.put(XmlRpcParameter.PARAM_SIGNATUREDATE, (String) null);
@@ -66,6 +67,7 @@ public class SepaLastschriftServiceImpl extends AbstractBaseUeberweisungServiceI
   protected void beforeStore(Map params, SepaLastschrift auftrag) throws Exception
   {
     auftrag.setEndtoEndId((String)params.get(XmlRpcParameter.PARAM_ENDTOEND_ID));
+    auftrag.setPmtInfId((String)params.get(XmlRpcParameter.PARAM_PMTINF_ID));
     auftrag.setMandateId((String)params.get(XmlRpcParameter.PARAM_MANDATE_ID));
     auftrag.setCreditorId((String)params.get(XmlRpcParameter.PARAM_CREDITOR_ID));
     auftrag.setSignatureDate(de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(params.get(XmlRpcParameter.PARAM_SIGNATUREDATE)));
@@ -109,6 +111,7 @@ public class SepaLastschriftServiceImpl extends AbstractBaseUeberweisungServiceI
   protected void afterLoad(Map params, SepaLastschrift auftrag) throws Exception
   {
     params.put(XmlRpcParameter.PARAM_ENDTOEND_ID,   StringUtil.notNull(auftrag.getEndtoEndId()));
+    params.put(XmlRpcParameter.PARAM_PMTINF_ID,     StringUtil.notNull(auftrag.getPmtInfId()));
     params.put(XmlRpcParameter.PARAM_MANDATE_ID,    auftrag.getMandateId());
     params.put(XmlRpcParameter.PARAM_CREDITOR_ID,   auftrag.getCreditorId());
     params.put(XmlRpcParameter.PARAM_SIGNATUREDATE, HBCI.DATEFORMAT.format(auftrag.getSignatureDate()));

@@ -121,6 +121,7 @@ public abstract class AbstractSepaSammelTransferServiceImpl<T extends SepaSammel
       l.setBezeichnung((String)auftrag.get(XmlRpcParameter.PARAM_NAME));
       l.setKonto((Konto) service.createObject(Konto.class,konto.toString()));
       l.setTermin(de.willuhn.jameica.hbci.xmlrpc.util.DateUtil.parse(auftrag.get(XmlRpcParameter.PARAM_TERMIN)));
+      l.setPmtInfId((String)auftrag.get(XmlRpcParameter.PARAM_PMTINF_ID));
       
       this.beforeStore(auftrag, l);
       
@@ -220,6 +221,7 @@ public abstract class AbstractSepaSammelTransferServiceImpl<T extends SepaSammel
     m.put(XmlRpcParameter.PARAM_KONTO,        (Integer) null);
     m.put(XmlRpcParameter.PARAM_TERMIN,       (String) null);
     m.put(XmlRpcParameter.PARAM_BATCHBOOK,    (String) null);
+    m.put(XmlRpcParameter.PARAM_PMTINF_ID,    (String) null);
     
     Map<String,Object> buchung = new HashMap<String,Object>();
     buchung.put(XmlRpcParameter.PARAM_BUCHUNGEN_KONTONUMMER,      (String) null);
@@ -306,6 +308,7 @@ public abstract class AbstractSepaSammelTransferServiceImpl<T extends SepaSammel
 	        values.put(XmlRpcParameter.PARAM_KONTO,       k.getID());
 	        values.put(XmlRpcParameter.PARAM_TERMIN,      HBCI.DATEFORMAT.format(t.getTermin()));
 	        values.put(XmlRpcParameter.PARAM_NAME,        t.getBezeichnung());
+          values.put(XmlRpcParameter.PARAM_PMTINF_ID,   t.getPmtInfId());
 	        
 	        BatchBookType batch = BatchBookType.byValue(MetaKey.SEPA_BATCHBOOK.get(t));
           values.put(XmlRpcParameter.PARAM_BATCHBOOK, batch != null ? batch.getBooleanValue().toString() : null);
