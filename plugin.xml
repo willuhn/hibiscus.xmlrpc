@@ -24,8 +24,6 @@
     <service name="konto"                  depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.KontoService" />
     <service name="umsatz"                 depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.UmsatzService" />
     <service name="ueberweisung"           depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.UeberweisungService" />
-    <service name="lastschrift"            depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.LastschriftService" />
-    <service name="sammellastschrift"      depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.SammelLastschriftService" />
     <service name="sammelueberweisung"     depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.SammelUeberweisungService" />
     <service name="sepaueberweisung"       depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.SepaUeberweisungService" />
     <service name="sepalastschrift"        depends="" autostart="true" class="de.willuhn.jameica.hbci.xmlrpc.rmi.SepaLastschriftService" />
