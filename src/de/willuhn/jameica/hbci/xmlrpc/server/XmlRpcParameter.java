@@ -13,7 +13,12 @@ public class XmlRpcParameter
 	 * EndToEnd-ID
 	 */
 	public final static String PARAM_ENDTOEND_ID = "endtoendid";
-	
+
+	 /**
+   * Purpose-Code
+   */
+  public final static String PARAM_PURPOSE_CODE = "purposecode";
+
   /**
    * Payment-Information-ID
    */

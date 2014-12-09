@@ -72,6 +72,7 @@ public class SepaSammelUeberweisungServiceImpl extends AbstractSepaSammelTransfe
   	  buchung.put(XmlRpcParameter.PARAM_BUCHUNGEN_BETRAG,           sb.getBetrag());
   	  buchung.put(XmlRpcParameter.PARAM_BUCHUNGEN_VERWENDUNGSZWECK, sb.getZweck());
   	  buchung.put(XmlRpcParameter.PARAM_ENDTOEND_ID,                StringUtil.notNull(sb.getEndtoEndId()));
+      buchung.put(XmlRpcParameter.PARAM_PURPOSE_CODE,               StringUtil.notNull(sb.getPurposeCode()));
   	  buchungen.add(buchung);
 	  }
 	  params.put(XmlRpcParameter.PARAM_BUCHUNGEN, buchungen);

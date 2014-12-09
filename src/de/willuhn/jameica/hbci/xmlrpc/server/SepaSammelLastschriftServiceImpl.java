@@ -99,6 +99,7 @@ public class SepaSammelLastschriftServiceImpl extends AbstractSepaSammelTransfer
   	  buchung.put(XmlRpcParameter.PARAM_BUCHUNGEN_BETRAG,           lb.getBetrag());
   	  buchung.put(XmlRpcParameter.PARAM_BUCHUNGEN_VERWENDUNGSZWECK, lb.getZweck());
   	  buchung.put(XmlRpcParameter.PARAM_ENDTOEND_ID,                StringUtil.notNull(lb.getEndtoEndId()));
+      buchung.put(XmlRpcParameter.PARAM_PURPOSE_CODE,               StringUtil.notNull(lb.getPurposeCode()));
   	  buchung.put(XmlRpcParameter.PARAM_CREDITOR_ID,                lb.getCreditorId());
   	  buchung.put(XmlRpcParameter.PARAM_MANDATE_ID,                 lb.getMandateId());
   	  buchung.put(XmlRpcParameter.PARAM_SIGNATUREDATE,              HBCI.DATEFORMAT.format(lb.getSignatureDate()));
@@ -122,6 +123,7 @@ public class SepaSammelLastschriftServiceImpl extends AbstractSepaSammelTransfer
     
     Map[] buchungen = (Map[]) m.get(XmlRpcParameter.PARAM_BUCHUNGEN);
     buchungen[0].put(XmlRpcParameter.PARAM_ENDTOEND_ID,   (String) null);
+    buchungen[0].put(XmlRpcParameter.PARAM_PURPOSE_CODE,  (String) null);
     buchungen[0].put(XmlRpcParameter.PARAM_CREDITOR_ID,   (String) null);
     buchungen[0].put(XmlRpcParameter.PARAM_MANDATE_ID,    (String) null);
     buchungen[0].put(XmlRpcParameter.PARAM_SIGNATUREDATE, (String) null);
