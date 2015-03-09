@@ -196,11 +196,19 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
         
         
         // Exakte Uebereinstimmung
-        if (key.equals(KEY_KONTO_ID) || key.equals(KEY_ART) || key.equals(KEY_BETRAG) || key.equals(KEY_SALDO) || key.equals(KEY_VALUTA) || key.equals(KEY_DATUM) || key.equals(KEY_PRIMANOTA) || key.equals(KEY_CUSTOMER_REF))
+        if (key.equals(KEY_KONTO_ID) || key.equals(KEY_ART) || key.equals(KEY_BETRAG) || key.equals(KEY_SALDO) || key.equals(KEY_PRIMANOTA) || key.equals(KEY_CUSTOMER_REF))
         {
           list.addFilter(key + " = ?", value);
           continue;
         }
+        
+        // Vergleiche mit Datum
+        if (key.equals(KEY_VALUTA) || key.equals(KEY_DATUM))
+        {
+          list.addFilter(key + " = ?", new java.sql.Date(DateUtil.parse(value).getTime()));
+          continue;
+        }
+        
         
         // Verwendungszweck, Kommentar und Gegenkonto sucht unscharf
         if (key.equals(KEY_GEGENKONTO_BLZ) || key.equals(KEY_GEGENKONTO_NAME) || key.equals(KEY_GEGENKONTO_NUMMER) || key.equals(KEY_KOMMENTAR))
