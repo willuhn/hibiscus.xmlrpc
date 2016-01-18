@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.willuhn.datasource.BeanUtil;
 import de.willuhn.datasource.rmi.DBIterator;
 import de.willuhn.datasource.rmi.ObjectNotFoundException;
 import de.willuhn.jameica.hbci.HBCI;
@@ -27,7 +28,7 @@ import de.willuhn.jameica.hbci.Settings;
 import de.willuhn.jameica.hbci.rmi.Umsatz;
 import de.willuhn.jameica.hbci.rmi.UmsatzTyp;
 import de.willuhn.jameica.hbci.server.UmsatzUtil;
-import de.willuhn.jameica.hbci.server.VerwendungszweckUtil;
+import de.willuhn.jameica.hbci.server.VerwendungszweckUtil.Tag;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.UmsatzService;
 import de.willuhn.jameica.hbci.xmlrpc.util.DateUtil;
 import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
@@ -266,7 +267,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
       map.put(KEY_BETRAG,            HBCI.DECIMALFORMAT.format(u.getBetrag()));
       map.put(KEY_VALUTA,            DateUtil.format(u.getValuta()));
       map.put(KEY_DATUM,             DateUtil.format(u.getDatum()));
-      map.put(KEY_ZWECK,             VerwendungszweckUtil.toString(u," "));
+      map.put(KEY_ZWECK,             BeanUtil.get(u,Tag.SVWZ.name()));
       map.put(KEY_SALDO,             StringUtil.notNull(u.getSaldo()));
       map.put(KEY_PRIMANOTA,         StringUtil.notNull(u.getPrimanota()));
       map.put(KEY_CUSTOMER_REF,      StringUtil.notNull(u.getCustomerRef()));
