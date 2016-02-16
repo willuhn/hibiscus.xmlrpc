@@ -15,6 +15,7 @@ package de.willuhn.jameica.hbci.xmlrpc.server;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -273,6 +274,15 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
       map.put(KEY_CUSTOMER_REF,      StringUtil.notNull(u.getCustomerRef()));
       map.put(KEY_KOMMENTAR,         StringUtil.notNull(u.getKommentar()));
       map.put(KEY_GVCODE,            StringUtil.notNull(u.getGvCode()));
+      
+      List<String> usages = new ArrayList<String>();
+      usages.add(u.getZweck());
+      String z2   = u.getZweck2();
+      String[] z3 = u.getWeitereVerwendungszwecke();
+      if (z2 != null && z2.length() > 0) usages.add(z2);
+      if (z3 != null && z3.length > 0)   usages.addAll(Arrays.asList(z3));
+      map.put(KEY_ZWECK_RAW,usages);
+
 
       UmsatzTyp kat = u.getUmsatzTyp();
       

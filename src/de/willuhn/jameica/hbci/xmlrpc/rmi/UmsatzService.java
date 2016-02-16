@@ -36,6 +36,7 @@ public interface UmsatzService extends Service
   public static final String KEY_VALUTA            = "valuta";
   public static final String KEY_DATUM             = "datum";
   public static final String KEY_ZWECK             = "zweck";
+  public static final String KEY_ZWECK_RAW         = "zweck_raw";
   public static final String KEY_SALDO             = "saldo";
   public static final String KEY_PRIMANOTA         = "primanota";
   public static final String KEY_CUSTOMER_REF      = "customer_ref";
