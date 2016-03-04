@@ -268,7 +268,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
       map.put(KEY_BETRAG,            HBCI.DECIMALFORMAT.format(u.getBetrag()));
       map.put(KEY_VALUTA,            DateUtil.format(u.getValuta()));
       map.put(KEY_DATUM,             DateUtil.format(u.getDatum()));
-      map.put(KEY_ZWECK,             BeanUtil.get(u,Tag.SVWZ.name()));
+      map.put(KEY_ZWECK,             StringUtil.notNull(BeanUtil.get(u,Tag.SVWZ.name())));
       map.put(KEY_SALDO,             StringUtil.notNull(u.getSaldo()));
       map.put(KEY_PRIMANOTA,         StringUtil.notNull(u.getPrimanota()));
       map.put(KEY_CUSTOMER_REF,      StringUtil.notNull(u.getCustomerRef()));
@@ -276,7 +276,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
       map.put(KEY_GVCODE,            StringUtil.notNull(u.getGvCode()));
       
       List<String> usages = new ArrayList<String>();
-      usages.add(u.getZweck());
+      usages.add(StringUtil.notNull(u.getZweck()));
       String z2   = u.getZweck2();
       String[] z3 = u.getWeitereVerwendungszwecke();
       if (z2 != null && z2.length() > 0) usages.add(z2);
