@@ -1,13 +1,8 @@
 /**********************************************************************
- * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/EchoTest.java,v $
- * $Revision: 1.6 $
- * $Date: 2011/02/07 17:12:52 $
- * $Author: willuhn $
- * $Locker:  $
- * $State: Exp $
  *
- * Copyright (c) by willuhn.webdesign
+ * Copyright (c) by Olaf Willuhn
  * All rights reserved
+ * GPLv2
  *
  **********************************************************************/
 
@@ -33,7 +28,7 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 /**
  * Testklasse.
  */
-public class EchoTest
+public class XmlRpcTest
 {
 
   /**
@@ -129,7 +124,7 @@ public class EchoTest
       // Die Aufrufe fuer "hibiscus.xmlrpc.lastschrift.find" und "hibiscus.xmlrpc.sepaueberweisung.find" sind identisch
       {
         System.out.println("Test 3: Überweisungen abrufen");
-        Object[] l = (Object[]) client.execute("hibiscus.xmlrpc.ueberweisung.find",new String[]{"test","01.01.2009","31.12.2011"});
+        Object[] l = (Object[]) client.execute("hibiscus.xmlrpc.sepaueberweisung.find",new String[]{"test","01.01.2009","31.12.2011"});
         for (Object o:l)
         {
           System.out.println(o);
@@ -140,63 +135,58 @@ public class EchoTest
       ////////////////////////////////////////////////////////////////////////////
       // Test 4: Ueberweisung anlegen
       {
-        System.out.println("Test 4: Überweisung anlegen");
-        // Variante 1
+        System.out.println("Test 4: SEPA-Überweisung anlegen");
         Map params = new HashMap();
         params.put("betrag",1.50d);
-        params.put("termin","15.01.2011");
+        params.put("termin","15.01.2017");
         params.put("konto",kontoID);
         params.put("name","Max Mustermann");
-        params.put("blz","12345678");
-        params.put("kontonummer","1111111111");
+        params.put("blz","BYLADEM1001");
+        params.put("kontonummer","DE02120300000000202051");
         params.put("verwendungszweck","Test");
-        Object result = client.execute("hibiscus.xmlrpc.ueberweisung.create",new Object[]{params});
+        Object result = client.execute("hibiscus.xmlrpc.sepaueberweisung.create",new Object[]{params});
         System.out.println(result);
         
         // Auftrag wieder loeschen
-        System.out.println(client.execute("hibiscus.xmlrpc.ueberweisung.delete",new Object[]{result}));
-
-        // Variante 2
-        result = client.execute("hibiscus.xmlrpc.ueberweisung.create",new Object[]{kontoID,           // Konto-ID
-                                                                                   "1111111111",      // Empfaenger-Konto
-                                                                                   "12345678",        // Empfaenger-BLZ
-                                                                                   "Max Mustermann",  // Empfaenger-Name
-                                                                                   "Test",            // Verwendungszweck 1
-                                                                                   "Test 2",          // Verwendungszweck 2
-                                                                                   2.5d,              // Betrag
-                                                                                   "15.01.2011"});    // Termin
-        System.out.println(result);
-        
-        // Auftrag wieder loeschen
-        System.out.println(client.execute("hibiscus.xmlrpc.ueberweisung.delete",new Object[]{result}));
+        System.out.println(client.execute("hibiscus.xmlrpc.sepaueberweisung.delete",new Object[]{result}));
       }
       ////////////////////////////////////////////////////////////////////////////
 
       ////////////////////////////////////////////////////////////////////////////
       // Test 5: Sammel-Lastschrift anlegen
       {
-        System.out.println("Test 5: Sammel-Lastschrift anlegen");
+        System.out.println("Test 5: SEPA-Sammel-Lastschrift anlegen");
         Map params = new HashMap();
         params.put("name","Test");
-        params.put("termin","15.01.2011");
+        params.put("termin","15.01.2017");
         params.put("konto",kontoID);
+        params.put("batchbook",null);
+        params.put("sequencetype","FRST");
+        params.put("sepatype","CORE");
+        params.put("targetdate","01.01.2018");
+        params.put("pmtinfid","test");
         
         Map buchung = new HashMap();
         buchung.put("betrag",1.50d);
         buchung.put("name","Max Mustermann");
-        buchung.put("blz","12345678");
-        buchung.put("kontonummer","1111111111");
+        buchung.put("blz","BYLADEM1001");
+        buchung.put("kontonummer","DE02120300000000202051");
         buchung.put("verwendungszweck","Test");
+        buchung.put("endtoendid","12345");
+        buchung.put("purposecode","12345");
+        buchung.put("mandateid","12345");
+        buchung.put("creditorid","12345");
+        buchung.put("sigdate","01.01.2017");
         List buchungen = new ArrayList();
         buchungen.add(buchung);
         
         params.put("buchungen",buchungen);
         
-        Object result = client.execute("hibiscus.xmlrpc.sammellastschrift.create",new Object[]{params});
+        Object result = client.execute("hibiscus.xmlrpc.sepasammellastschrift.create",new Object[]{params});
         System.out.println(result);
 
         // Auftrag wieder loeschen
-        System.out.println(client.execute("hibiscus.xmlrpc.sammellastschrift.delete",new Object[]{result}));
+        System.out.println(client.execute("hibiscus.xmlrpc.sepasammellastschrift.delete",new Object[]{result}));
       }
       ////////////////////////////////////////////////////////////////////////////
 
@@ -209,8 +199,8 @@ public class EchoTest
         
         Map address = new HashMap();
         address.put("name","Max Mustermann");
-        address.put("kontonummer","1234567890");
-        address.put("blz","12345678");
+        address.put("iban","DE02120300000000202051");
+        address.put("bic","BYLADEM1001");
         id = client.execute("hibiscus.xmlrpc.address.create",new Object[]{address});
         System.out.println(id);
       }
@@ -231,14 +221,17 @@ public class EchoTest
       ////////////////////////////////////////////////////////////////////////////
       // Test 8: Adresse aendern
       
+      // Die ID wird nur zurueckgeliefert, wenn der NULL-Support in jameica.xmlrpc deaktiviert wurde.
+      // Siehe http://www.willuhn.de/wiki/doku.php?id=develop:xmlrpc#null-support_aktivieren_deaktivieren
+      if (id != null)
       {
         System.out.println("Test 8: Adresse aendern");
         
         Map address = new HashMap();
         address.put("id",id);
         address.put("name","Max Mustermann");
-        address.put("kontonummer","1111111111");
-        address.put("blz","12345678");
+        address.put("iban","DE02120300000000202051");
+        address.put("bic","BYLADEM1001");
         id = client.execute("hibiscus.xmlrpc.address.update",new Object[]{address});
         System.out.println(id);
       }
@@ -325,28 +318,3 @@ public class EchoTest
 
   }
 }
-
-
-/*********************************************************************
- * $Log: EchoTest.java,v $
- * Revision 1.6  2011/02/07 17:12:52  willuhn
- * @N Code-Cleanup
- *
- * Revision 1.5  2011-02-07 12:22:13  willuhn
- * @N XML-RPC Address-Service
- *
- * Revision 1.4  2011-01-27 00:10:33  willuhn
- * *** empty log message ***
- *
- * Revision 1.3  2011-01-25 13:43:54  willuhn
- * @N Loeschen von Auftraegen
- * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
- * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten
- * @B Parameter-Name in Umsatzsuche wurde nicht auf ungueltige Zeichen geprueft
- * @C Code-Cleanup
- * @N Limitierung der zurueckgemeldeten Umsaetze auf 10.000
- *
- * Revision 1.2  2010/03/31 12:24:51  willuhn
- * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
- * @C Code-Cleanup
- **********************************************************************/
