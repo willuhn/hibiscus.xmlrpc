@@ -35,9 +35,9 @@
     <echo message="JAVA   : ${java.version}" />
 
 		<property name="define.jarfilename" 		value="${plugin.name}.jar" />
-		<property name="define.zipfilename" 		value="${plugin.name}.zip" />
-		<property name="define.srcfilename" 		value="${plugin.name}.src.zip" />
-		<property name="define.javadocfilename" value="${plugin.name}.javadoc.zip" />
+		<property name="define.zipfilename" 		value="${plugin.name}-${plugin.version}.zip" />
+		<property name="define.srcfilename" 		value="${plugin.name}-${plugin.version}.src.zip" />
+		<property name="define.javadocfilename" value="${plugin.name}-${plugin.version}.javadoc.zip" />
 
 		<property name="project.nightly" 			  value="releases/nightly" />
 		<property name="project.release" 			  value="releases/${plugin.version}-${build.number}" />
