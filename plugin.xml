@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<plugin name="hibiscus.xmlrpc" version="2.11.0-nightly" class="de.willuhn.jameica.hbci.xmlrpc.Plugin"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:noNamespaceSchemaLocation="http://www.willuhn.de/schema/jameica-plugin-1.0.xsd">
+<plugin xmlns="http://www.willuhn.de/schema/jameica-plugin"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.willuhn.de/schema/jameica-plugin https://www.willuhn.de/schema/jameica-plugin-1.5.xsd"
+        name="hibiscus.xmlrpc" version="2.11.0-nightly" class="de.willuhn.jameica.hbci.xmlrpc.Plugin">
 
   <description>Meta-Plugin, welches Hibiscus um XML-RPC-Funktionalitaet erweitert</description>
   <url>https://www.willuhn.de/products/hibiscus/releases/nightly/hibiscus.xmlrpc-2.11.0-nightly.zip</url>
-  <homepage>http://www.willuhn.de/products/hibiscus</homepage>
+  <homepage validate="true">https://www.willuhn.de/products/hibiscus</homepage>
   <license>GPL - http://www.gnu.org/copyleft/gpl.html</license>
 
-  <requires jameica="2.8.0+">
-    <import plugin="jameica.xmlrpc" version="2.8.0+"/>
-    <import plugin="hibiscus"       version="2.8.0+"/>
-  </requires>
+  <requires jameica="2.8.0+">
+    <import plugin="jameica.xmlrpc" version="2.8.0+"/>
+    <import plugin="hibiscus"       version="2.8.0+"/>
+  </requires>
 
   <classfinder>
     <include>hibiscus\.xmlrpc\.jar</include>
