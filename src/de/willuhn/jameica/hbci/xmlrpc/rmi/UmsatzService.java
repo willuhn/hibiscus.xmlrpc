@@ -43,6 +43,7 @@ public interface UmsatzService extends Service
   public static final String KEY_UMSATZ_TYP        = "umsatz_typ";
   public static final String KEY_KOMMENTAR         = "kommentar";
   public static final String KEY_GVCODE            = "gvcode";
+  public static final String KEY_ENDTOENDID        = "endtoendid";
 
 
   /**

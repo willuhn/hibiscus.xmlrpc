@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import de.willuhn.datasource.BeanUtil;
 import de.willuhn.datasource.rmi.DBIterator;
 import de.willuhn.datasource.rmi.ObjectNotFoundException;
@@ -29,6 +31,7 @@ import de.willuhn.jameica.hbci.Settings;
 import de.willuhn.jameica.hbci.rmi.Umsatz;
 import de.willuhn.jameica.hbci.rmi.UmsatzTyp;
 import de.willuhn.jameica.hbci.server.UmsatzUtil;
+import de.willuhn.jameica.hbci.server.VerwendungszweckUtil;
 import de.willuhn.jameica.hbci.server.VerwendungszweckUtil.Tag;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.UmsatzService;
 import de.willuhn.jameica.hbci.xmlrpc.util.DateUtil;
@@ -274,6 +277,11 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
       map.put(KEY_CUSTOMER_REF,      StringUtil.notNull(u.getCustomerRef()));
       map.put(KEY_KOMMENTAR,         StringUtil.notNull(u.getKommentar()));
       map.put(KEY_GVCODE,            StringUtil.notNull(u.getGvCode()));
+      
+      String eref = StringUtils.trimToNull(u.getEndToEndId());
+      if (eref == null)
+        eref = VerwendungszweckUtil.getTag(u,Tag.EREF); // Falls es im Verwendungszweck steht - bei älteren Buchungen
+      map.put(KEY_ENDTOENDID,        StringUtil.notNull(eref));
       
       List<String> usages = new ArrayList<String>();
       usages.add(StringUtil.notNull(u.getZweck()));
