@@ -56,6 +56,20 @@ public class StringUtil
   }
   
   /**
+   * Wandelt ein Objekt in einen Strim um.
+   * @param o das Objekt.
+   * @return die String-Repraesentation oder null - niemals "".
+   */
+  public static String trimToNull(Object o)
+  {
+    if (o == null)
+      return null;
+    
+    String s = o.toString();
+    return s != null ? s.trim() : null;
+  }
+  
+  /**
    * Versucht das Objekt als Verwendungszweck zu parsen.
    * Die Funktion erkennt selbst, ob "object" ein Array oder vom Typ "List" ist.
    * @param object der potentielle Verwendungszweck. Darf NULL sein.

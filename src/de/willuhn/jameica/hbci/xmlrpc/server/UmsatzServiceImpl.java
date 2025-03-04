@@ -1,13 +1,10 @@
 /**********************************************************************
- * $Source: /cvsroot/hibiscus/hibiscus.xmlrpc/src/de/willuhn/jameica/hbci/xmlrpc/server/UmsatzServiceImpl.java,v $
- * $Revision: 1.15 $
- * $Date: 2012/03/28 22:18:41 $
- * $Author: willuhn $
- * $Locker:  $
- * $State: Exp $
  *
- * Copyright (c) by willuhn.webdesign
- * All rights reserved
+ * Copyright (c) 2025 Olaf Willuhn
+ * All rights reserved.
+ * 
+ * This software is copyrighted work licensed under the terms of the
+ * Jameica License.  Please consult the file "LICENSE" for details. 
  *
  **********************************************************************/
 
@@ -20,8 +17,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
 
 import de.willuhn.datasource.BeanUtil;
 import de.willuhn.datasource.rmi.DBIterator;
@@ -128,7 +123,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
         sb.append(StringUtil.quote(StringUtil.notNull(u.getKommentar())));
         result.add(sb.toString());
       }
-      return (String[]) result.toArray(new String[result.size()]);
+      return result.toArray(new String[result.size()]);
     }
     catch (RemoteException re)
     {
@@ -278,7 +273,7 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
       map.put(KEY_KOMMENTAR,         StringUtil.notNull(u.getKommentar()));
       map.put(KEY_GVCODE,            StringUtil.notNull(u.getGvCode()));
       
-      String eref = StringUtils.trimToNull(u.getEndToEndId());
+      String eref = StringUtil.trimToNull(u.getEndToEndId());
       if (eref == null)
         eref = VerwendungszweckUtil.getTag(u,Tag.EREF); // Falls es im Verwendungszweck steht - bei älteren Buchungen
       map.put(KEY_ENDTOENDID,        StringUtil.notNull(eref));
@@ -344,39 +339,3 @@ public class UmsatzServiceImpl extends AbstractServiceImpl implements UmsatzServ
     return "[xml-rpc] umsatz";
   }
 }
-
-/*********************************************************************
- * $Log: UmsatzServiceImpl.java,v $
- * Revision 1.15  2012/03/28 22:18:41  willuhn
- * @C Umstellung auf DateUtil, javadoc Fixes
- *
- * Revision 1.14  2011-06-07 10:07:53  willuhn
- * @C Verwendungszweck-Handling vereinheitlicht/vereinfacht - geht jetzt fast ueberall ueber VerwendungszweckUtil
- *
- * Revision 1.13  2011-02-10 11:55:19  willuhn
- * @B minor debugging
- *
- * Revision 1.12  2011-01-25 14:05:12  willuhn
- * @B Kompatibilitaet zu Hibiscus 1.12
- *
- * Revision 1.11  2011-01-25 13:53:25  willuhn
- * @C Jameica 1.10 Kompatibilitaet
- *
- * Revision 1.10  2011-01-25 13:49:26  willuhn
- * @N Limit konfigurierbar und auch in Auftragslisten beruecksichtigen
- *
- * Revision 1.9  2011-01-25 13:43:54  willuhn
- * @N Loeschen von Auftraegen
- * @N Verhalten der Rueckgabewerte von create/delete konfigurierbar (kann jetzt bei Bedarf die ID des erstellten Datensatzes liefern und Exceptions werfen)
- * @N Filter fuer Zweck, Kommentar, Gegenkonto in Umsatzsuche fehlten
- * @B Parameter-Name in Umsatzsuche wurde nicht auf ungueltige Zeichen geprueft
- * @C Code-Cleanup
- * @N Limitierung der zurueckgemeldeten Umsaetze auf 10.000
- *
- * Revision 1.8  2010/03/31 12:31:35  willuhn
- * *** empty log message ***
- *
- * Revision 1.7  2010/03/31 12:24:51  willuhn
- * @N neue XML-RPC-Funktion "find" zum erweiterten Suchen in Auftraegen
- * @C Code-Cleanup
- **********************************************************************/
