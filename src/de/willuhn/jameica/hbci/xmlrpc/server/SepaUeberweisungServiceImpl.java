@@ -25,7 +25,7 @@ import de.willuhn.jameica.hbci.xmlrpc.util.StringUtil;
  */
 public class SepaUeberweisungServiceImpl extends AbstractBaseUeberweisungServiceImpl<AuslandsUeberweisung> implements SepaUeberweisungService
 {
-  
+  final static String PARAM_INSTANT = "instantpayment";
 
   /**
    * ct.
@@ -55,6 +55,7 @@ public class SepaUeberweisungServiceImpl extends AbstractBaseUeberweisungService
     m.put(XmlRpcParameter.PARAM_ENDTOEND_ID, (String) null);
     m.put(XmlRpcParameter.PARAM_PMTINF_ID, (String) null);
     m.put(XmlRpcParameter.PARAM_PURPOSE_CODE, (String) null);
+    m.put(PARAM_INSTANT, (String) null);
     return m;
   }
   
@@ -66,6 +67,9 @@ public class SepaUeberweisungServiceImpl extends AbstractBaseUeberweisungService
     auftrag.setEndtoEndId((String)params.get(XmlRpcParameter.PARAM_ENDTOEND_ID));
     auftrag.setPmtInfId((String)params.get(XmlRpcParameter.PARAM_PMTINF_ID));
     auftrag.setPurposeCode((String)params.get(XmlRpcParameter.PARAM_PURPOSE_CODE));
+    
+    final Object instant = params.get(PARAM_INSTANT);
+    auftrag.setInstantPayment(instant != null && Boolean.parseBoolean(instant.toString()));
   }
   
   /**
@@ -76,6 +80,7 @@ public class SepaUeberweisungServiceImpl extends AbstractBaseUeberweisungService
     params.put(XmlRpcParameter.PARAM_ENDTOEND_ID,StringUtil.notNull(auftrag.getEndtoEndId()));
     params.put(XmlRpcParameter.PARAM_PMTINF_ID,StringUtil.notNull(auftrag.getPmtInfId()));
     params.put(XmlRpcParameter.PARAM_PURPOSE_CODE,StringUtil.notNull(auftrag.getPurposeCode()));
+    params.put(PARAM_INSTANT,Boolean.toString(auftrag.isInstantPayment()));
   }
 
   /**
