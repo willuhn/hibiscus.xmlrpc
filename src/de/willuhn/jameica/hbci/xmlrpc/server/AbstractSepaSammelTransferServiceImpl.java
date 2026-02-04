@@ -24,7 +24,6 @@ import de.willuhn.jameica.hbci.Settings;
 import de.willuhn.jameica.hbci.rmi.BatchBookType;
 import de.willuhn.jameica.hbci.rmi.HBCIDBService;
 import de.willuhn.jameica.hbci.rmi.Konto;
-import de.willuhn.jameica.hbci.rmi.SammelTransfer;
 import de.willuhn.jameica.hbci.rmi.SepaSammelTransfer;
 import de.willuhn.jameica.hbci.rmi.SepaSammelTransferBuchung;
 import de.willuhn.jameica.hbci.xmlrpc.rmi.SepaSammelTransferService;
@@ -248,7 +247,7 @@ public abstract class AbstractSepaSammelTransferServiceImpl<T extends SepaSammel
         throw new ApplicationException(i18n.tr("Keine ID des zu löschenden Datensatzes angegeben"));
 
       DBService service = (DBService) Application.getServiceFactory().lookup(HBCI.class,"database");
-      SammelTransfer t = (SammelTransfer) service.createObject(getTransferType(),id);
+      T t = (T) service.createObject(getTransferType(),id);
       t.delete();
       Logger.info("deleted bundle transfer [ID: " + id + " (" + t.getClass().getName() + ")]");
       return supportNull ? null : id;
